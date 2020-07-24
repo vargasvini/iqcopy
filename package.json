@@ -1,0 +1,15 @@
+{
+  "name": "configbot",
+  "version": "1.0.0",
+  "description": "Config of copybot",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "author": "Vargas Vini",
+  "license": "ISC",
+  "dependencies": {
+    "electron": "^9.1.0",
+    "python-shell": "^2.0.1"
+  }
+}

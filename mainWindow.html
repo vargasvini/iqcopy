@@ -1,0 +1,133 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link rel="stylesheet" href="main.css">
+        <script type="text/javascript" src="./business/business.js" defer></script>
+        <script type="text/javascript" src="./business/behavior.js" defer></script>
+        <script type="text/javascript" src="./business/display.js" defer></script>
+        <script type="text/javascript" src="./business/linkers.js" defer></script>
+        <title>Config Bot</title>      
+    </head>
+    <body class="body-custom">
+        <nav class="nav-custom">
+            <div class="nav-wraper">
+                <a href="" class="brand-logo center" id="idMenuTitle">LOGIN CORRETORA</a>
+            </div>
+        </nav>
+        <div class="row">
+            <div class="col s3 menu">
+                <div class="row" id="rowLogin">
+                    <div class="col s12 valign-wrapper menu-item active">
+                        <div class="col s3">
+                            <i class="small material-icons">person_outline</i>
+                        </div>
+                        <div class="col s12">
+                            LOGIN CORRETORA
+                        </div>
+                    </div>
+                </div>
+                <div class="row" id="rowGerenciamento">
+                    <div class="col s12 valign-wrapper menu-item">
+                        <div class="col s3">
+                            <i class="small material-icons">attach_money</i>
+                        </div>
+                        <div class="col s12">
+                            GERENCIAMENTO
+                        </div>
+                    </div>
+                </div>
+                <div class="row" id="rowCopiar">
+                    <div class="col s12 valign-wrapper menu-item">
+                        <div class="col s3">
+                            <i class="small material-icons">multiline_chart</i>
+                        </div>
+                        <div class="col s12">
+                            COPIAR TRADERS
+                        </div>
+                    </div>
+                </div>
+                <div class="row" id="rowSalvar">
+                    <div class="col s12 valign-wrapper">
+                        <button id="idBtnSaveConfig" class="btn waves-effect waves-light btn-nav-menu" type="submit" name="btnSave" onclick="onSaveConfig()">SALVAR
+                            <i class="material-icons right">save</i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <!-- LOGIN -->
+            <div id="idDivLogin" class="col s9 div-body" style="display:block;">
+                <div class="row">
+                    <div class="input-field col s6">
+                        <input id="idLoginUser" class="input-value" type="text" class="validate">
+                        <label for="idLoginUser" class="input-label">Usuário</label>
+                    </div>                    
+                </div>
+                <div class="row">
+                    <div class="input-field col s6">
+                        <input id="idLoginPass" class="input-value" type="password" class="validate">
+                        <label for="idLoginPass" class="input-label">Senha</label>
+                    </div>
+                </div>
+            </div>
+            <!-- GERENCIAMENTO -->
+            <div id="idDivGerenciamento" class="col s6" style="display:none">AQUI SERÁ O GERENCIAMENTO</div>
+            <!-- CÓPIA -->
+            <div id="idDivCopiar" class="col s9 div-copiar" style="display:none">
+                <div class="row">
+                    <div class="col s12">
+                        <div class="card-panel grey lighten-5 z-depth-1" style="height: 100px;">
+                          <div class="row valign-wrapper">
+                            <div class="row col s12">
+                                <div class="col s6">
+                                    <form action="#">
+                                        <p>
+                                        <label>
+                                            <input name="group1" type="radio" checked id="radioReal"/>
+                                            <span>REAL</span>
+                                        </label>
+                                        <label style="margin-left:20px">
+                                            <input name="group1" type="radio"  id="radioTreinamento"/>
+                                            <span>TREINAMENTO</span>
+                                        </label>
+                                        </p>
+                                    </form>
+                                </div>
+                                <div class="col s2" style="margin-top: 15px;">
+                                    <span class="black-text" id="idNome"></span>
+                                </div>
+                                <div class="col s4" style="margin-top: 15px;">
+                                    <span class="black-text" id="idCurrencyBalance"></span>
+                                </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                </div>
+                <div class="row">
+                    <div class="col s12 valign-wrapper">
+                        <button id="idBtnTestePy" class="btn waves-effect waves-light" type="submit" name="btnTestePy" onclick="onTestePy()">TESTE PY
+                        </button>
+                    </div>
+                </div>                
+            </div>
+            <div id="idDivLoader" class="col s9 div-loader" style="display:none">
+                <div class="preloader-wrapper big active">
+                    <div class="spinner-layer spinner-red-only">
+                        <div class="circle-clipper left">
+                            <div class="circle"></div>
+                        </div>
+                        <div class="gap-patch">
+                                <div class="circle"></div>
+                        </div>
+                        <div class="circle-clipper right">
+                            <div class="circle"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
