@@ -71,6 +71,16 @@ input:not([type]):focus:not([readonly])+label, input[type=text]:not(.browser-def
     place-content: center;
 }
 
+.toast-custom-error{
+    top: 35px;
+    background-color: #ee6e73;
+    font-weight: bold;
+    color:white;
+    width: 1000px;
+    height: 75px;
+    place-content: center;
+}
+
 .div-copiar{
     margin-top:20px;
 }
@@ -80,4 +90,56 @@ input:not([type]):focus:not([readonly])+label, input[type=text]:not(.browser-def
     height: 650px;
     margin-top: 220px;
 
+}
+
+.div-copy-info{
+    height: 387px;
+    overflow: overlay;
+    color:black;
+}
+
+.blockquote-custom {
+    margin: 5px 0;
+    padding-left: 1.5rem;
+    border-left: 5px solid #ff5722;
+}
+
+[type="radio"]:checked+span:after, [type="radio"].with-gap:checked+span:before, [type="radio"].with-gap:checked+span:after {
+    border: 2px solid #ff5722;
+}
+
+[type="radio"]:checked+span:after, [type="radio"].with-gap:checked+span:after {
+    background-color: #ff5722;
+}
+
+.btn-custom{
+    background-color: #bf411a;
+    margin-right: 15px;
+}
+
+.btn-custom:hover, .btn-custom:active, .btn-custom:focus{
+    background-color: #ff5722;
+}
+
+
+.btn-custom-cancel{
+    background-color: #8c807c;
+    margin-right: 15px;
+}
+
+.btn-custom-cancel:hover, .btn-custom-cancel:active, .btn-custom-cancel:focus{
+    background-color: #a9a8a8;
+}
+
+.gray-text-bold{
+    color:#9e9e9e;
+    font-weight: bold;
+}
+
+.citem-custom{
+    color: black;
+}
+
+.pag-custom{
+    text-align: right;
 }

@@ -17,7 +17,7 @@
             </div>
         </nav>
         <div class="row">
-            <div class="col s3 menu">
+            <div class="col s3 menu" id="idDivMenu"  onclick="event.stopPropagation()">
                 <div class="row" id="rowLogin">
                     <div class="col s12 valign-wrapper menu-item active">
                         <div class="col s3">
@@ -45,6 +45,16 @@
                         </div>
                         <div class="col s12">
                             COPIAR TRADERS
+                        </div>
+                    </div>
+                </div>
+                <div class="row" id="rowHistorico">
+                    <div class="col s12 valign-wrapper menu-item">
+                        <div class="col s3">
+                            <i class="small material-icons">history</i>
+                        </div>
+                        <div class="col s12">
+                            HISTÓRICO
                         </div>
                     </div>
                 </div>
@@ -95,23 +105,173 @@
                                     </form>
                                 </div>
                                 <div class="col s2" style="margin-top: 15px;">
-                                    <span class="black-text" id="idNome"></span>
+                                    <span class="gray-text-bold" id="idNome" style="overflow-wrap: break-word;"></span>
                                 </div>
                                 <div class="col s4" style="margin-top: 15px;">
-                                    <span class="black-text" id="idCurrencyBalance"></span>
+                                    <span class="gray-text-bold" id="idCurrencyBalance"></span>
                                 </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-
+                    </div>
                 </div>
                 <div class="row">
                     <div class="col s12 valign-wrapper">
-                        <button id="idBtnTestePy" class="btn waves-effect waves-light" type="submit" name="btnTestePy" onclick="onTestePy()">TESTE PY
+                        <button id="idBtnTestePy" class="btn waves-effect waves-light btn-custom" type="submit" name="btnTestePy" onclick="onStartCopy()">INICIAR COPY
+                            <i class="material-icons right">play_arrow</i>
+                        </button>
+                        <button id="idBtnTestePy" class="btn waves-effect waves-light btn-custom-cancel" type="submit" name="btnTestePy" onclick="onStartCopy()">PARAR COPY
+                            <i class="material-icons right">stop</i>
                         </button>
                     </div>
-                </div>                
+                </div>    
+                <blockquote class="blockquote-custom">
+                    Abaixo você pode acompanhar sua informações em tempo real de suas operações.
+                </blockquote>
+                <div class="row">
+                    <div class="col s12">
+                        <div class="card-panel grey lighten-5 z-depth-1 div-copy-info">
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Arcu dui vivamus arcu felis bibendum ut tristique et. At ultrices mi tempus imperdiet. Dictum sit amet justo donec enim. A cras semper auctor neque vitae tempus quam. Nunc mattis enim ut tellus elementum. Egestas erat imperdiet sed euismod nisi porta lorem mollis aliquam. Massa sapien faucibus et molestie ac feugiat. Auctor urna nunc id cursus metus aliquam eleifend mi in. Purus in massa tempor nec feugiat nisl. Egestas diam in arcu cursus euismod quis. Aenean pharetra magna ac placerat vestibulum lectus mauris. Facilisis volutpat est velit egestas dui id ornare arcu. Justo laoreet sit amet cursus sit amet dictum sit. Purus in massa tempor nec feugiat nisl pretium. Orci dapibus ultrices in iaculis nunc sed. Elementum integer enim neque volutpat ac tincidunt vitae. Amet massa vitae tortor condimentum lacinia.
+
+                            Est velit egestas dui id ornare arcu odio ut. Molestie nunc non blandit massa. Mattis enim ut tellus elementum sagittis vitae et leo. Convallis tellus id interdum velit laoreet. Et netus et malesuada fames ac turpis egestas. Mi tempus imperdiet nulla malesuada pellentesque elit eget. Nisl nunc mi ipsum faucibus vitae aliquet nec. Massa ultricies mi quis hendrerit dolor magna. Ornare massa eget egestas purus viverra accumsan in. Non arcu risus quis varius quam. Morbi non arcu risus quis varius quam quisque id diam. Diam quis enim lobortis scelerisque fermentum dui.
+
+                            Porta non pulvinar neque laoreet suspendisse interdum consectetur. Cras adipiscing enim eu turpis egestas. Pellentesque habitant morbi tristique senectus et netus et malesuada fames. Ac felis donec et odio pellentesque diam. Cras pulvinar mattis nunc sed blandit libero volutpat sed. Viverra nam libero justo laoreet sit amet. Malesuada bibendum arcu vitae elementum curabitur vitae. A diam maecenas sed enim ut sem viverra. Nulla facilisi nullam vehicula ipsum a. Quisque egestas diam in arcu cursus euismod. Quis viverra nibh cras pulvinar mattis nunc sed blandit. A pellentesque sit amet porttitor eget dolor morbi non. Felis bibendum ut tristique et egestas. Sit amet justo donec enim diam vulputate. Turpis nunc eget lorem dolor sed viverra ipsum nunc aliquet.
+
+                            Volutpat ac tincidunt vitae semper quis lectus nulla. Porttitor leo a diam sollicitudin. Sed faucibus turpis in eu mi bibendum. Pellentesque massa placerat duis ultricies lacus sed turpis. Egestas erat imperdiet sed euismod nisi porta lorem mollis. Sagittis orci a scelerisque purus semper eget duis. Donec pretium vulputate sapien nec sagittis aliquam. Vestibulum rhoncus est pellentesque elit ullamcorper dignissim cras tincidunt lobortis. Orci phasellus egestas tellus rutrum. Blandit volutpat maecenas volutpat blandit aliquam etiam erat velit. Neque volutpat ac tincidunt vitae semper quis lectus nulla at. Nunc eget lorem dolor sed. Sed libero enim sed faucibus turpis in.
+
+                            Diam volutpat commodo sed egestas egestas fringilla phasellus. Mattis rhoncus urna neque viverra justo nec ultrices dui sapien. Neque volutpat ac tincidunt vitae semper. Lobortis scelerisque fermentum dui faucibus in ornare. Et odio pellentesque diam volutpat commodo sed egestas egestas fringilla. Id diam vel quam elementum pulvinar etiam. Enim neque volutpat ac tincidunt vitae. Arcu ac tortor dignissim convallis aenean. Convallis aenean et tortor at risus viverra adipiscing. Fermentum et sollicitudin ac orci. Amet luctus venenatis lectus magna. Egestas fringilla phasellus faucibus scelerisque eleifend. Morbi quis commodo odio aenean sed adipiscing. Enim nulla aliquet porttitor lacus luctus accumsan tortor posuere ac. Lectus quam id leo in. Congue eu consequat ac felis donec. In hac habitasse platea dictumst vestibulum rhoncus est pellentesque. Pretium fusce id velit ut tortor pretium. Porta non pulvinar neque laoreet suspendisse interdum consectetur libero id.
+                        </div>
+                    </div>
+                </div>            
+            </div>
+            <!-- HISTÓRICO DE OPERAÇÕES -->
+            <div id="idDivHistorico" class="col s9 div-body" style="display:none">
+                <blockquote class="blockquote-custom">
+                    Abaixo você pode consultar o seu histórico de operações
+                </blockquote>
+                <div class="row" style="height: 520px;">
+                    <div class="col s12">
+                        <table class="striped">
+                            <thead>
+                              <tr>
+                                  <th>ID</th>
+                                  <th>NOME</th>
+                                  <th>RESULT.</th>
+                                  <th>VALOR</th>
+                                  <th>ORDEM</th>
+                                  <th>TF</th>
+                                  <th>PAR.</th>
+                                  <th>DATA</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                  <td>44269014</td>
+                                  <td>Vinicius D. O. M.</td>
+                                  <td>WIN</td>
+                                  <td>101.0</td>
+                                  <td>CALL</td>
+                                  <th>M5</th>
+                                  <td>EURUSD</td>
+                                  <td>24/07/2020 17:42</td>
+                                </tr>
+                                <tr>
+                                    <td>44269014</td>
+                                    <td>Vinicius D. O. M.</td>
+                                    <td>WIN</td>
+                                    <td>15000.0</td>
+                                    <td>CALL</td>
+                                    <th>M5</th>
+                                    <td>EURUSD</td>
+                                    <td>24/07/2020 17:42</td>
+                                </tr>
+                                <tr>
+                                    <td>17054580</td>
+                                    <td>Jose P. B. D. M.</td>
+                                    <td>LOSS</td>
+                                    <td>3597.0</td>
+                                    <td>CALL</td>
+                                    <th>M5</th>
+                                    <td>AUDCAD</td>
+                                    <td>24/07/2020 17:42</td>
+                                </tr>
+                                <tr>
+                                    <td>17054580</td>
+                                    <td>Jose P. B. D. M.</td>
+                                    <td>LOSS</td>
+                                    <td>3597.0</td>
+                                    <td>CALL</td>
+                                    <th>M5</th>
+                                    <td>AUDCAD</td>
+                                    <td>24/07/2020 17:42</td>
+                                </tr>
+                                <tr>
+                                    <td>44269014</td>
+                                    <td>Vinicius D. O. M.</td>
+                                    <td>WIN</td>
+                                    <td>15000.0</td>
+                                    <td>CALL</td>
+                                    <th>M5</th>
+                                    <td>EURUSD</td>
+                                    <td>24/07/2020 17:42</td>
+                                </tr>
+                                <tr>
+                                    <td>17054580</td>
+                                    <td>Jose P. B. D. M.</td>
+                                    <td>LOSS</td>
+                                    <td>3597.0</td>
+                                    <td>CALL</td>
+                                    <th>M5</th>
+                                    <td>AUDCAD</td>
+                                    <td>24/07/2020 17:42</td>
+                                </tr>
+                                <tr>
+                                    <td>17054580</td>
+                                    <td>Jose P. B. D. M.</td>
+                                    <td>LOSS</td>
+                                    <td>3597.0</td>
+                                    <td>CALL</td>
+                                    <th>M5</th>
+                                    <td>AUDCAD</td>
+                                    <td>24/07/2020 17:42</td>
+                                </tr>
+                                <tr>
+                                    <td>44269014</td>
+                                    <td>Vinicius D. O. M.</td>
+                                    <td>WIN</td>
+                                    <td>15000.0</td>
+                                    <td>CALL</td>
+                                    <th>M5</th>
+                                    <td>EURUSD</td>
+                                    <td>24/07/2020 17:42</td>
+                                </tr>
+                                <tr>
+                                    <td>17054580</td>
+                                    <td>Jose P. B. D. M.</td>
+                                    <td>LOSS</td>
+                                    <td>3597.0</td>
+                                    <td>CALL</td>
+                                    <th>M5</th>
+                                    <td>AUDCAD</td>
+                                    <td>24/07/2020 17:42</td>
+                                </tr>                             
+                              </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col s12" id="idDivPagination">
+                        <ul class="pagination pag-custom">
+                            <li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
+                            <li class="active"><a href="#!">1</a></li>
+                            <li class="waves-effect"><a href="#!">2</a></li>
+                            <li class="waves-effect"><a href="#!">3</a></li>
+                            <li class="waves-effect"><a href="#!">4</a></li>
+                            <li class="waves-effect"><a href="#!">5</a></li>
+                            <li class="waves-effect"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
+                        </ul>
+                    </div> 
+                </div>
             </div>
             <div id="idDivLoader" class="col s9 div-loader" style="display:none">
                 <div class="preloader-wrapper big active">

@@ -2,7 +2,8 @@ var {PythonShell} = require("python-shell");
 var path = require("path");
 
 
-function onTestePy(){
+function onStartCopy(){
+    removeMenuClick();
     hideCopiarDiv();
     showLoaderDiv();
 
@@ -21,17 +22,18 @@ function onTestePy(){
     var login = new PythonShell('login.py', options);
     
     login.on('message', function(message){
- 
-        console.log(message)
         var userData = JSON.parse(message);
-        // if(returnMessage.message){
-        //     M.toast({html: returnMessage.message, classes: 'toast-custom-success valign-wrapper'})
-        // }
-        document.getElementById("idNome").innerHTML = userData.name.toUpperCase();
-        document.getElementById("idCurrencyBalance").innerHTML = userData.currency + " " + userData.balance;
-        
+        setUserData(userData);
+        if (userData.message == 'error'){
+            M.toast({html: 'Autenticação inválida! Por favor, verifique os dados informados na área "LOGIN CORRETORA".', classes: 'toast-custom-error valign-wrapper'}) 
+        }
         hideLoaderDiv();
         showCopiarDiv();
-    
+        setMenuClick();
     })
+}
+
+function setUserData(_data){
+    document.getElementById("idNome").innerHTML = _data.name.toUpperCase();
+    document.getElementById("idCurrencyBalance").innerHTML = _data.currency + " " + _data.balance;
 }

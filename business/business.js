@@ -65,7 +65,6 @@ function getDataFromSystemFile(){
     var fs = require('fs');
     const data = fs.readFileSync('system.config', {encoding:'utf8', flag:'r'}); 
     processDataSystem(data); 
-        
 }
 
 function processDataSystem(_data) {

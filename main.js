@@ -34,7 +34,6 @@ app.on('ready', function(){
 
 //Handle createAddWindow
 function createAddWindow(){
-    console.log('teste')
     //Create new window
     addWindow = new BrowserWindow({
         width:200,

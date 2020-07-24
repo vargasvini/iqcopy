@@ -71,6 +71,9 @@ function changeBodyItem(_item){
         case "COPIAR TRADERS":
             showCopiarDiv();
             break;
+        case "HISTÓRICO":
+            showHistoricoDiv();
+            break;
         default:
             break;
     }
@@ -81,7 +84,6 @@ function verifyStartInputsBehavior(){
     for (let index = 0; index < inputs.length; index++) {
         const input = inputs[index];
         const inputValue = document.getElementById(input.getAttribute("for")).value;
-        console.log(input)
         if(input != undefined && inputValue == ""){
             input.classList.remove("active");
         }else{
