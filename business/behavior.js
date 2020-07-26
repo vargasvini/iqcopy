@@ -1,8 +1,9 @@
 function initBehavior(){
-    getDataFromSystemFile()
+    getDataFromSystemFile();
     getMenuItemsAndSetEvent();
     getInputFieldAndSetEvent();
     verifyStartInputsBehavior();
+    getHistoryData();
 }
 
 

@@ -73,3 +73,47 @@ function processDataSystem(_data) {
     document.getElementById("idLoginUser").value = formData.login;
     document.getElementById("idLoginPass").value = formData.password;
 }
+
+
+/*GET HISTORY DATA*/
+function getHistoryData(){
+    var fs = require('fs');
+    const data = fs.readFileSync('resultados.log.config', {encoding:'utf8', flag:'r'}); 
+    processHistoryData(data); 
+}
+
+function processHistoryData(_data) {
+    const historyData = JSON.parse(_data);
+    paginationHistoryData(historyData);
+}
+
+function paginationHistoryData(item){
+    $('#pagination-history-container').pagination({
+        locator: 'data',
+        dataSource: item,
+        callback: function(data, pagination) {
+            // template method of yourself
+            var html = historyDataTemplate(data);
+            $('#data-history-container').html(html);
+        }
+    })
+}
+
+function historyDataTemplate(data) {
+    var html = '';
+    $.each(data, function(index, item){
+        html += `
+            <tr>
+                <td>${item.id}</td>
+                <td>${item.nome}</td>
+                <td>${item.resultado}</td>
+                <td>${item.valor}</td>
+                <td>${item.operacao.toUpperCase()}</td>
+                <td>${item.timeframe.replace("PT","")}</td>
+                <td>${item.paridade}</td>
+                <td>${moment(item.data).format("DD/MM/YYYY hh:mm")}</td>
+            </tr>
+        `
+        });
+    return html;
+}

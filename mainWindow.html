@@ -1,5 +1,6 @@
 <html>
     <head>
+        <script type="text/javascript" src="./utils/jquery.js" defer></script>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -8,6 +9,8 @@
         <script type="text/javascript" src="./business/behavior.js" defer></script>
         <script type="text/javascript" src="./business/display.js" defer></script>
         <script type="text/javascript" src="./business/linkers.js" defer></script>
+        <script type="text/javascript" src="./utils/moment.js" defer></script>
+        <script type="text/javascript" src="./utils/pagination.js" defer></script>
         <title>Config Bot</title>      
     </head>
     <body class="body-custom">
@@ -146,9 +149,9 @@
             </div>
             <!-- HISTÓRICO DE OPERAÇÕES -->
             <div id="idDivHistorico" class="col s9 div-body" style="display:none">
-                <blockquote class="blockquote-custom">
+                <!-- <blockquote class="blockquote-custom">
                     Abaixo você pode consultar o seu histórico de operações
-                </blockquote>
+                </blockquote> -->
                 <div class="row" style="height: 520px;">
                     <div class="col s12">
                         <table class="striped">
@@ -164,113 +167,15 @@
                                   <th>DATA</th>
                               </tr>
                             </thead>
-                            <tbody>
-                                <tr>
-                                  <td>44269014</td>
-                                  <td>Vinicius D. O. M.</td>
-                                  <td>WIN</td>
-                                  <td>101.0</td>
-                                  <td>CALL</td>
-                                  <th>M5</th>
-                                  <td>EURUSD</td>
-                                  <td>24/07/2020 17:42</td>
-                                </tr>
-                                <tr>
-                                    <td>44269014</td>
-                                    <td>Vinicius D. O. M.</td>
-                                    <td>WIN</td>
-                                    <td>15000.0</td>
-                                    <td>CALL</td>
-                                    <th>M5</th>
-                                    <td>EURUSD</td>
-                                    <td>24/07/2020 17:42</td>
-                                </tr>
-                                <tr>
-                                    <td>17054580</td>
-                                    <td>Jose P. B. D. M.</td>
-                                    <td>LOSS</td>
-                                    <td>3597.0</td>
-                                    <td>CALL</td>
-                                    <th>M5</th>
-                                    <td>AUDCAD</td>
-                                    <td>24/07/2020 17:42</td>
-                                </tr>
-                                <tr>
-                                    <td>17054580</td>
-                                    <td>Jose P. B. D. M.</td>
-                                    <td>LOSS</td>
-                                    <td>3597.0</td>
-                                    <td>CALL</td>
-                                    <th>M5</th>
-                                    <td>AUDCAD</td>
-                                    <td>24/07/2020 17:42</td>
-                                </tr>
-                                <tr>
-                                    <td>44269014</td>
-                                    <td>Vinicius D. O. M.</td>
-                                    <td>WIN</td>
-                                    <td>15000.0</td>
-                                    <td>CALL</td>
-                                    <th>M5</th>
-                                    <td>EURUSD</td>
-                                    <td>24/07/2020 17:42</td>
-                                </tr>
-                                <tr>
-                                    <td>17054580</td>
-                                    <td>Jose P. B. D. M.</td>
-                                    <td>LOSS</td>
-                                    <td>3597.0</td>
-                                    <td>CALL</td>
-                                    <th>M5</th>
-                                    <td>AUDCAD</td>
-                                    <td>24/07/2020 17:42</td>
-                                </tr>
-                                <tr>
-                                    <td>17054580</td>
-                                    <td>Jose P. B. D. M.</td>
-                                    <td>LOSS</td>
-                                    <td>3597.0</td>
-                                    <td>CALL</td>
-                                    <th>M5</th>
-                                    <td>AUDCAD</td>
-                                    <td>24/07/2020 17:42</td>
-                                </tr>
-                                <tr>
-                                    <td>44269014</td>
-                                    <td>Vinicius D. O. M.</td>
-                                    <td>WIN</td>
-                                    <td>15000.0</td>
-                                    <td>CALL</td>
-                                    <th>M5</th>
-                                    <td>EURUSD</td>
-                                    <td>24/07/2020 17:42</td>
-                                </tr>
-                                <tr>
-                                    <td>17054580</td>
-                                    <td>Jose P. B. D. M.</td>
-                                    <td>LOSS</td>
-                                    <td>3597.0</td>
-                                    <td>CALL</td>
-                                    <th>M5</th>
-                                    <td>AUDCAD</td>
-                                    <td>24/07/2020 17:42</td>
-                                </tr>                             
-                              </tbody>
+                            <!-- <tbody id="idHistoryTableBody"></tbody> -->
+                            <tbody id="data-history-container"></tbody>
                         </table>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col s12" id="idDivPagination">
-                        <ul class="pagination pag-custom">
-                            <li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
-                            <li class="active"><a href="#!">1</a></li>
-                            <li class="waves-effect"><a href="#!">2</a></li>
-                            <li class="waves-effect"><a href="#!">3</a></li>
-                            <li class="waves-effect"><a href="#!">4</a></li>
-                            <li class="waves-effect"><a href="#!">5</a></li>
-                            <li class="waves-effect"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
-                        </ul>
-                    </div> 
+                    <div class="col s12"  >
+                        <ul class="pagination pag-custom col s9" id="pagination-history-container"></ul>
+                    </div>
                 </div>
             </div>
             <div id="idDivLoader" class="col s9 div-loader" style="display:none">

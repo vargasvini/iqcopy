@@ -142,4 +142,18 @@ input:not([type]):focus:not([readonly])+label, input[type=text]:not(.browser-def
 
 .pag-custom{
     text-align: right;
+    position: fixed;
+    bottom: 5px;
+}
+
+.pagination li.active {
+    background-color:#ff5722;
+}
+
+.pagination li a {
+    color: white;
+    display: inline-block;
+    font-size: 1.2rem;
+    padding: 0 10px;
+    line-height: 30px;
 }
