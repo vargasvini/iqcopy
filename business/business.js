@@ -74,7 +74,6 @@ function processDataSystem(_data) {
     document.getElementById("idLoginPass").value = formData.password;
 }
 
-
 /*GET HISTORY DATA*/
 function getHistoryData(){
     var fs = require('fs');

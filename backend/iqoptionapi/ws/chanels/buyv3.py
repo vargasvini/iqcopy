@@ -13,7 +13,7 @@ class Buyv3(Base):
         # thank Darth-Carrotpie's code
         # https://github.com/Lu-Yi-Hsun/iqoptionapi/issues/6
         exp,idx=get_expiration_time(int(self.api.timesync.server_timestamp),duration)  
-        if idx<5:
+        if idx<=5:
             option = 3#"turbo"
         else:
              option = 1#"binary"
