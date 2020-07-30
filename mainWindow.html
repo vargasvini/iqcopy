@@ -24,7 +24,7 @@
                 </div>
                 <div class="row" id="rowLogin">
                     <div class="col s12 valign-wrapper menu-item active">
-                        <div class="col s3">
+                        <div class="col s3" style="width:20%">
                             <i class="small material-icons">person_outline</i>
                         </div>
                         <div class="col s12">
@@ -32,9 +32,19 @@
                         </div>
                     </div>
                 </div>
+                <div class="row" id="rowSelecionarTrader ">
+                    <div class="col s12 valign-wrapper menu-item">
+                        <div class="col s3" style="width:20%">
+                            <i class="small material-icons">search</i>
+                        </div>
+                        <div class="col s12">
+                            SELECIONAR TRADER
+                        </div>
+                    </div>
+                </div>
                 <div class="row" id="rowGerenciamento">
                     <div class="col s12 valign-wrapper menu-item">
-                        <div class="col s3">
+                        <div class="col s3" style="width:20%">
                             <i class="small material-icons">attach_money</i>
                         </div>
                         <div class="col s12">
@@ -42,19 +52,29 @@
                         </div>
                     </div>
                 </div>
+                <div class="row" id="rowConfig">
+                    <div class="col s12 valign-wrapper menu-item">
+                        <div class="col s3" style="width:20%">
+                            <i class="small material-icons">settings</i>
+                        </div>
+                        <div class="col s12">
+                            CONFIGURAÇÕES
+                        </div>
+                    </div>
+                </div>
                 <div class="row" id="rowCopiar">
                     <div class="col s12 valign-wrapper menu-item">
-                        <div class="col s3">
+                        <div class="col s3" style="width:20%">
                             <i class="small material-icons">multiline_chart</i>
                         </div>
                         <div class="col s12">
-                            COPIAR TRADERS
+                            INICIAR CÓPIA
                         </div>
                     </div>
                 </div>
                 <div class="row" id="rowHistorico">
                     <div class="col s12 valign-wrapper menu-item">
-                        <div class="col s3">
+                        <div class="col s3" style="width:20%">
                             <i class="small material-icons">history</i>
                         </div>
                         <div class="col s12">
@@ -78,7 +98,7 @@
             </nav>
             <div class="">
                 <!-- LOGIN -->
-                <div id="idDivLogin" class="col s9 div-body slide_in" style="display:block;">
+                <div id="idDivLogin" class="col s9 div-content slide_in" style="display:block;">
                     <div class="row">
                         <div class="input-field col s6">
                             <input id="idLoginUser" class="input-value" type="text" class="validate">
@@ -92,46 +112,162 @@
                         </div>
                     </div>
                 </div>
-                <!-- GERENCIAMENTO -->
-                <div id="idDivGerenciamento" class="col s6 slide_in" style="display:none">AQUI SERÁ O GERENCIAMENTO</div>
-                <!-- CÓPIA -->
-                <div id="idDivCopiar" class="col s9 div-copiar slide_in" style="display:none">
+                <!-- SELECIONAR TRADER -->
+                <div id="idDivSelecionarTrader" class="col s9 div-content slide_in" style="display:none">                 
+                    <blockquote class="blockquote-custom">
+                        Abaixo você pode acompanhar sua informações em tempo real de suas operações.
+                    </blockquote>
                     <div class="row">
                         <div class="col s12">
-                            <div class="card-panel grey lighten-5 z-depth-1" style="height: 100px;">
-                            <div class="row valign-wrapper">
-                                <div class="row col s12">
-                                    <div class="col s6">
-                                        <form action="#">
-                                            <p>
-                                            <label>
-                                                <input class="with-gap" name="group1" type="radio" checked id="radioReal"/>
-                                                <span>REAL</span>
+                            <div class="card-panel grey lighten-5 z-depth-1" style="height: 215px;">
+                                <div>
+                                    <blockquote class="blockquote-header col s12">
+                                        Selecione abaixo a maneira que deseja seguir os traders</b>
+                                    </blockquote>
+                                    <div class="blockquote-body col s12">
+                                        <div action="#">
+                                            <label class="label-custom col s3">
+                                                <input class="with-gap" name="groupTipoOpcoes" type="radio"  id="radioBinarias"/>
+                                                <span >RANK</span>
                                             </label>
-                                            <label style="margin-left:20px">
-                                                <input class="with-gap" name="group1" type="radio"  id="radioTreinamento"/>
-                                                <span>TREINAMENTO</span>
+                                            <label class="label-custom col s3">
+                                                <input class="with-gap" name="groupTipoOpcoes" type="radio"  id="radioDigitais"/>
+                                                <span>ID</span>
                                             </label>
-                                            </p>
-                                        </form>
+                                            <label class="label-custom col s4">
+                                                <input class="with-gap" name="groupTipoOpcoes" type="radio"  id="radioDigitais"/>
+                                                <span>AMBOS</span>
+                                            </label>
+                                        </div>
                                     </div>
-                                    <div class="col s2" style="margin-top: 15px;">
-                                        <span class="gray-text-bold" id="idNome" style="overflow-wrap: break-word;"></span>
-                                    </div>
-                                    <div class="col s4" style="margin-top: 15px;">
-                                        <span class="gray-text-bold" id="idCurrencyBalance"></span>
+                                    <div >
+                                        <blockquote class="blockquote-header col s4">
+                                            Selecione o intervalo do rank</b>
+                                        </blockquote>
+                                        <blockquote class="blockquote-header col s8">
+                                            Informe um ou mais traders utilizando seus identificadores</b>
+                                        </blockquote>
+                                        <div class="blockquote-body col s4">
+                                            <div class="input-field col s12">
+                                                <input id="idRankTop" class="input-value input-card" type="number" min="1" class="validate">
+                                                <label for="idRankTop" class="input-label">DO TOP <b>1</b> AO:</label>
+                                            </div> 
+                                        </div>
+                                        <div class="blockquote-body col s8">
+                                            <div class="input-field col s12">
+                                                <input id="idRankTop" class="input-value input-card" type="number" min="1" class="validate">
+                                                <label for="idRankTop" class="input-label">SEGUIR OS <b>ID(s)</b></label>
+                                            </div> 
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+                            <blockquote class="blockquote-custom">
+                                Abaixo você pode pesquisar qualquer trader pelo nome.
+                            </blockquote>
+                            <div class="row">
+                                <div class="col s12">
+                                    <div class="card-panel grey lighten-5 z-depth-1" style="padding: 10px; height: 316px;">
+                                        <div>
+                                            <div class="blockquote-body col s12">
+                                                <div class="input-field col s4">
+                                                    <input id="idTraderNome" class="input-value input-card" type="text" class="validate">
+                                                    <label for="idTraderNome" class="input-label"><b>Nome</b> do trader</label>
+                                                </div> 
+                                                <div class="input-field col s4">
+                                                    <input id="idTraderSobrenome" class="input-value input-card" type="text" class="validate">
+                                                    <label for="idTraderSobrenome" class="input-label"><b>Sobrenome</b> do trader</label>
+                                                </div> 
+                                                <div class="input-field col s4" style="text-align: right;">
+                                                    <button id="idBtnTestePy" class="btn waves-effect waves-light btn-custom" type="submit"  name="btnTestePy" onclick="onEndCopy()">PESQUISAR
+                                                        <i class="material-icons right">search</i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
+                </div>
+                <!-- GERENCIAMENTO -->
+                <div id="idDivGerenciamento" class="col s9 div-content slide_in" style="display:none">AQUI SERÁ O GERENCIAMENTO</div>
+                <!-- CONFIGURAÇÕES -->
+                <div id="idDivConfig" class="col s9 div-content slide_in" style="display:none">
+                    <blockquote class="blockquote-custom">
+                        Abaixo você pode acompanhar sua informações em tempo real de suas operações.
+                    </blockquote>
+                    <div class="row">
+                        <div class="col s12">
+                            <div class="card-panel grey lighten-5 z-depth-1" style="height: 240px;">
+                                <div>
+                                    <blockquote class="blockquote-header col s12">
+                                        Selecione abaixo se deseja operar em sua conta <b>Real</b> ou de <b>Treinamento</b>
+                                    </blockquote>
+                                    <div class="blockquote-body col s12">
+                                        <div action="#">
+                                            <label class="col s3">
+                                                <input class="with-gap" name="groupTipoConta" type="radio" checked id="radioReal"/>
+                                                <span>REAL</span>
+                                            </label>
+                                            <label class="col s3">
+                                                <input class="with-gap" name="groupTipoConta" type="radio"  id="radioTreinamento"/>
+                                                <span>TREINAMENTO</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <blockquote class="blockquote-header col s12">
+                                        Selecione abaixo em qual <b>opção</b> você deseja operar
+                                    </blockquote>
+                                    <div class="blockquote-body col s12">
+                                        <div action="#">
+                                            <label class="label-custom col s3">
+                                                <input class="with-gap" name="groupTipoOpcoes" type="radio"  id="radioBinarias"/>
+                                                <span >BINÁRIAS</span>
+                                            </label>
+                                            <label class="label-custom col s3">
+                                                <input class="with-gap" name="groupTipoOpcoes" type="radio"  id="radioDigitais"/>
+                                                <span>DIGITAIS</span>
+                                            </label>
+                                            <label class="label-custom col s4">
+                                                <input class="with-gap" name="groupTipoOpcoes" type="radio"  id="radioDigitais"/>
+                                                <span>AMBAS</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <blockquote class="blockquote-header col s12">
+                                        Selecione abaixo o tempo de expiração
+                                    </blockquote>
+                                    <div class="blockquote-body col s12">
+                                        <div action="#">
+                                            <label class="label-custom col s3">
+                                                <input class="with-gap" name="groupTempExpiracao" type="radio"  id="radioMinutoUm"/>
+                                                <span >1 MINUTO</span>
+                                            </label>
+                                            <label class="label-custom col s3">
+                                                <input class="with-gap" name="groupTempExpiracao" type="radio"  id="radioMinutoCinco"/>
+                                                <span>5 MINUTOS</span>
+                                            </label>
+                                            <label class="label-custom col s3">
+                                                <input class="with-gap" name="groupTempExpiracao" type="radio"  id="radioMinutoTodos"/>
+                                                <span>AMBOS</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- CÓPIA -->
+                <div id="idDivCopiar" class="col s9 div-content slide_in" style="display:none">
                     <div class="row">
                         <div class="col s12 valign-wrapper">
-                            <button id="idBtnTestePy" class="btn waves-effect waves-light btn-custom" type="submit" name="btnTestePy" onclick="onStartCopy()">INICIAR COPY
+                            <button id="idBtnTestePy" class="btn waves-effect waves-light btn-custom" type="submit" name="btnTestePy" onclick="onStartCopy()">INICIAR
                                 <i class="material-icons right">play_arrow</i>
                             </button>
-                            <button id="idBtnTestePy" class="btn waves-effect waves-light btn-custom-cancel" type="submit" name="btnTestePy" onclick="onEndCopy()">PARAR COPY
+                            <button id="idBtnTestePy" class="btn waves-effect waves-light btn-custom-cancel" type="submit" name="btnTestePy" onclick="onEndCopy()">PARAR
                                 <i class="material-icons right">stop</i>
                             </button>
                         </div>
@@ -141,22 +277,12 @@
                     </blockquote>
                     <div class="row">
                         <div class="col s12">
-                            <div id="idDivAtividadesLog" class="card-panel grey lighten-5 z-depth-1 div-copy-info">
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Arcu dui vivamus arcu felis bibendum ut tristique et. At ultrices mi tempus imperdiet. Dictum sit amet justo donec enim. A cras semper auctor neque vitae tempus quam. Nunc mattis enim ut tellus elementum. Egestas erat imperdiet sed euismod nisi porta lorem mollis aliquam. Massa sapien faucibus et molestie ac feugiat. Auctor urna nunc id cursus metus aliquam eleifend mi in. Purus in massa tempor nec feugiat nisl. Egestas diam in arcu cursus euismod quis. Aenean pharetra magna ac placerat vestibulum lectus mauris. Facilisis volutpat est velit egestas dui id ornare arcu. Justo laoreet sit amet cursus sit amet dictum sit. Purus in massa tempor nec feugiat nisl pretium. Orci dapibus ultrices in iaculis nunc sed. Elementum integer enim neque volutpat ac tincidunt vitae. Amet massa vitae tortor condimentum lacinia.
-
-                                Est velit egestas dui id ornare arcu odio ut. Molestie nunc non blandit massa. Mattis enim ut tellus elementum sagittis vitae et leo. Convallis tellus id interdum velit laoreet. Et netus et malesuada fames ac turpis egestas. Mi tempus imperdiet nulla malesuada pellentesque elit eget. Nisl nunc mi ipsum faucibus vitae aliquet nec. Massa ultricies mi quis hendrerit dolor magna. Ornare massa eget egestas purus viverra accumsan in. Non arcu risus quis varius quam. Morbi non arcu risus quis varius quam quisque id diam. Diam quis enim lobortis scelerisque fermentum dui.
-
-                                Porta non pulvinar neque laoreet suspendisse interdum consectetur. Cras adipiscing enim eu turpis egestas. Pellentesque habitant morbi tristique senectus et netus et malesuada fames. Ac felis donec et odio pellentesque diam. Cras pulvinar mattis nunc sed blandit libero volutpat sed. Viverra nam libero justo laoreet sit amet. Malesuada bibendum arcu vitae elementum curabitur vitae. A diam maecenas sed enim ut sem viverra. Nulla facilisi nullam vehicula ipsum a. Quisque egestas diam in arcu cursus euismod. Quis viverra nibh cras pulvinar mattis nunc sed blandit. A pellentesque sit amet porttitor eget dolor morbi non. Felis bibendum ut tristique et egestas. Sit amet justo donec enim diam vulputate. Turpis nunc eget lorem dolor sed viverra ipsum nunc aliquet.
-
-                                Volutpat ac tincidunt vitae semper quis lectus nulla. Porttitor leo a diam sollicitudin. Sed faucibus turpis in eu mi bibendum. Pellentesque massa placerat duis ultricies lacus sed turpis. Egestas erat imperdiet sed euismod nisi porta lorem mollis. Sagittis orci a scelerisque purus semper eget duis. Donec pretium vulputate sapien nec sagittis aliquam. Vestibulum rhoncus est pellentesque elit ullamcorper dignissim cras tincidunt lobortis. Orci phasellus egestas tellus rutrum. Blandit volutpat maecenas volutpat blandit aliquam etiam erat velit. Neque volutpat ac tincidunt vitae semper quis lectus nulla at. Nunc eget lorem dolor sed. Sed libero enim sed faucibus turpis in.
-
-                                Diam volutpat commodo sed egestas egestas fringilla phasellus. Mattis rhoncus urna neque viverra justo nec ultrices dui sapien. Neque volutpat ac tincidunt vitae semper. Lobortis scelerisque fermentum dui faucibus in ornare. Et odio pellentesque diam volutpat commodo sed egestas egestas fringilla. Id diam vel quam elementum pulvinar etiam. Enim neque volutpat ac tincidunt vitae. Arcu ac tortor dignissim convallis aenean. Convallis aenean et tortor at risus viverra adipiscing. Fermentum et sollicitudin ac orci. Amet luctus venenatis lectus magna. Egestas fringilla phasellus faucibus scelerisque eleifend. Morbi quis commodo odio aenean sed adipiscing. Enim nulla aliquet porttitor lacus luctus accumsan tortor posuere ac. Lectus quam id leo in. Congue eu consequat ac felis donec. In hac habitasse platea dictumst vestibulum rhoncus est pellentesque. Pretium fusce id velit ut tortor pretium. Porta non pulvinar neque laoreet suspendisse interdum consectetur libero id.
-                            </div>
+                            <div id="idDivAtividadesLog" class="card-panel grey lighten-5 z-depth-1 div-copy-info"></div>
                         </div>
                     </div>            
                 </div>
                 <!-- HISTÓRICO DE OPERAÇÕES -->
-                <div id="idDivHistorico" class="col s9 div-body slide_in" style="display:none">
+                <div id="idDivHistorico" class="col s9 div-content slide_in" style="display:none">
                     <!-- <blockquote class="blockquote-custom">
                         Abaixo você pode consultar o seu histórico de operações
                     </blockquote> -->
@@ -164,7 +290,7 @@
                         <div class="col s12">
                             <table class="striped">
                                 <thead>
-                                <tr>
+                                <tr class="tr-header-custom">
                                     <th>ID</th>
                                     <th>NOME</th>
                                     <th>RESULT.</th>

@@ -2,8 +2,16 @@ function showLoginDiv(){
     document.getElementById("idDivLogin").style="display:block";
 }
 
+function showSelecionarTraderDiv(){
+    document.getElementById("idDivSelecionarTrader").style="display:block";
+}
+
 function showGerenciamentoDiv(){
     document.getElementById("idDivGerenciamento").style="display:block";
+}
+
+function showConfigDiv(){
+    document.getElementById("idDivConfig").style="display:block";
 }
 
 function showCopiarDiv(){
@@ -20,7 +28,9 @@ function hideCopiarDiv(){
 
 function hideAllDivs(){
     document.getElementById("idDivLogin").style="display:none";
+    document.getElementById("idDivSelecionarTrader").style="display:none";
     document.getElementById("idDivGerenciamento").style="display:none";
+    document.getElementById("idDivConfig").style="display:none";
     document.getElementById("idDivCopiar").style="display:none";
     document.getElementById("idDivHistorico").style="display:none";
 }

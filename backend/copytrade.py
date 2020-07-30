@@ -245,7 +245,7 @@ else:
     
     while True:  
         threading.Thread(target=getLiveDealBinary).start()
-        threading.Thread(target=getLiveDealBinaryEUR).start()
+        #threading.Thread(target=getLiveDealBinaryEUR).start()
 
 
 

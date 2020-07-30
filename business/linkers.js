@@ -33,7 +33,6 @@ async function callCopy(){
     
     login.on('message', function(message){
         var userData = JSON.parse(message);
-        setUserData(userData);
         if (userData.message == 'error'){
             M.toast({html: 'Autenticação inválida! Por favor, verifique os dados informados na área "LOGIN CORRETORA".', classes: 'toast-custom-error valign-wrapper'}) 
         }

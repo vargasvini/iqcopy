@@ -66,10 +66,16 @@ function changeBodyItem(_item){
         case "LOGIN CORRETORA":
             showLoginDiv();
             break;
+        case "SELECIONAR TRADER":
+            showSelecionarTraderDiv();
+            break;
         case "GERENCIAMENTO":
             showGerenciamentoDiv();
             break;
-        case "COPIAR TRADERS":
+        case "CONFIGURAÇÕES":
+            showConfigDiv();
+            break;
+        case "INICIAR CÓPIA":
             showCopiarDiv();
             break;
         case "HISTÓRICO":

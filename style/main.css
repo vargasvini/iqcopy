@@ -44,10 +44,6 @@ nav .brand-logo {
     color: white;
 }
 
-.div-body{
-    margin-top:20px;
-}
-
 .menu-logo{
     margin-top: 10px;
     background-image: url('meutrader.png');
@@ -103,7 +99,7 @@ input:not([type]):focus:not([readonly])+label, input[type=text]:not(.browser-def
     place-content: center;
 }
 
-.div-copiar{
+.div-content{
     margin-top:20px;
 }
 
@@ -115,7 +111,7 @@ input:not([type]):focus:not([readonly])+label, input[type=text]:not(.browser-def
 }
 
 .div-copy-info{
-    height: 387px;
+    height: 528px;
     overflow: overlay;
     color:black;
 }
@@ -194,12 +190,26 @@ input:not([type]):focus:not([readonly])+label, input[type=text]:not(.browser-def
     font-weight: bold;
     margin-bottom:0px;
 }
+/*UTILIZADO APENAS PARA O LOG DAS OPERAÇÕES*/
 .blockquote-custom-body {
     margin: 5px 0;
     padding-left: 1.5rem;
     border-left: 5px solid #dcdcdc;
     border-bottom: inset;
     margin-top:0px;
+}
+
+.blockquote-header {
+    margin: 5px 0;
+    padding-left: 1.5rem;
+    border-left: 5px solid #101326;
+    margin-top:0px;
+    color: #101326
+}
+
+.blockquote-body {
+    margin-left: 22px;
+    margin-bottom: 20px;
 }
 
 .slide_in{
@@ -215,4 +225,67 @@ input:not([type]):focus:not([readonly])+label, input[type=text]:not(.browser-def
     50% {margin-top:100px;} 
     60% {margin-top:50px;} 
     70% {margin-top:10px;}     
+}
+
+.tr-header-custom{
+    color: #69F3A8
+}
+
+.switch label .lever {
+    content: "";
+    display: inline-block;
+    position: relative;
+    width: 36px;
+    height: 14px;
+    background-color: rgba(0,0,0,0.38);
+    border-radius: 15px;
+    margin-right: 10px;
+    -webkit-transition: background 0.3s ease;
+    transition: background 0.3s ease;
+    vertical-align: middle;
+    margin: 0 5px 0px 4px;
+}
+
+.label-custom{
+    font-size: 1rem;
+}
+
+[type="radio"]:not(:checked)+span, [type="radio"]:checked+span {
+    position: relative;
+    padding-left: 28px;
+    cursor: pointer;
+    display: inline-block;
+    height: 25px;
+    line-height: 25px;
+    font-size: 1rem;
+    -webkit-transition: .28s ease;
+    transition: .28s ease;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+.switch label input[type=checkbox]:checked+.lever {
+    background-color: #69F3A8;
+}
+
+.switch label input[type=checkbox]:checked+.lever:after {
+    background-color: #46d387;
+}
+
+[type="checkbox"].filled-in:checked+span:not(.lever):after {
+    top: 0;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #69F3A8;
+    background-color: #69F3A8;
+    z-index: 0;
+}
+
+.menu-item-icon{
+    width: 20%;
+}
+
+.input-card{
+    color: 101326;
 }
