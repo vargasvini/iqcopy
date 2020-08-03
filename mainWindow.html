@@ -12,14 +12,13 @@
         <script type="text/javascript" src="./business/linkers.js" defer></script>
         <script type="text/javascript" src="./utils/moment.js" defer></script>
         <script type="text/javascript" src="./utils/pagination.js" defer></script>
-        <title>IQ Copy Bot</title>      
+        <title>Meu Trader</title>      
     </head>
     <body class="body-custom">
         <div class="row">
             <div class="col s3 menu" id="idDivMenu"  onclick="event.stopPropagation()">
-                <div class="row" id="rowLogo">
+                <div class="row" id="rowLogo" style="cursor: unset;">
                     <div class="col s12 valign-wrapper menu-item menu-logo">
-                        
                     </div>
                 </div>
                 <div class="row" id="rowLogin">
@@ -90,7 +89,6 @@
                     </div>
                 </div>
             </div>
-           
             <nav class="nav-custom">
                 <div class="nav-wraper">
                     <a href="" class="brand-logo" id="idMenuTitle">LOGIN CORRETORA</a>
@@ -119,7 +117,7 @@
                     </blockquote>
                     <div class="row">
                         <div class="col s12">
-                            <div class="card-panel grey lighten-5 z-depth-1" style="height: 215px;">
+                            <div class="card-panel grey lighten-5 z-depth-1" style="height: 200px;">
                                 <div>
                                     <blockquote class="blockquote-header col s12">
                                         Selecione abaixo a maneira que deseja seguir os traders</b>
@@ -149,42 +147,58 @@
                                         </blockquote>
                                         <div class="blockquote-body col s4">
                                             <div class="input-field col s12">
-                                                <input id="idRankTop" class="input-value input-card" type="number" min="1" class="validate">
+                                                <input id="idRankTop" class="input-value input-card" type="number" min="1" >
                                                 <label for="idRankTop" class="input-label">DO TOP <b>1</b> AO:</label>
                                             </div> 
                                         </div>
                                         <div class="blockquote-body col s8">
                                             <div class="input-field col s12">
-                                                <input id="idRankTop" class="input-value input-card" type="number" min="1" class="validate">
+                                                <input id="idRankTop" class="input-value input-card" type="number" min="1" >
                                                 <label for="idRankTop" class="input-label">SEGUIR OS <b>ID(s)</b></label>
                                             </div> 
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <blockquote class="blockquote-custom">
-                                Abaixo você pode pesquisar qualquer trader pelo nome.
-                            </blockquote>
+
                             <div class="row">
+       
                                 <div class="col s12">
-                                    <div class="card-panel grey lighten-5 z-depth-1" style="padding: 10px; height: 316px;">
+                                    <blockquote class="blockquote-custom">
+                                        Abaixo você pode pesquisar qualquer trader pelo nome.
+                                    </blockquote>
+                                    <div class="card-panel grey lighten-5 z-depth-1 header-search-trader" >
                                         <div>
-                                            <div class="blockquote-body col s12">
+                                            <div class="blockquote-body col s12" style="margin-bottom: 0px;">
                                                 <div class="input-field col s4">
-                                                    <input id="idTraderNome" class="input-value input-card" type="text" class="validate">
+                                                    <input id="idTraderNome" class="input-value input-card" type="text" >
                                                     <label for="idTraderNome" class="input-label"><b>Nome</b> do trader</label>
                                                 </div> 
                                                 <div class="input-field col s4">
-                                                    <input id="idTraderSobrenome" class="input-value input-card" type="text" class="validate">
+                                                    <input id="idTraderSobrenome" class="input-value input-card" type="text" >
                                                     <label for="idTraderSobrenome" class="input-label"><b>Sobrenome</b> do trader</label>
                                                 </div> 
                                                 <div class="input-field col s4" style="text-align: right;">
-                                                    <button id="idBtnTestePy" class="btn waves-effect waves-light btn-custom" type="submit"  name="btnTestePy" onclick="onEndCopy()">PESQUISAR
+                                                    <button id="idBtnPesquisarTrader" class="btn waves-effect waves-light btn-custom" type="submit"  name="btnPesquisarTrader" onclick="onStartFinder()">PESQUISAR
                                                         <i class="material-icons right">search</i>
                                                     </button>
                                                 </div>
                                             </div>
                                         </div>
+                                    </div>
+                                    <div id="idDivPesquisaLog" class="card-panel grey lighten-5 body-search-trader">
+                                        <table class="striped">
+                                            <thead>
+                                            <tr class="tr-header-custom">
+                                                <th>RANK</th>
+                                                <th>ID</th>
+                                                <th>NOME</th>
+                                                <th>FATURAMENTO</th>
+                                                <th>PAÍS</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody id="idFindTraderTBody"></tbody>
+                                        </table>
                                     </div>
                                 </div>
                             </div>

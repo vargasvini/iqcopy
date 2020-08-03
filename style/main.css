@@ -31,6 +31,8 @@ nav .brand-logo {
 }
 .nav-custom{
     background-color: #101326;
+    pointer-events: none;
+    cursor: unset;
 }
 
 .body-custom{
@@ -49,6 +51,7 @@ nav .brand-logo {
     background-image: url('meutrader.png');
     background-size: cover;
     height: 100px;
+    pointer-events: none;
 }
 
 input:not([type]):focus:not([readonly]), input[type=text]:not(.browser-default):focus:not([readonly]), input[type=password]:not(.browser-default):focus:not([readonly]), input[type=email]:not(.browser-default):focus:not([readonly]), input[type=url]:not(.browser-default):focus:not([readonly]), input[type=time]:not(.browser-default):focus:not([readonly]), input[type=date]:not(.browser-default):focus:not([readonly]), input[type=datetime]:not(.browser-default):focus:not([readonly]), input[type=datetime-local]:not(.browser-default):focus:not([readonly]), input[type=tel]:not(.browser-default):focus:not([readonly]), input[type=number]:not(.browser-default):focus:not([readonly]), input[type=search]:not(.browser-default):focus:not([readonly]), textarea.materialize-textarea:focus:not([readonly]) {
@@ -288,4 +291,28 @@ input:not([type]):focus:not([readonly])+label, input[type=text]:not(.browser-def
 
 .input-card{
     color: 101326;
+}
+.header-search-trader{
+    padding: 10px; 
+    height: 85px; 
+    margin-bottom: 5px;
+}
+.body-search-trader{
+    padding-top: 0px;
+    margin-top:0px;
+    height: 230px;
+    overflow: overlay;
+}
+
+.body-search-trader .tr-header-custom{
+    color: #101326;
+}
+
+.body-search-trader table.striped>tbody>tr:nth-child(odd) {
+    color: #9e9e9e;
+    background-color: rgba(223,221,221,0.5);
+} 
+.body-search-trader table.striped>tbody>tr>td {
+    color: #9e9e9e;
+    border-radius: 0;
 }

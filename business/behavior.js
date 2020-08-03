@@ -4,6 +4,7 @@ function initBehavior(){
     getInputFieldAndSetEvent();
     verifyStartInputsBehavior();
     getHistoryData();
+    clearLogsContent();
 }
 
 
@@ -37,7 +38,8 @@ function onInputFieldClick(){
     var elements = this.getElementsByClassName("input-label active");
     if(elements[0] != undefined && input.value == '')
         elements[0].classList.remove("active");
-    this.getElementsByClassName("input-label")[0].classList.add("active");
+    if(this.getElementsByClassName("input-label")[0] != undefined)
+        this.getElementsByClassName("input-label")[0].classList.add("active");
 }
 
 function onInputLostFocus(event){

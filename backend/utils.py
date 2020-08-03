@@ -2,9 +2,6 @@ from iqoptionapi.expiration import get_expiration_time
 from datetime import datetime, date, timedelta
 import logging, json, time, csv, sys
 
-logger = logging.getLogger()
-logging.getLogger().setLevel(logging.INFO)
-
 
 ###Funções usadas internamentes para compras de ordems (processar_ordem)
 def trade_binaria(_iqOption, valor, expiracao, ativo, direcao):
@@ -152,8 +149,17 @@ class Utils:
     def getLiveDealDigital(paridade):
         return True
 
-#####==============================================================#
+    def setup_logger(name, log_file, level=logging.INFO):
+        handler = logging.FileHandler(log_file, 'w', 'utf-8')        
+        handler.terminator = ""
+        logger = logging.getLogger(name)
+        logger.setLevel(level)
+        logger.addHandler(handler)
+        
 
+        return logger, handler
+
+#####==============================================================#
 
 # if __name__ == '__main__':
 #     trade_binaria()

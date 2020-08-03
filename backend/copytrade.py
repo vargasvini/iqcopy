@@ -5,20 +5,17 @@ from api import start
 from utils import Utils
 from datetime import datetime, date, timedelta
 from dateutil import tz, rrule
-from utils import Utils
 import threading
 from iqoptionapi.expiration import get_expiration_time
 import asyncio
 
-logger = logging.getLogger()
-handler = logging.FileHandler('atividades.log', 'w', 'utf-8')
-logger.addHandler(handler)
+logging, handler = Utils.setup_logger('copylogger', 'atividades.log')
+
 api = start()
 iqoption = api.getApi()
 check, reason = iqoption.connect()
 
 real = sys.argv[1]
-
 
 def buyBinary(paridade, direction, created, expiration):
     status, id = iqoption.buy(2, paridade, str(direction).lower(), Utils.getDifferenceInMinutes(int(str(created)[0:10]), int(str(expiration)[0:10])))
@@ -59,8 +56,6 @@ def subscribe(paridade):
             ok = True
             old = trades[0]['user_id']
             logActivities(True, old)
-
-
 
 
 if check == False:
