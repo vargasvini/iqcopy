@@ -3,9 +3,10 @@ var path = require("path");
 const {promisify} = require('util');
 
 
-var idIntervalFinder = "";
-var idIntervalFinderFile = "";
 var pyshell;
+var idIntervalFinderBackend = "";
+var idIntervalFinderFile = "";
+var progress = 1;
 
 
 async function onStartCopy(){
@@ -54,7 +55,6 @@ async function readActivitiesLog(){
     data = fs.readFileSync('atividades.log', {encoding:'utf8', flag:'r'});
     if(auxData != data){
         auxData = data;
-        //console.log(auxData)
         document.getElementById("idDivAtividadesLog").innerHTML = auxData;
     }
     
@@ -62,17 +62,54 @@ async function readActivitiesLog(){
 
 function clearLogsContent(){
     const fs = require('fs')
-    fs.writeFile('findtrader.log', '', function(){console.log('done')})
+    fs.writeFile('findtrader.log', '', function(){})
+}
+
+function startProgressBar(){
+    progress = 0;
+    document.getElementById("idProgressBar").style.width = "0%"
+}
+
+
+async function checkFinderTimeRemaining (dt){
+    progress +=0.166667
+
+    if(progress >= 100){
+        progress = 100;
+    }
+
+    document.getElementById("idProgressBar").style.width = progress+"%"
+    if(Date.now() >= dt){
+        if (pyshell != undefined){
+            pyshell.childProcess.kill();
+        }
+        clearInterval(idIntervalFinderBackend)
+        clearInterval(idIntervalFinderFile)
+        idIntervalFinderBackend = "";
+        idIntervalFinderFile = "";
+    }
 }
 
 async function onStartFinder(){
-    clearLogsContent();
-    setInterval(getFindTraderData, 1000)
+    const dt = new Date(Date.now())
+    dt.setMinutes(dt.getMinutes() + 10);
 
     if (pyshell != undefined){
         pyshell.childProcess.kill();
     }
-    
+    if (idIntervalFinderBackend != ""){
+        clearInterval(idIntervalFinderBackend)
+    }
+    if (idIntervalFinderFile != ""){
+        clearInterval(idIntervalFinderFile)
+    }
+
+    clearLogsContent();
+    startProgressBar();
+
+    idIntervalFinderBackend = setInterval(checkFinderTimeRemaining, 1000, dt)
+    idIntervalFinderFile = setInterval(getFindTraderData, 1000)
+
     document.getElementById('idFindTraderTBody').innerHTML ="";
     var nome = document.getElementById("idTraderNome").value;
     var sobrenome = document.getElementById("idTraderSobrenome").value;

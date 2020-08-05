@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-  
 import sys
-import json, configparser, logging, time
+import json, logging
 from api import start
 from utils import Utils
-from datetime import datetime, date, timedelta
-import os
 
 logging, handler = Utils.setup_logger('finderlogger', 'findtrader.log')
 
@@ -36,8 +34,8 @@ if check == False:
     python2json = json.dumps(userData)
     print(python2json)
 else:
-    now = datetime.now() #Hora atual rsrs
-    end = now + timedelta(seconds=20) #Por quantos minutos a pesquisa ficará rodando
+    # now = datetime.now()
+    # end = now + timedelta(minutes=1) #Por quantos minutos a pesquisa ficará rodando
     #while now < end:
     last = 1
     for i in range(1, 1000):
@@ -53,6 +51,5 @@ else:
 
             if str(nome).lower().strip() in nome_ranking.lower().strip() or str(nome).lower() in result_trader['user_name'].lower():
                 logFinder(str(colocacao), str(data['result']['positional'][colocacao]['user_id']), str(result_trader['user_name']), str(round(data['result']['positional'][colocacao]['score'], 2)), str(data['result']['positional'][colocacao]['flag']), str((result_trader['img_url'] if result_trader['img_url'] != '' else 'Imagem nao disponivel')))
-
         last = quantidade
     sys.exit(0)

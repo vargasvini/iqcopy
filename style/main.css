@@ -316,3 +316,11 @@ input:not([type]):focus:not([readonly])+label, input[type=text]:not(.browser-def
     color: #9e9e9e;
     border-radius: 0;
 }
+
+.progress .determinate {
+    background-color: #69F3A8;
+}
+
+.progress{
+    background-color: #8f9090;
+}
