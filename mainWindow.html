@@ -164,7 +164,7 @@
                             <div class="row">
                                 <div class="col s12">
                                     <blockquote class="blockquote-custom"  style="margin-top: 0px;">
-                                        Abaixo você pode pesquisar qualquer trader pelo nome.
+                                        Abaixo você pode pesquisar qualquer trader pelo nome, país ou posição no rank.
                                     </blockquote>
                                     <div class="card-panel grey lighten-5 z-depth-1 header-search-trader" >
                                         <div>
@@ -173,10 +173,17 @@
                                                     <input id="idTraderNome" class="input-value input-card" type="text" >
                                                     <label for="idTraderNome" class="input-label"><b>Nome</b> do trader</label>
                                                 </div> 
-                                                <div class="input-field col s4">
-                                                    <input id="idTraderSobrenome" class="input-value input-card" type="text" >
-                                                    <label for="idTraderSobrenome" class="input-label"><b>Sobrenome</b> do trader</label>
-                                                </div> 
+                                                <div class="input-field col s2" >
+                                                    <select class="icons" id="idCountrySelect">                                                    
+                                                    </select>
+                                                    <label>Selecione um <b>País</b></label>
+                                                </div>
+                                                <div class="blockquote-body col s2" style="margin-bottom: 0px;">
+                                                    <div class="input-field col s12">
+                                                        <input id="idStartTop" class="input-value input-card" type="number" min="1" value="1">
+                                                        <label for="idStartTop" class="input-label">A partir do:</label>
+                                                    </div> 
+                                                </div>
                                                 <div class="input-field col s4" style="text-align: right;">
                                                     <button id="idBtnPesquisarTrader" class="btn waves-effect waves-light btn-custom" type="submit"  name="btnPesquisarTrader" onclick="onStartFinder()">PESQUISAR
                                                         <i class="material-icons right">search</i>

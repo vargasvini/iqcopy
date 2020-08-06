@@ -78,7 +78,6 @@ async function checkFinderTimeRemaining (dt){
         progress = 100;
     }
 
-    document.getElementById("idProgressBar").style.width = progress+"%"
     if(Date.now() >= dt){
         if (pyshell != undefined){
             pyshell.childProcess.kill();
@@ -87,7 +86,10 @@ async function checkFinderTimeRemaining (dt){
         clearInterval(idIntervalFinderFile)
         idIntervalFinderBackend = "";
         idIntervalFinderFile = "";
+        progress = 100
     }
+
+    document.getElementById("idProgressBar").style.width = progress+"%"
 }
 
 async function onStartFinder(){
@@ -112,11 +114,12 @@ async function onStartFinder(){
 
     document.getElementById('idFindTraderTBody').innerHTML ="";
     var nome = document.getElementById("idTraderNome").value;
-    var sobrenome = document.getElementById("idTraderSobrenome").value;
-    
+    var pais = document.getElementById('idCountrySelect').value;
+    var start = document.getElementById('idStartTop').value;
+
     var options = {
         scriptPath: path.join(__dirname, './backend/'),
-        args: [nome, sobrenome]
+        args: [nome, pais, start]
     }
 
     const callTraderFinder = promisify(this.runPyShell);
@@ -162,7 +165,7 @@ async function appendFindTraderData(data) {
         `
             if(item.img == 'Imagem nao disponivel'){
                 html += `
-                <td><img src="./style/user.png" alt="" class="circle" style="height: 50px;"></td>
+                <td><img src="./images/user.png" alt="" class="circle" style="height: 50px;"></td>
                 </tr>
                 `
             }else{

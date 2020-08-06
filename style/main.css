@@ -48,7 +48,7 @@ nav .brand-logo {
 
 .menu-logo{
     margin-top: 10px;
-    background-image: url('meutrader.png');
+    background-image: url('../images/meutrader.png');
     background-size: cover;
     height: 100px;
     pointer-events: none;
@@ -323,4 +323,18 @@ input:not([type]):focus:not([readonly])+label, input[type=text]:not(.browser-def
 
 .progress{
     background-color: #8f9090;
+}
+
+.select-dropdown li img {
+    height: 30px;
+    width: 30px;
+    margin: 5px 5px;
+    float: right;
+    border-radius: 50%;
+}
+.dropdown-content li>a, .dropdown-content li>span {
+    color: #26a69a;
+    display: block;
+    line-height: 12px;
+    padding: 14px 10px;
 }
