@@ -10,6 +10,7 @@ function initBehavior(){
     applyMasks();
     applyDefaultValueOnBlur();
     applyDefaultValues();
+    setOptionsClick();
 }
 
 function setSelectType(){
@@ -325,6 +326,15 @@ function applyMasks(){
 }
 
 function applyDefaultValueOnBlur(){
+    $('#idFollowRank').on("blur", function(){
+        if(document.getElementById('radioFollowRank').checked || document.getElementById('radioFollowAmbos').checked){
+            if($('#idFollowRank').val()==0){
+                $('#idFollowRank').val(1)
+                $('#idFollowRankLabel').addClass("active")   
+            }
+        }
+    });
+
     $('#idValorEntrada').on("blur", function(){
         if($('#idValorEntrada').maskMoney('unmasked')[0] < 2.00){
             $('#idValorEntrada').val("R$ 2,00")
@@ -360,6 +370,12 @@ function applyDefaultValueOnBlur(){
 }
 
 function applyDefaultValues(){
+    if(document.getElementById('radioFollowRank').checked || document.getElementById('radioFollowAmbos').checked){
+        if($('#idFollowRank').val()==0){
+            $('#idFollowRank').val(1)
+            $('#idFollowRankLabel').addClass("active")   
+        }
+    }
     if($('#idValorEntrada').maskMoney('unmasked')[0] < 2.00){
         $('#idValorEntrada').val("R$ 2,00")
         $('#idValorEntradaLabel').addClass("active") 
@@ -385,6 +401,53 @@ function applyDefaultValues(){
             $('#idQtdMartingale').val(1)
             $('#idQtdMartingaleLabel').addClass("active")   
         }
+    }
+}
+
+function setOptionsClick(){
+    var radioFollowRank = document.querySelector('#radioFollowRank');
+    var radioFollowId = document.querySelector('#radioFollowId');
+    var radioFollowAmbos = document.querySelector('#radioFollowAmbos');
+    var radioMartingale = document.querySelector('#radioMartingale');
+    var radioMaofixa = document.querySelector('#radioMaofixa');
+
+    radioFollowRank.addEventListener('click', function (event) {
+        setInputsValuesAfterClick()
+    });
+    radioFollowId.addEventListener('click', function (event) {
+        setInputsValuesAfterClick()
+    });
+    radioFollowAmbos.addEventListener('click', function (event) {
+        setInputsValuesAfterClick()
+    });
+    radioMartingale.addEventListener('click', function (event) {
+        setInputsValuesAfterClick()
+    });
+    radioMaofixa.addEventListener('click', function (event) {
+        setInputsValuesAfterClick()
+    });
+}
+
+function setInputsValuesAfterClick(){
+    if(document.getElementById('radioFollowRank').checked || document.getElementById('radioFollowAmbos').checked){
+        if($('#idFollowRank').val()==0){
+            $('#idFollowRank').val(1)
+            $('#idFollowRankLabel').addClass("active")   
+        }
+    }
+    if(document.getElementById('radioFollowId').checked){
+        $('#idFollowRank').val("")
+        $('#idFollowRankLabel').removeClass("active")   
+    }
+    if(document.getElementById('radioMartingale').checked){
+        if($('#idQtdMartingale').val()==0){
+            $('#idQtdMartingale').val(1)
+            $('#idQtdMartingaleLabel').addClass("active")   
+        }
+    }
+    if(document.getElementById('radioMaofixa').checked){
+        $('#idQtdMartingale').val(0)
+        $('#idQtdMartingaleLabel').addClass("active")   
     }
 }
 

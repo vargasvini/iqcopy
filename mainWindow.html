@@ -126,15 +126,15 @@
                                     <div class="blockquote-body col s12">
                                         <div action="#">
                                             <label class="label-custom col s3">
-                                                <input class="with-gap" name="groupTipoOpcoes" type="radio"  id="radioBinarias"/>
+                                                <input class="with-gap" name="groupFollowOpcoes" type="radio"  id="radioFollowRank" checked/>
                                                 <span >RANK</span>
                                             </label>
                                             <label class="label-custom col s3">
-                                                <input class="with-gap" name="groupTipoOpcoes" type="radio"  id="radioDigitais"/>
+                                                <input class="with-gap" name="groupFollowOpcoes" type="radio"  id="radioFollowId"/>
                                                 <span>ID</span>
                                             </label>
                                             <label class="label-custom col s4">
-                                                <input class="with-gap" name="groupTipoOpcoes" type="radio"  id="radioDigitais"/>
+                                                <input class="with-gap" name="groupFollowOpcoes" type="radio"  id="radioFollowAmbos"/>
                                                 <span>AMBOS</span>
                                             </label>
                                         </div>
@@ -148,14 +148,14 @@
                                         </blockquote>
                                         <div class="blockquote-body col s4" style="margin-bottom: 0px;">
                                             <div class="input-field col s12">
-                                                <input id="idRankTop" class="input-value input-card" type="number" min="1" onkeydown="if(event.key==='.' || event.key===','){event.preventDefault();}"  oninput="event.target.value = event.target.value.replace(/[^0-9]*/g,'');">
-                                                <label for="idRankTop" class="input-label">DO TOP <b>1</b> AO</label>
+                                                <input id="idFollowRank" class="input-value input-card" type="number" min="1" onkeydown="if(event.key==='.' || event.key===','){event.preventDefault();}"  oninput="event.target.value = event.target.value.replace(/[^0-9]*/g,'');">
+                                                <label id="idFollowRankLabel" for="idFollowRank" class="input-label">DO TOP <b>1</b> AO</label>
                                             </div> 
                                         </div>
                                         <div class="blockquote-body col s8" style="margin-bottom: 0px;">
                                             <div class="input-field col s12">
-                                                <input id="idRankTop" class="input-value input-card" type="number" min="1" >
-                                                <label for="idRankTop" class="input-label">SEGUIR OS <b>ID(s)</b></label>
+                                                <input id="idFollowIds" class="input-value input-card" type="number" min="1" >
+                                                <label id="idFollowIdsLabel" for="idFollowIds" class="input-label">SEGUIR OS <b>ID(s)</b></label>
                                             </div> 
                                         </div>
                                     </div>
@@ -231,7 +231,7 @@
                                     <div class="blockquote-body col s12">
                                         <div action="#">
                                             <label class="col s3">
-                                                <input class="with-gap" name="groupTipoEntrada" type="radio" checked id="radioMaofixa"/>
+                                                <input class="with-gap" name="groupTipoEntrada" type="radio" id="radioMaofixa" checked/>
                                                 <span>MÃO FIXA</span>
                                             </label>
                                             <label class="col s3">
@@ -299,7 +299,7 @@
                                     <div class="blockquote-body col s12">
                                         <div action="#">
                                             <label class="col s3">
-                                                <input class="with-gap" name="groupTipoConta" type="radio" checked id="radioReal"/>
+                                                <input class="with-gap" name="groupTipoConta" type="radio" id="radioReal" checked/>
                                                 <span>REAL</span>
                                             </label>
                                             <label class="col s3">
@@ -314,12 +314,12 @@
                                     <div class="blockquote-body col s12">
                                         <div action="#">
                                             <label class="label-custom col s3">
-                                                <input class="with-gap" name="groupTipoOpcoes" type="radio"  id="radioBinarias"/>
-                                                <span >BINÁRIAS</span>
+                                                <input class="with-gap" name="groupTipoOpcoes" type="radio"  id="radioDigitais" checked/>
+                                                <span>DIGITAIS</span>
                                             </label>
                                             <label class="label-custom col s3">
-                                                <input class="with-gap" name="groupTipoOpcoes" type="radio"  id="radioDigitais"/>
-                                                <span>DIGITAIS</span>
+                                                <input class="with-gap" name="groupTipoOpcoes" type="radio"  id="radioBinarias"/>
+                                                <span >BINÁRIAS</span>
                                             </label>
                                             <label class="label-custom col s4">
                                                 <input class="with-gap" name="groupTipoOpcoes" type="radio"  id="radioDigitais"/>
@@ -333,7 +333,7 @@
                                     <div class="blockquote-body col s12">
                                         <div action="#">
                                             <label class="label-custom col s3">
-                                                <input class="with-gap" name="groupTempExpiracao" type="radio"  id="radioMinutoUm"/>
+                                                <input class="with-gap" name="groupTempExpiracao" type="radio"  id="radioMinutoUm" checked/>
                                                 <span >1 MINUTO</span>
                                             </label>
                                             <label class="label-custom col s3">
