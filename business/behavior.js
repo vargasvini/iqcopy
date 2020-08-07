@@ -7,7 +7,9 @@ function initBehavior(){
     clearLogsContent(); 
     setCountryOptions();   
     setSelectType();
-    
+    applyMasks();
+    applyDefaultValueOnBlur();
+    applyDefaultValues();
 }
 
 function setSelectType(){
@@ -316,6 +318,74 @@ function setCountryOptions(){
         opt.value = index;
         sel.appendChild(opt); 
     });
+}
+
+function applyMasks(){
+    $('.money').maskMoney({prefix:'R$ ', allowNegative: false, thousands:'.', decimal:',', affixesStay: true});
+}
+
+function applyDefaultValueOnBlur(){
+    $('#idValorEntrada').on("blur", function(){
+        if($('#idValorEntrada').maskMoney('unmasked')[0] < 2.00){
+            $('#idValorEntrada').val("R$ 2,00")
+        }
+    });
+
+    $('#idValorStopWin').on("blur", function(){
+        if($('#idValorStopWin').maskMoney('unmasked')[0] < 2.00){
+            $('#idValorStopWin').val("R$ 2,00")
+        }
+    });
+
+    $('#idValorStopLoss').on("blur", function(){
+        if($('#idValorStopLoss').maskMoney('unmasked')[0] < 2.00){
+            $('#idValorStopLoss').val("R$ 2,00")
+        }
+    });
+
+    $('#idValorMinimoTrader').on("blur", function(){
+        if($('#idValorMinimoTrader').maskMoney('unmasked')[0] < 2.00){
+            $('#idValorMinimoTrader').val("R$ 2,00")
+        }
+    });
+
+    $('#idQtdMartingale').on("blur", function(){
+        if(document.getElementById('radioMartingale').checked){
+            if($('#idQtdMartingale').val() < 1){
+                $('#idQtdMartingale').val(1)
+                $('#idQtdMartingaleLabel').addClass("active")   
+            }
+        }
+    });
+}
+
+function applyDefaultValues(){
+    if($('#idValorEntrada').maskMoney('unmasked')[0] < 2.00){
+        $('#idValorEntrada').val("R$ 2,00")
+        $('#idValorEntradaLabel').addClass("active") 
+    }
+
+    if($('#idValorStopWin').maskMoney('unmasked')[0] < 2.00){
+        $('#idValorStopWin').val("R$ 2,00")
+        $('#idValorStopWinLabel').addClass("active") 
+    }
+
+    if($('#idValorStopLoss').maskMoney('unmasked')[0] < 2.00){
+        $('#idValorStopLoss').val("R$ 2,00")
+        $('#idValorStopLossLabel').addClass("active") 
+    }
+
+    if($('#idValorMinimoTrader').maskMoney('unmasked')[0] < 2.00){
+        $('#idValorMinimoTrader').val("R$ 2,00")
+        $('#idValorMinimoTraderLabel').addClass("active") 
+    }
+
+    if(document.getElementById('radioMartingale').checked){
+        if($('#idQtdMartingale').val() < 1){
+            $('#idQtdMartingale').val(1)
+            $('#idQtdMartingaleLabel').addClass("active")   
+        }
+    }
 }
 
 window.onload = function() {

@@ -1,6 +1,7 @@
 <html>
     <head>
         <script type="text/javascript" src="./utils/jquery.js" defer></script>
+        <script type="text/javascript" src="./utils/jquery-masks.js" defer></script>
         <script src="./utils/materialize.js"></script>
         <link rel="stylesheet" href="./style/roboto.css">
         <link rel="stylesheet" href="./style/materialize.css">
@@ -147,8 +148,8 @@
                                         </blockquote>
                                         <div class="blockquote-body col s4" style="margin-bottom: 0px;">
                                             <div class="input-field col s12">
-                                                <input id="idRankTop" class="input-value input-card" type="number" min="1" >
-                                                <label for="idRankTop" class="input-label">DO TOP <b>1</b> AO:</label>
+                                                <input id="idRankTop" class="input-value input-card" type="number" min="1" onkeydown="if(event.key==='.' || event.key===','){event.preventDefault();}"  oninput="event.target.value = event.target.value.replace(/[^0-9]*/g,'');">
+                                                <label for="idRankTop" class="input-label">DO TOP <b>1</b> AO</label>
                                             </div> 
                                         </div>
                                         <div class="blockquote-body col s8" style="margin-bottom: 0px;">
@@ -180,8 +181,8 @@
                                                 </div>
                                                 <div class="blockquote-body col s2" style="margin-bottom: 0px;">
                                                     <div class="input-field col s12">
-                                                        <input id="idStartTop" class="input-value input-card" type="number" min="1" value="1">
-                                                        <label for="idStartTop" class="input-label">A partir do:</label>
+                                                        <input id="idStartTop" class="input-value input-card" type="number" min="1" value="1" onkeydown="if(event.key==='.' || event.key===','){event.preventDefault();}"  oninput="event.target.value = event.target.value.replace(/[^0-9]*/g,'');">
+                                                        <label for="idStartTop" class="input-label">A partir do</label>
                                                     </div> 
                                                 </div>
                                                 <div class="input-field col s4" style="text-align: right;">
@@ -216,7 +217,73 @@
                     </div>
                 </div>
                 <!-- GERENCIAMENTO -->
-                <div id="idDivGerenciamento" class="col s9 div-content slide_in" style="display:none">AQUI SERÁ O GERENCIAMENTO</div>
+                <div id="idDivGerenciamento" class="col s9 div-content slide_in" style="display:none">
+                    <blockquote class="blockquote-custom">
+                        Abaixo você pode acompanhar sua informações em tempo real de suas operações.
+                    </blockquote>
+                    <div class="row">
+                        <div class="col s12">
+                            <div class="card-panel grey lighten-5 z-depth-1" style="height: 420px;">
+                                <div>
+                                    <blockquote class="blockquote-header col s12">
+                                        Selecione abaixo se deseja operar com entradas de <b>Mão Fixa</b> ou aplicando <b>Martingale</b>
+                                    </blockquote>
+                                    <div class="blockquote-body col s12">
+                                        <div action="#">
+                                            <label class="col s3">
+                                                <input class="with-gap" name="groupTipoEntrada" type="radio" checked id="radioMaofixa"/>
+                                                <span>MÃO FIXA</span>
+                                            </label>
+                                            <label class="col s3">
+                                                <input class="with-gap" name="groupTipoEntrada" type="radio"  id="radioMartingale"/>
+                                                <span>MARTINGALE</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <blockquote class="blockquote-header col s12">
+                                        Selecione abaixo o <b>valor</b> das suas entradas e a <b>quantidade de martingales</b>
+                                    </blockquote>
+                                    <div class="blockquote-body col s3" style="margin-bottom: 0px;">
+                                        <div class="input-field col s12">
+                                            <input id="idValorEntrada" class="money input-value input-card" type="text" min="2" step="any"/>
+                                            <label id="idValorEntradaLabel" for="idValorEntrada" class="input-label"><b>Valor</b> das entradas</label>
+                                        </div> 
+                                    </div>
+                                    <div class="blockquote-body col s3" style="margin-bottom: 0px;">
+                                        <div class="input-field col s12">
+                                            <input id="idQtdMartingale" class="input-value input-card" type="number" min="1" onkeydown="if(event.key==='.' || event.key===','){event.preventDefault();}"  oninput="event.target.value = event.target.value.replace(/[^0-9]*/g,'');">
+                                            <label id="idQtdMartingaleLabel" for="idQtdMartingale" class="input-label"><b>Qtd.</b> de martingales</label>
+                                        </div> 
+                                    </div>
+                                    <blockquote class="blockquote-header col s12">
+                                        Selecione abaixo o <b>Stop Win</b> e <b>Stop Loss</b>
+                                    </blockquote>
+                                    <div class="blockquote-body col s3" style="margin-bottom: 0px;">
+                                        <div class="input-field col s12">
+                                            <input id="idValorStopWin" class="money input-value input-card" type="text" min="2" step="any"/>
+                                            <label id="idValorStopWinLabel" for="idValorStopWin" class="input-label">Valor do<b> Stop Win</b></label>
+                                        </div> 
+                                    </div>
+                                    <div class="blockquote-body col s3" style="margin-bottom: 0px;">
+                                        <div class="input-field col s12">
+                                            <input id="idValorStopLoss" class="money input-value input-card" type="text" min="2" step="any"/>
+                                            <label id="idValorStopLossLabel" for="idValorStopLoss" class="input-label">Valor do<b> Stop Loss</b></label>
+                                        </div> 
+                                    </div>
+                                    <blockquote class="blockquote-header col s12">
+                                        Selecione abaixo o <b>valor mínimo</b> das entradas realizadas pelos traders selecionados
+                                    </blockquote>
+                                    <div class="blockquote-body col s3" style="margin-bottom: 0px;">
+                                        <div class="input-field col s12">
+                                            <input id="idValorMinimoTrader" class="money input-value input-card" type="text" min="2" step="any"/>
+                                            <label id="idValorMinimoTraderLabel" for="idValorMinimoTrader" class="input-label">Valor mínimo</label>
+                                        </div> 
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <!-- CONFIGURAÇÕES -->
                 <div id="idDivConfig" class="col s9 div-content slide_in" style="display:none">
                     <blockquote class="blockquote-custom">
