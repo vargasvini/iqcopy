@@ -451,6 +451,19 @@ function setInputsValuesAfterClick(){
     }
 }
 
+function getRadioVal(form, name) {
+    var val;
+    var radios = form.elements[name];
+
+    for (var i=0, len=radios.length; i<len; i++) {
+        if ( radios[i].checked ) {
+            val = radios[i].value;
+            break;
+        }
+    }
+    return val;
+}
+
 window.onload = function() {
     initBehavior();
     initBusiness();

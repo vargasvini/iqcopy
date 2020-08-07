@@ -16,8 +16,24 @@ function onSaveConfig(){
 /*GENERIC FORM WITH INPUT DATA*/
 function createFormData(){
     var formData = { 
+        /*Login Corretora*/
         login: document.getElementById("idLoginUser").value,
-        password: document.getElementById("idLoginPass").value
+        password: document.getElementById("idLoginPass").value,
+        /*Selecionar Trader*/
+        tipoFollow: getRadioVal(document.getElementById('divFollowOptions'), 'groupFollowOpcoes'),
+        followRank: document.getElementById("idFollowRank").value,
+        followId: document.getElementById("idFollowIds").value,
+        /*Gerenciamento*/
+        tipoGerenciamento: getRadioVal(document.getElementById('divOptionsGerenciamento'), 'groupTipoEntrada'),
+        valorEntrada: $('#idValorEntrada').maskMoney('unmasked')[0],
+        qtdMartingales: document.getElementById('idQtdMartingale').value,
+        valorStopWin: $('#idValorStopWin').maskMoney('unmasked')[0],
+        valorStopLoss: $('#idValorStopLoss').maskMoney('unmasked')[0],
+        valorMinimoTrader: $('#idValorMinimoTrader').maskMoney('unmasked')[0],
+        /*Configurações*/
+        tipoConta: getRadioVal(document.getElementById('divOptionsConta'), 'groupTipoConta'),
+        tipoOpcoes: getRadioVal(document.getElementById('divOptionsOpcoes'), 'groupTipoOpcoes'),
+        tipoExpiracao: getRadioVal(document.getElementById('divOptionsExpiracao'), 'groupTempExpiracao')
     }
     return formData;
 }
@@ -36,10 +52,29 @@ function writeToConfigFile() {
 }
 
 function createConfig(_formData){
-    var config = `[acesso] \
-    \nlogin=${_formData.login.trim()} \
-    \nsenha=${_formData.password.trim()} \ `;
+    var config=``;
+    config += `[acesso]`
+    config += `\nlogin=${_formData.login.trim()}`
+    config += `\nsenha=${_formData.password.trim()}`
 
+    config += `\n[seguirTrader]`
+    config += `\ntipoFollow=${_formData.tipoFollow.trim()}`
+    config += `\nfollowRank=${_formData.followRank.trim()}`
+    config += `\nfollowId=${_formData.followId.trim()}`
+
+    config += `\n[gerenciamento]`
+    config += `\ntipoGerenciamento=${_formData.tipoGerenciamento.trim()}`
+    config += `\nvalorEntrada=${_formData.valorEntrada}`
+    config += `\nqtdMartingales=${_formData.qtdMartingales}`
+    config += `\nvalorStopWin=${_formData.valorStopWin}`
+    config += `\nvalorStopLoss=${_formData.valorStopLoss}`
+    config += `\nvalorMinimoTrader=${_formData.valorMinimoTrader}`
+
+    config += `\n[configuracoes]`
+    config += `\ntipoConta=${_formData.tipoConta.trim()}`
+    config += `\ntipoOpcoes=${_formData.tipoOpcoes.trim()}`
+    config += `\ntipoExpiracao=${_formData.tipoExpiracao.trim()}`
+    
     return config;
 }
 

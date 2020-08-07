@@ -124,20 +124,20 @@
                                         Selecione abaixo a maneira que deseja seguir os traders</b>
                                     </blockquote>
                                     <div class="blockquote-body col s12">
-                                        <div action="#">
+                                        <form action="#" id="divFollowOptions">
                                             <label class="label-custom col s3">
-                                                <input class="with-gap" name="groupFollowOpcoes" type="radio"  id="radioFollowRank" checked/>
+                                                <input class="with-gap" name="groupFollowOpcoes" type="radio"  id="radioFollowRank" value="followRank" checked/>
                                                 <span >RANK</span>
                                             </label>
                                             <label class="label-custom col s3">
-                                                <input class="with-gap" name="groupFollowOpcoes" type="radio"  id="radioFollowId"/>
+                                                <input class="with-gap" name="groupFollowOpcoes" type="radio"  id="radioFollowId" value="followId"/>
                                                 <span>ID</span>
                                             </label>
                                             <label class="label-custom col s4">
-                                                <input class="with-gap" name="groupFollowOpcoes" type="radio"  id="radioFollowAmbos"/>
+                                                <input class="with-gap" name="groupFollowOpcoes" type="radio"  id="radioFollowAmbos" value="followAmbos"/>
                                                 <span>AMBOS</span>
                                             </label>
-                                        </div>
+                                        </form>
                                     </div>
                                     <div >
                                         <blockquote class="blockquote-header col s4">
@@ -229,16 +229,16 @@
                                         Selecione abaixo se deseja operar com entradas de <b>Mão Fixa</b> ou aplicando <b>Martingale</b>
                                     </blockquote>
                                     <div class="blockquote-body col s12">
-                                        <div action="#">
+                                        <form action="#" id="divOptionsGerenciamento">
                                             <label class="col s3">
-                                                <input class="with-gap" name="groupTipoEntrada" type="radio" id="radioMaofixa" checked/>
+                                                <input class="with-gap" name="groupTipoEntrada" type="radio" id="radioMaofixa" value ="maofixa" checked/>
                                                 <span>MÃO FIXA</span>
                                             </label>
                                             <label class="col s3">
-                                                <input class="with-gap" name="groupTipoEntrada" type="radio"  id="radioMartingale"/>
+                                                <input class="with-gap" name="groupTipoEntrada" type="radio"  id="radioMartingale" value ="martingale"/>
                                                 <span>MARTINGALE</span>
                                             </label>
-                                        </div>
+                                        </form>
                                     </div>
                                     <blockquote class="blockquote-header col s12">
                                         Selecione abaixo o <b>valor</b> das suas entradas e a <b>quantidade de martingales</b>
@@ -297,54 +297,54 @@
                                         Selecione abaixo se deseja operar em sua conta <b>Real</b> ou de <b>Treinamento</b>
                                     </blockquote>
                                     <div class="blockquote-body col s12">
-                                        <div action="#">
+                                        <form action="#" id="divOptionsConta">
                                             <label class="col s3">
-                                                <input class="with-gap" name="groupTipoConta" type="radio" id="radioReal" checked/>
+                                                <input class="with-gap" name="groupTipoConta" type="radio" id="radioReal" value ="real" checked/>
                                                 <span>REAL</span>
                                             </label>
                                             <label class="col s3">
-                                                <input class="with-gap" name="groupTipoConta" type="radio"  id="radioTreinamento"/>
+                                                <input class="with-gap" name="groupTipoConta" type="radio"  id="radioTreinamento" value ="treinamento"/>
                                                 <span>TREINAMENTO</span>
                                             </label>
-                                        </div>
+                                        </form>
                                     </div>
                                     <blockquote class="blockquote-header col s12">
                                         Selecione abaixo em qual <b>opção</b> você deseja operar
                                     </blockquote>
                                     <div class="blockquote-body col s12">
-                                        <div action="#">
+                                        <form action="#" id="divOptionsOpcoes">
                                             <label class="label-custom col s3">
-                                                <input class="with-gap" name="groupTipoOpcoes" type="radio"  id="radioDigitais" checked/>
+                                                <input class="with-gap" name="groupTipoOpcoes" type="radio"  id="radioDigitais" value ="digitais" checked/>
                                                 <span>DIGITAIS</span>
                                             </label>
                                             <label class="label-custom col s3">
-                                                <input class="with-gap" name="groupTipoOpcoes" type="radio"  id="radioBinarias"/>
+                                                <input class="with-gap" name="groupTipoOpcoes" type="radio"  id="radioBinarias" value ="binarias"/>
                                                 <span >BINÁRIAS</span>
                                             </label>
                                             <label class="label-custom col s4">
-                                                <input class="with-gap" name="groupTipoOpcoes" type="radio"  id="radioDigitais"/>
+                                                <input class="with-gap" name="groupTipoOpcoes" type="radio"  id="radioDigitais" value ="opcoesAmbas"/>
                                                 <span>AMBAS</span>
                                             </label>
-                                        </div>
+                                        </form>
                                     </div>
                                     <blockquote class="blockquote-header col s12">
                                         Selecione abaixo o tempo de expiração
                                     </blockquote>
                                     <div class="blockquote-body col s12">
-                                        <div action="#">
+                                        <form action="#" id="divOptionsExpiracao">
                                             <label class="label-custom col s3">
-                                                <input class="with-gap" name="groupTempExpiracao" type="radio"  id="radioMinutoUm" checked/>
+                                                <input class="with-gap" name="groupTempExpiracao" type="radio"  id="radioMinutoUm" value ="um" checked/>
                                                 <span >1 MINUTO</span>
                                             </label>
                                             <label class="label-custom col s3">
-                                                <input class="with-gap" name="groupTempExpiracao" type="radio"  id="radioMinutoCinco"/>
+                                                <input class="with-gap" name="groupTempExpiracao" type="radio"  id="radioMinutoCinco" value ="cinco"/>
                                                 <span>5 MINUTOS</span>
                                             </label>
                                             <label class="label-custom col s3">
-                                                <input class="with-gap" name="groupTempExpiracao" type="radio"  id="radioMinutoTodos"/>
+                                                <input class="with-gap" name="groupTempExpiracao" type="radio"  id="radioMinutoTodos" value ="expiracaoAmbos"/>
                                                 <span>AMBOS</span>
                                             </label>
-                                        </div>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
