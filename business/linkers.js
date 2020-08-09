@@ -14,7 +14,7 @@ async function onStartCopy(){
     // hideCopiarDiv();
     // showLoaderDiv();
     callCopy();
-    setInterval(readActivitiesLog, 5)
+    setInterval(readActivitiesLog, 1000)
     //setTimeout(readActivitiesLog, 30)
 }
 
