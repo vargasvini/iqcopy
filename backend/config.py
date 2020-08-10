@@ -23,6 +23,11 @@ def copyTradeConfig():
             self.horaRefreshAtivos = int(1)
             self.minutosRefreshRank = int(10)
             self.minutosrefreshPayout = int(30)
+            # EXTRAS #
+            self.valorEntradaAtual = float(2)
+            self.valorEntradaAnterior = float(2)
+            self.qtdMartingaleAtual = int(0)
+            self.saldoAtual = float(0)
 
         ###### GETTERS #######
         # SELECIONAR TRADER #
@@ -36,15 +41,15 @@ def copyTradeConfig():
         def getTipoGerenciamento(self):
             return self.tipoGerenciamento
         def getValorEntrada(self):
-            return float(self.valorEntrada)
+            return round(float(self.valorEntrada),2)
         def getQtdMartingales(self):
             return int(self.qtdMartingales)
         def getValorStopWin(self):
-            return float(self.valorStopWin)
+            return round(float(self.valorStopWin),2)
         def getValorStopLoss(self):
-            return float(self.valorStopLoss)
+            return round(float(self.valorStopLoss),2)
         def getValorMinimoTrader(self):
-            return float(self.valorMinimoTrader)
+            return round(float(self.valorMinimoTrader),2)
         # CONFIGURAÇÕES #
         def getTipoConta(self):
             return self.tipoConta
@@ -59,6 +64,15 @@ def copyTradeConfig():
             return self.horaRefreshAtivos
         def getMinutosRefreshRank(self):
             return self.minutosRefreshRank
+        # EXTRAS #
+        def getValorEntradaAtual(self):
+            return round(float(self.valorEntradaAtual),2)
+        def getValorEntradaAnterior(self):
+            return round(float(self.valorEntradaAnterior),2)
+        def getQtdMartingaleAtual(self):
+            return int(self.qtdMartingaleAtual)
+        def getSaldoAtual(self):
+            return round(float(self.saldoAtual),2)
 
         ###### SETTERS #######
         # SELECIONAR TRADER #
@@ -88,6 +102,16 @@ def copyTradeConfig():
             self.tipoOpcoes = _tipoOpcoes
         def setTipoExpiracao(self, _tipoExpiracao):
             self.tipoExpiracao = _tipoExpiracao
+        # EXTRAS #
+        def setValorEntradaAtual(self, _valorEntradaAtual):
+            self.valorEntradaAtual = _valorEntradaAtual
+        def setValorEntradaAnterior(self, _valorEntradaAnterior):
+            self.valorEntradaAnterior = _valorEntradaAnterior
+        def setQtdMartingaleAtual(self, _qtdMartingaleAtual):
+            self.qtdMartingaleAtual = _qtdMartingaleAtual
+        def setSaldoAtual(self, _saldoAtual):
+            self.saldoAtual = _saldoAtual
+
 
     copyTradeConfig = copyTradeStructure()
     return copyTradeConfig

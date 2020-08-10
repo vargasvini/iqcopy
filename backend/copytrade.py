@@ -45,24 +45,26 @@ def filtro_ranking():
             user_id.append(id)
     return user_id
 
-def getValorEntradaCalculada(entradaAnterior):
+def getValorEntradaCalculada():
     valEntrada = 2
     if config.getTipoGerenciamento() == 'maofixa':
         valEntrada = config.getValorEntrada()
     else:
-        if currentMartingale == 0:
+        if config.getQtdMartingaleAtual() == 0:
             valEntrada = config.getValorEntrada()
         else:
-            valEntrada = entradaAnterior * 2
-    return float(valEntrada)
+            valEntrada = config.getValorEntradaAnterior() * 2
+    return round(float(valEntrada),2)
 
-def setVariaveisMartingale(status, valor):
+def setVariaveisMartingale(status):
     if config.getTipoGerenciamento() == 'martingale':
-        if status == 'win' or config.getQtdMartingales() == currentMartingale:
-            currentMartingale = 0
+        if status == 'win' or config.getQtdMartingales() == config.getQtdMartingaleAtual():
+            config.setQtdMartingaleAtual(0)
         else:
-            valorEntradaAnterior = valor
-            currentMartingale += 1
+            config.setQtdMartingaleAtual(config.getQtdMartingaleAtual() + 1)
+
+def calculaSaldoAtual(valorResultado):
+    config.setSaldoAtual(config.getSaldoAtual() + round(float(valorResultado),2))
 
 
 if check == False:
@@ -183,8 +185,8 @@ else:
     refreshPayout = now + timedelta(minutes=30) #Intervalo de tempo entre as verificações do payout dos ativos
 
     old = 0
-    valorEntradaAnterior = config.getValorEntrada()
-    currentMartingale = 0
+    config.setValorEntradaAtual(config.getValorEntrada())
+    config.setValorEntradaAnterior(config.getValorEntrada())
     logActivities(True, "Iniciando cópia")
   
     def getLiveDealBinary():
@@ -198,27 +200,37 @@ else:
                     new = trades[0]['user_id']
                     direction = trades[0]['direction']
                     created = trades[0]['created_at']
-                    expiration = trades[0]['expiration']
-                    #valor = getValorEntradaCalculada(valorEntradaAnterior)
-                    valor = 2.00
+                    expiration = trades[0]['expiration']                   
                     #if old != int(new):
                     #res = round(time.time() - datetime.timestamp(timestamp_converter(created / 1000, 2)), 2)
                     expiration_calc = Utils.getDifferenceInMinutes(int(str(created)[0:10]), int(str(expiration)[0:10]))
                     #if res <= float(5): 
                         #logActivities(False, '{},{},{}'.format(paridade, str(direction).lower(), Utils.getDifferenceInMinutes(int(str(created)[0:10]), int(str(expiration)[0:10]))))
-                    status, id = iqoption.buy(valor, paridade, direction, expiration_calc)
+                    status, id = iqoption.buy(config.getValorEntradaAtual(), paridade, direction, 1)
 
                     if status:
                         lucro = iqoption.check_win_v3(id)
-                        print('{}'.format(lucro))
-                        # while True:
-                        #     try:
-                        #         if iqoption.get_async_order(id)['option-closed'] != {}:
-                        #             break
-                        #     except:
-                        #         pass
-                        # win_money = iqoption.get_async_order(id)['option-closed']['msg']['profit_amount'] - iqoption.get_async_order(id)['option-closed']['msg']['amount']
-                        #logActivities(False, '{}'.format(lucro))
+                        calculaSaldoAtual(lucro)
+                        print ('SALDO ATUAL: {}'.format(config.getSaldoAtual()))
+                        if config.getSaldoAtual() >= config.getValorStopWin() or (config.getSaldoAtual()*-1) >= config.getValorStopLoss():
+                            sys.exit()
+                        if lucro > 0:
+                            setVariaveisMartingale('win')
+                            config.setValorEntradaAnterior(config.getValorEntradaAtual())
+                            config.setValorEntradaAtual(getValorEntradaCalculada())
+                            #print('Ganhou {}'.format(lucro))
+                            print(config.getValorEntradaAtual())
+                            print(config.getValorEntradaAnterior())
+                            print(config.getQtdMartingaleAtual())
+                        else:
+                            setVariaveisMartingale('loss')
+                            config.setValorEntradaAnterior(config.getValorEntradaAtual())
+                            config.setValorEntradaAtual(getValorEntradaCalculada())
+                            #print('Perdeu {}'.format(lucro))
+                            print(config.getValorEntradaAtual())
+                            print(config.getValorEntradaAnterior())
+                            print(config.getQtdMartingaleAtual())
+                        
 
     def getLiveDealDigital(timeFrame):
         while True:
@@ -238,7 +250,6 @@ else:
                     if isinstance(id, int):
                         while True:
                             status, lucro = iqoption.check_win_digital_v2(id)
-
                             if status:
                                 if lucro > 0:
                                     logActivities(False, '{}'.format('ganhou'))
