@@ -28,6 +28,9 @@ def copyTradeConfig():
             self.valorEntradaAnterior = float(2)
             self.qtdMartingaleAtual = int(0)
             self.saldoAtual = float(0)
+            self.tradersToFollow = []
+            self.ativosAbertosBinarias = []
+            self.ativosAbertosDigitais = []
 
         ###### GETTERS #######
         # SELECIONAR TRADER #
@@ -73,6 +76,12 @@ def copyTradeConfig():
             return int(self.qtdMartingaleAtual)
         def getSaldoAtual(self):
             return round(float(self.saldoAtual),2)
+        def getTradersToFollow(self):
+            return self.tradersToFollow
+        def getAtivosAbertosBinarias(self):
+            return self.ativosAbertosBinarias
+        def getAtivosAbertosDigitais(self):
+            return self.ativosAbertosDigitais
 
         ###### SETTERS #######
         # SELECIONAR TRADER #
@@ -111,7 +120,12 @@ def copyTradeConfig():
             self.qtdMartingaleAtual = _qtdMartingaleAtual
         def setSaldoAtual(self, _saldoAtual):
             self.saldoAtual = _saldoAtual
-
+        def setTradersToFollow(self, _tradersToFollow):
+            self.tradersToFollow = _tradersToFollow
+        def setAtivosAbertosBinarias(self, _ativosAbertosBinarias):
+            self.ativosAbertosBinarias = _ativosAbertosBinarias
+        def setAtivosAbertosDigitais(self, _ativosAbertosDigitais):
+            self.ativosAbertosDigitais = _ativosAbertosDigitais
 
     copyTradeConfig = copyTradeStructure()
     return copyTradeConfig

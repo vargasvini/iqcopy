@@ -104,9 +104,24 @@ function getDataFromSystemFile(){
 
 function processDataSystem(_data) {
     var formData = JSON.parse(_data);
-
+    /*Login Corretora*/
     document.getElementById("idLoginUser").value = formData.login;
     document.getElementById("idLoginPass").value = formData.password;
+    /*Selecionar Trader*/
+    document.querySelectorAll(`input[value=${formData.tipoFollow}]`)[0].checked = true;
+    document.getElementById("idFollowRank").value = formData.followRank;
+    document.getElementById("idFollowIds").value = formData.followId;
+    /*Gerenciamento*/
+    document.querySelectorAll(`input[value=${formData.tipoGerenciamento}]`)[0].checked = true;
+    $('#idValorEntrada').val(`R$ ${formData.valorEntrada.toFixed(2).replace(".",",")}`);
+    document.getElementById('idQtdMartingale').value = formData.qtdMartingales;
+    $('#idValorStopWin').val(`R$ ${formData.valorStopWin.toFixed(2).replace(".",",")}`);
+    $('#idValorStopLoss').val(`R$ ${formData.valorStopLoss.toFixed(2).replace(".",",")}`);
+    $('#idValorMinimoTrader').val(`R$ ${formData.valorMinimoTrader.toFixed(2).replace(".",",")}`);
+    // /*Configurações*/
+    document.querySelectorAll(`input[value=${formData.tipoConta}]`)[0].checked = true;
+    document.querySelectorAll(`input[value=${formData.tipoOpcoes}]`)[0].checked = true;
+    document.querySelectorAll(`input[value=${formData.tipoExpiracao}]`)[0].checked = true;
 }
 
 /*GET HISTORY DATA*/

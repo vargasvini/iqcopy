@@ -14,7 +14,7 @@ async function onStartCopy(){
     // hideCopiarDiv();
     // showLoaderDiv();
     callCopy();
-    setInterval(readActivitiesLog, 1000)
+    setInterval(readActivitiesLog, 2000)
     //setTimeout(readActivitiesLog, 30)
 }
 
@@ -24,16 +24,8 @@ function setUserData(_data){
 }
 
 async function callCopy(){    
-    var real = '';
-    if (document.getElementById('radioReal').checked) {
-        real = 'REAL';
-    }else{
-        real = 'TREINAMENTO';
-    }
-
     var options = {
         scriptPath: path.join(__dirname, './backend/'),
-        args: [real]
     }
     
     var login = new PythonShell('copytrade.py', options);

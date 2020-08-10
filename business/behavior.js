@@ -11,6 +11,7 @@ function initBehavior(){
     applyDefaultValueOnBlur();
     applyDefaultValues();
     setOptionsClick();
+    
 }
 
 function setSelectType(){
