@@ -149,8 +149,8 @@ class Utils:
     def getLiveDealDigital(paridade):
         return True
 
-    def setup_logger(name, log_file, level=logging.INFO):
-        handler = logging.FileHandler(log_file, 'w', 'utf-8')        
+    def setup_logger(name, log_file, logType, level=logging.INFO):
+        handler = logging.FileHandler(log_file, logType, 'utf-8')        
         handler.terminator = ""
         logger = logging.getLogger(name)
         logger.setLevel(level)

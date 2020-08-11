@@ -128,7 +128,11 @@ function processDataSystem(_data) {
 function getHistoryData(){
     var fs = require('fs');
     const data = fs.readFileSync('resultados.log.config', {encoding:'utf8', flag:'r'}); 
-    processHistoryData(data); 
+    if(data != ""){
+        var dataFormat = "["+data.slice(0, -1)+"]";
+        processHistoryData(dataFormat); 
+    }
+    
 }
 
 function processHistoryData(_data) {

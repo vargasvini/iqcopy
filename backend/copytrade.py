@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-  
 import sys
-import json, configparser, logging, time
+import json, configparser, time
 from api import start
 from utils import Utils
 from datetime import datetime, date, timedelta
@@ -10,7 +10,8 @@ from iqoptionapi.expiration import get_expiration_time
 import asyncio
 from config import startConfig
 
-logging, handler = Utils.setup_logger('copylogger', 'atividades.log')
+logging, handler = Utils.setup_logger('copylogger', 'atividades.log', 'w')
+loggingHistory, handlerHistory = Utils.setup_logger('historylogger', 'resultados.log.config', 'a')
 
 api = start()
 iqoption = api.getApi()
@@ -18,11 +19,6 @@ check, reason = iqoption.connect()
 
 config = startConfig().getConfig()
 
-def timestamp_converter(x, retorno = 1):
-	hora = datetime.strptime(datetime.utcfromtimestamp(x).strftime('%Y-%m-%d %H:%M:%S'), '%Y-%m-%d %H:%M:%S')
-	hora = hora.replace(tzinfo=tz.gettz('GMT'))
-	
-	return str(hora.astimezone(tz.gettz('America/Sao Paulo')))[:-6] if retorno == 1 else hora.astimezone(tz.gettz('America/Sao Paulo'))
 
 def logActivities(isHeader, msg):
     if isHeader:
@@ -30,6 +26,27 @@ def logActivities(isHeader, msg):
     else:
         logging.info('<blockquote class="blockquote-custom-body">{}</blockquote>'.format(msg))
     handler.flush()
+
+def logHistorico(id, resultado, paridade, valor, operacao, nome, timeframe, data):
+    ok = True
+    while ok:
+        try:
+            myfile = open("resultados.log.config", "a+")
+            ok = False
+        except IOError:
+            ok = True
+    with myfile:
+        historicoJson = {'message':'','id': id, 'resultado': resultado.upper(), 'paridade': paridade.upper(), 'valor': valor, 'operacao': operacao.upper(), 'nome': nome, 'timeframe': timeframe, 'data': timestamp_converter(data)}
+        python2json = json.dumps(historicoJson)
+        loggingHistory.info(python2json + ",")
+        handlerHistory.flush()
+        myfile.close()
+
+def timestamp_converter(x, retorno = 1):
+	hora = datetime.strptime(datetime.utcfromtimestamp(x).strftime('%Y-%m-%d %H:%M:%S'), '%Y-%m-%d %H:%M:%S')
+	hora = hora.replace(tzinfo=tz.gettz('GMT'))
+	
+	return str(hora.astimezone(tz.gettz('America/Sao Paulo')))[:-6] if retorno == 1 else hora.astimezone(tz.gettz('America/Sao Paulo'))
 
 def filtro_ranking():
     user_id = []
@@ -77,7 +94,6 @@ if check == False:
     python2json = json.dumps(userData)
     print(python2json)
 else:
-    #print(reason)
     result = iqoption.get_profile_ansyc()
     ###############################################
     # ETAPA 1
@@ -196,33 +212,35 @@ else:
                 #logActivities(True, 'TRUE' if old != int(trades[0]['user_id']) else 'FALSE')
                 if len(trades) > 0:
                     user_id = trades[0]['user_id']
+                    name = trades[0]['name']
                     direction = trades[0]['direction']
                     created = trades[0]['created_at']
                     expiration = trades[0]['expiration']
                     amount_enrolled = round(float(trades[0]['amount_enrolled']),2)
 
-                    if user_id in config.getTradersToFollow():
-                        if amount_enrolled >= config.getValorMinimoTrader():
-                            #if old != int(new):
-                            res = round(time.time() - datetime.timestamp(timestamp_converter(created / 1000, 2)), 2)
-                            expiration_calc = Utils.getDifferenceInMinutes(int(str(created)[0:10]), int(str(expiration)[0:10]))
-                            if res <= float(10): 
-                                status, id = iqoption.buy(config.getValorEntradaAtual(), paridade, direction, 1)
-                                logActivities(True, "Operação encontrada nas opções BINÁRIAS ({}):".format(id))
-                                logActivities(False, "Aguardando resultado da operação de identificador <b>{}</b>...".format(id))
-                                if status:
-                                    lucro = iqoption.check_win_v3(id)
-                                    calculaSaldoAtual(lucro)
-                                    if config.getSaldoAtual() >= config.getValorStopWin() or (config.getSaldoAtual()*-1) >= config.getValorStopLoss():
-                                        sys.exit()
-                                    if lucro > 0:
-                                        setVariaveisMartingale('win')
-                                        config.setValorEntradaAnterior(config.getValorEntradaAtual())
-                                        config.setValorEntradaAtual(getValorEntradaCalculada())
-                                    else:
-                                        setVariaveisMartingale('loss')
-                                        config.setValorEntradaAnterior(config.getValorEntradaAtual())
-                                        config.setValorEntradaAtual(getValorEntradaCalculada())
+                    #if user_id in config.getTradersToFollow():
+                    if amount_enrolled >= config.getValorMinimoTrader():
+                        #if old != int(new):
+                        res = round(time.time() - datetime.timestamp(timestamp_converter(created / 1000, 2)), 2)
+                        expiration_calc = Utils.getDifferenceInMinutes(int(str(created)[0:10]), int(str(expiration)[0:10]))
+                        if res <= float(15): 
+                            status, id = iqoption.buy(config.getValorEntradaAtual(), paridade, direction, expiration_calc)
+                            logActivities(True, "Operação encontrada nas opções BINÁRIAS ({}):".format(id))
+                            logActivities(False, "Aguardando resultado da operação de identificador <b>{}</b>...".format(id))
+                            if status:
+                                lucro = iqoption.check_win_v3(id)
+                                calculaSaldoAtual(lucro)
+                                logHistorico(user_id, "WIN" if lucro >= 0 else "LOSS", paridade, config.getValorEntradaAtual(), direction, name, "PT{}M".format(expiration_calc), int(str(expiration)[0:10]))
+                                if config.getSaldoAtual() >= config.getValorStopWin() or (config.getSaldoAtual()*-1) >= config.getValorStopLoss():
+                                    sys.exit()
+                                if lucro > 0:
+                                    setVariaveisMartingale('win')
+                                    config.setValorEntradaAnterior(config.getValorEntradaAtual())
+                                    config.setValorEntradaAtual(getValorEntradaCalculada())
+                                else:
+                                    setVariaveisMartingale('loss')
+                                    config.setValorEntradaAnterior(config.getValorEntradaAtual())
+                                    config.setValorEntradaAtual(getValorEntradaCalculada())
                         
 
     def getLiveDealDigital(timeFrame):
@@ -248,32 +266,34 @@ else:
                 trades = iqoption.get_live_deal('live-deal-digital-option', paridade, timeFrame)
                 if len(trades) > 0:
                     user_id = trades[0]['user_id']
+                    name = trades[0]['name']
                     direction = trades[0]['instrument_dir']
                     created = trades[0]['created_at']
                     expiration = trades[0]['expiration_type'].replace("PT", "").replace("M","")
                     amount_enrolled = round(float(trades[0]['amount_enrolled']),2)
-                    if user_id in config.getTradersToFollow():
-                        if amount_enrolled >= config.getValorMinimoTrader():
-                            res = round(time.time() - datetime.timestamp(timestamp_converter(created / 1000, 2)), 2)
-                            if res <= float(10): 
-                                id = iqoption.buy_digital_spot(paridade, config.getValorEntradaAtual(), direction, int(1))
-                                logActivities(True, "Operação encontrada nas opções DIGITAIS ({}):".format(id))
-                                logActivities(False, "Aguardando resultado da operação de identificador {}...".format(id))
-                                if isinstance(id, int):
-                                    while True:
-                                        status, lucro = iqoption.check_win_digital_v2(id)
-                                        if status:
-                                            calculaSaldoAtual(lucro)
-                                            if config.getSaldoAtual() >= config.getValorStopWin() or (config.getSaldoAtual()*-1) >= config.getValorStopLoss():
-                                                sys.exit()
-                                            if lucro > 0:
-                                                setVariaveisMartingale('win')
-                                                config.setValorEntradaAnterior(config.getValorEntradaAtual())
-                                                config.setValorEntradaAtual(getValorEntradaCalculada())
-                                            else:
-                                                setVariaveisMartingale('loss')
-                                                config.setValorEntradaAnterior(config.getValorEntradaAtual())
-                                                config.setValorEntradaAtual(getValorEntradaCalculada())
+                    #if user_id in config.getTradersToFollow():
+                    if amount_enrolled >= config.getValorMinimoTrader():
+                        res = round(time.time() - datetime.timestamp(timestamp_converter(created / 1000, 2)), 2)
+                        if res <= float(15): 
+                            id = iqoption.buy_digital_spot(paridade, config.getValorEntradaAtual(), direction, int(1))
+                            logActivities(True, "Operação encontrada nas opções DIGITAIS ({}):".format(id))
+                            logActivities(False, "Aguardando resultado da operação de identificador {}...".format(id))
+                            if isinstance(id, int):
+                                while True:
+                                    status, lucro = iqoption.check_win_digital_v2(id)
+                                    if status:
+                                        calculaSaldoAtual(lucro)
+                                        logHistorico(user_id, "WIN" if lucro >= 0 else "LOSS", paridade, config.getValorEntradaAtual(), direction, name, "PT{}M".format(expiration), int(str(created)[0:10]))
+                                        if config.getSaldoAtual() >= config.getValorStopWin() or (config.getSaldoAtual()*-1) >= config.getValorStopLoss():
+                                            sys.exit()
+                                        if lucro > 0:
+                                            setVariaveisMartingale('win')
+                                            config.setValorEntradaAnterior(config.getValorEntradaAtual())
+                                            config.setValorEntradaAtual(getValorEntradaCalculada())
+                                        else:
+                                            setVariaveisMartingale('loss')
+                                            config.setValorEntradaAnterior(config.getValorEntradaAtual())
+                                            config.setValorEntradaAtual(getValorEntradaCalculada())
                                     
     if config.getTipoOpcoes() == 'binarias' or config.getTipoOpcoes() == 'opcoesAmbas': 
         threading.Thread(target=getLiveDealBinary).start()
