@@ -1,5 +1,40 @@
+
+function onEntrar(){
+    getAccess();
+}
+
+function getAccess(){
+    getUserAsync()
+    .then(data => verifyAccess(data)); 
+}
+
+async function getUserAsync() 
+{
+  let response = await fetch(`http://meutrader-com.umbler.net/users`);
+  let data = await response.json()
+  return data;
+}
+
+function verifyAccess(data){
+    var aKey = document.getElementById("idAccessKey").value
+    // 9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d
+    if (data.some(item => item.accesskey === aKey.trim() && item.isActive == true))
+    {
+        hideAccessItem();
+        $("#idDivAccessLogo").addClass('slide_logo')
+        setTimeout(() => {
+        hideAccessDiv();
+        }, 495);
+    }else{
+        showAccessDiv();
+        return;
+    }
+}
+
 function initBusiness(){
-    console.log('initBusiness')
+    $("#idDivAccessLogo").removeClass('slide_logo')
+    document.getElementById("idAccessKey").value = "9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d"
+    //getAccess()
 }
 
 function onSaveConfig(){

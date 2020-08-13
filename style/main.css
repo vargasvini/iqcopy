@@ -338,3 +338,39 @@ input:not([type]):focus:not([readonly])+label, input[type=text]:not(.browser-def
     line-height: 12px;
     padding: 14px 10px;
 }
+
+.access{
+    height: 100%;
+    width: 100%;
+}
+
+.access-content{
+    /* margin-top: 35px; */
+}
+
+.access-logo{
+    margin-top: 10px;
+    background-image: url('../images/meutrader.png');
+    /* background-size: cover; */
+    background-repeat: no-repeat, repeat;
+    height: 100%;
+    pointer-events: none;
+    width: 650;
+    height: 300px;
+    background-position-x: center;
+    
+}
+
+.access-key{
+    margin-top: 15px;
+}
+
+.slide_logo{
+    animation: logo_slide .7s;
+}
+
+@keyframes logo_slide {
+    95% {background-size: cover; height: 450; width: 600; margin-top: 10px;}
+    90% {background-size: cover; height: 250; width: 400; margin-top: 10px;}
+    80% {background-size: cover; height: 100; width: 200; margin-top: 10px;}
+}

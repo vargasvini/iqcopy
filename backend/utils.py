@@ -155,10 +155,21 @@ class Utils:
         logger = logging.getLogger(name)
         logger.setLevel(level)
         logger.addHandler(handler)
-        
-
+    
         return logger, handler
 
+    def check_win_digital_v3(iqoption, buy_order_id):
+        while iqoption.get_async_order(buy_order_id)["position-changed"] == {}:
+            pass
+        order_data = iqoption.get_async_order(buy_order_id)["position-changed"]["msg"]
+        if order_data != None:
+            while order_data["status"] != "closed":
+                order_data = iqoption.get_async_order(buy_order_id)["position-changed"]["msg"]
+                if order_data["status"] == "closed":
+                    if order_data["close_reason"] == "expired":
+                        return True, order_data["close_profit"] - order_data["invest"]
+                    elif order_data["close_reason"] == "default":
+                        return True, order_data["pnl_realized"]
 #####==============================================================#
 
 # if __name__ == '__main__':

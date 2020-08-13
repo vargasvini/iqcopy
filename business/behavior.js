@@ -76,6 +76,9 @@ function getInputFieldAndSetEvent(){
 function changeBodyItem(_item){
     hideAllDivs();
     switch(_item){
+        case "ACCESS":
+            showAccessDiv();
+            break;
         case "LOGIN CORRETORA":
             showLoginDiv();
             break;

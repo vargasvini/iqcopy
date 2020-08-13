@@ -1091,9 +1091,8 @@ class IQ_Option:
             pass
         return self.api.result
 
-    def check_win_digital(self, buy_order_id, polling_time):
+    def check_win_digital(self, buy_order_id):
         while True:
-            time.sleep(polling_time)
             data = self.get_digital_position(buy_order_id)
 
             if data["msg"]["position"]["status"] == "closed":

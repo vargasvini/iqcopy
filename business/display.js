@@ -1,3 +1,28 @@
+function hideAccessItem(){
+    document.getElementById("divAccessKey").style="display:none";
+    document.getElementById("divAccessBtn").style="display:none";
+}
+
+function showAccessDiv(){
+    hideNavAndSave();
+    document.getElementById("idDivAccess").style="display:block";
+}
+
+function hideAccessDiv(){
+    showNavAndSave();
+    document.getElementById("idDivAccess").style="display:none";
+}
+
+function showNavAndSave(){
+    document.getElementById("idNavCustom").style="display:block";
+    document.getElementById("rowSalvar").style="display:block";
+}
+
+function hideNavAndSave(){
+    document.getElementById("idNavCustom").style="display:none";
+    document.getElementById("rowSalvar").style="display:none";
+}
+
 function showLoginDiv(){
     document.getElementById("idDivLogin").style="display:block";
 }

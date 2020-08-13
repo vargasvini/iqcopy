@@ -31,6 +31,10 @@ def copyTradeConfig():
             self.tradersToFollow = []
             self.ativosAbertosBinarias = []
             self.ativosAbertosDigitais = []
+            # THREAD CONTROL #
+            self.isBinarias = False
+            self.isDigitaisUm = False
+            self.isDigitaisCinco = False
 
         ###### GETTERS #######
         # SELECIONAR TRADER #
@@ -82,6 +86,14 @@ def copyTradeConfig():
             return self.ativosAbertosBinarias
         def getAtivosAbertosDigitais(self):
             return self.ativosAbertosDigitais
+        # THREAD CONTROL #
+        def getIsBinariasRunning(self):
+            return self.isBinarias
+        def getIsDigitaisUmRunning(self):
+            return self.isDigitaisUm
+        def getIsDigitaisCincoRunning(self):
+            return self.isDigitaisCinco
+
 
         ###### SETTERS #######
         # SELECIONAR TRADER #
@@ -126,6 +138,13 @@ def copyTradeConfig():
             self.ativosAbertosBinarias = _ativosAbertosBinarias
         def setAtivosAbertosDigitais(self, _ativosAbertosDigitais):
             self.ativosAbertosDigitais = _ativosAbertosDigitais
+        # THREAD CONTROL #
+        def setIsBinariasRunning(self, _isBinarias):
+            self.isBinarias = _isBinarias
+        def setIsDigitaisUmRunning(self, _isDigitaisUm):
+            self.isDigitaisUm = _isDigitaisUm
+        def setIsDigitaisCincoRunning(self, _isDigitaisCinco):
+            self.isDigitaisCinco = _isDigitaisCinco
 
     copyTradeConfig = copyTradeStructure()
     return copyTradeConfig
