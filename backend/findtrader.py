@@ -4,7 +4,7 @@ import json, logging
 from api import start
 from utils import Utils
 
-logging, handler = Utils.setup_logger('finderlogger', 'findtrader.log')
+logging, handler = Utils.setup_logger('finderlogger', 'findtrader.log', 'w')
 
 api = start()
 iqoption = api.getApi()

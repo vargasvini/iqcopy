@@ -145,6 +145,16 @@ class Utils:
             minutes = 1
 
         return int(minutes)
+    def getDifferenceInSeconds(now, created):
+        date1 = datetime.fromtimestamp(now)
+        date2= datetime.fromtimestamp(created)
+        
+        time_delta = (date1 - date2)
+        total_seconds = time_delta.total_seconds()
+        # seconds = (total_seconds/60)/60
+        # if seconds < 1:
+        #     seconds = 1
+        return int(total_seconds)
 
     def getLiveDealDigital(paridade):
         return True

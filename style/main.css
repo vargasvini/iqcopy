@@ -102,6 +102,16 @@ input:not([type]):focus:not([readonly])+label, input[type=text]:not(.browser-def
     place-content: center;
 }
 
+.toast-custom-warning{
+    top: 35px;
+    background-color: #fff3cd;
+    font-weight: bold;
+    color:#101326;
+    width: 1000px;
+    height: 75px;
+    place-content: center;
+}
+
 .div-content{
     margin-top:20px;
 }
@@ -373,4 +383,10 @@ input:not([type]):focus:not([readonly])+label, input[type=text]:not(.browser-def
     95% {background-size: cover; height: 450; width: 600; margin-top: 10px;}
     90% {background-size: cover; height: 250; width: 400; margin-top: 10px;}
     80% {background-size: cover; height: 100; width: 200; margin-top: 10px;}
+}
+
+.finder-add-icon{
+    font-size: 40px;
+    cursor: pointer;
+    color: #69F3A8;
 }

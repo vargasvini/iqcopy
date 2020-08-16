@@ -691,7 +691,6 @@ class IQ_Option:
     def check_win_v3(self, id_number):
         while True:
             try:
-
                 if self.get_async_order(id_number)["option-closed"] != {}:
                     break
             except:

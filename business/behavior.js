@@ -70,6 +70,12 @@ function getInputFieldAndSetEvent(){
     for (var i = 0; i < inputElements.length; i++) {
         inputElements[i].addEventListener('focusout', onInputLostFocus, false);
     }
+
+    $('#idFollowIds').on('change, keyup', function() {
+        var currentInput = $(this).val();
+        var fixedInput = currentInput.replace(/[A-Za-z!@#$%^&*()]/g, '');
+        $(this).val(fixedInput);        
+    });
 }
 
 

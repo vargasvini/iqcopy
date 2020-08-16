@@ -146,6 +146,7 @@ async function processFindTraderData(_data) {
 
 async function appendFindTraderData(data) {
     var html = '';
+    var userIdList = [];
     $.each(data, function(index, item){
         html += `
         <tr>
@@ -158,14 +159,49 @@ async function appendFindTraderData(data) {
             if(item.img == 'Imagem nao disponivel'){
                 html += `
                 <td><img src="./images/user.png" alt="" class="circle" style="height: 50px;"></td>
-                </tr>
                 `
             }else{
                 html += `
                 <td><img src="${item.img}" alt="" class="circle" style="height: 50px;"></td>
-                </tr>
                 `
             }
+            html += `<td id="idBtnAdd${item.userid}"><i class="material-icons right finder-add-icon">add_box</i></td>
+            </tr>`
+            userIdList.push(`${item.userid}`)
         });
     document.getElementById('idFindTraderTBody').innerHTML = html;
+    for (let index = 0; index < userIdList.length; index++) {
+        document.getElementById(`idBtnAdd${userIdList[index]}`).addEventListener('click', function (event) {
+            addToFollowList(`${userIdList[index]}`)
+            event.preventDefault();
+        });
+    }
+
 }
+
+function addToFollowList(userId){
+    var idsToFollow = $('#idFollowIds').val();
+    if(verifyIdAlreadyAdded(idsToFollow, userId)){
+        $('#idFollowIds').val('');
+        if(idsToFollow == ''){
+            idsToFollow  = userId
+        }else{   
+            idsToFollow += "," + userId
+        }
+        idsToFollow.replace(/,\s*$/, "");
+        $('#idFollowIds').val(idsToFollow);
+        document.getElementById('idFollowIdsLabel').classList.add("active");
+    }
+}
+
+function verifyIdAlreadyAdded(idList, currId){
+    idArr = idList.split(',');
+    for (let index = 0; index < idArr.length; index++) {
+        if(idArr[index] == currId){
+            M.toast({html: 'O TRADER SELECIONADO JÁ FOI ADICIONADO NA LISTA!', classes: 'toast-custom-warning valign-wrapper', displayLength: 1000})
+            return false;
+        }
+    }
+    return true;
+}
+
