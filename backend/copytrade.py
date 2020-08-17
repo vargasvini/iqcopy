@@ -27,6 +27,15 @@ def logActivities(isHeader, msg):
         logging.info('<blockquote class="blockquote-custom-body">{}</blockquote>'.format(msg))
     handler.flush()
 
+
+def checkConditions(_userId, _valorEntrada):
+    isValido = False
+    if config.getTipoFollow() != "followNenhum" and _userId in config.getTradersToFollow() and _valorEntrada >= config.getValorMinimoTrader():
+        isValido = True 
+    elif config.getTipoFollow() == "followNenhum" and _valorEntrada >= config.getValorMinimoTrader():
+        isValido = True
+    return isValido
+
 def logHistorico(id, resultado, paridade, valor, operacao, nome, timeframe, data):
     ok = True
     while ok:
@@ -45,7 +54,6 @@ def logHistorico(id, resultado, paridade, valor, operacao, nome, timeframe, data
 def timestamp_converter(x, retorno = 1):
 	hora = datetime.strptime(datetime.utcfromtimestamp(x).strftime('%Y-%m-%d %H:%M:%S'), '%Y-%m-%d %H:%M:%S')
 	hora = hora.replace(tzinfo=tz.gettz('GMT'))
-
 	return str(hora.astimezone(tz.gettz('America/Sao Paulo')))[:-6] if retorno == 1 else hora.astimezone(tz.gettz('America/Sao Paulo'))
 
 def filtro_ranking():
@@ -335,7 +343,8 @@ else:
                         expiration = trades[0]['expiration']
                         amount_enrolled = round(float(trades[0]['amount_enrolled']),2)
                         #if user_id in config.getTradersToFollow():
-                        if amount_enrolled >= config.getValorMinimoTrader():
+                        #if amount_enrolled >= config.getValorMinimoTrader():
+                        if checkConditions(user_id, amount_enrolled):
                             expiration_calc = Utils.getDifferenceInMinutes(int(str(created)[0:10]), int(str(expiration)[0:10]))
                             status, id = iqoption.buy(config.getValorEntradaAtual(), paridade, direction, 1)
                             if status:
@@ -343,7 +352,7 @@ else:
                                 calculaSaldoAtual(lucro)
                                 logActivities(True, "A operação <b>{}</b> realizada nas opções <b>BINÁRIAS</b> foi finalizada:".format(id))
                                 logActivities(False, "Resultado: <b>{}</b><br>Saldo: <b>{}</b><br>Lucro/Prejuizo: <b>{}</b>".format("WIN" if lucro > 0 else "LOSS", config.getSaldoAtual(),round(float(lucro),2)))
-                                logHistorico(user_id, "WIN" if lucro > 0 else "LOSS", paridade, round(float(lucro),2), direction, name, "PT{}M".format(expiration_calc), int(str(expiration)[0:10]))
+                                logHistorico(user_id, "WIN" if lucro > 0 else "LOSS", paridade, round(float(amount_enrolled),2), direction, name, "PT{}M".format(expiration_calc), int(str(expiration)[0:10]))
                                 if config.getSaldoAtual() >= config.getValorStopWin() or (config.getSaldoAtual()*-1) >= config.getValorStopLoss():
                                     sys.exit()
                                 if lucro > 0:
@@ -367,12 +376,13 @@ else:
                 config.getAtivosAbertosBinarias().clear()
                 config.setAtivosAbertosBinarias(Utils.buscaAtivosAbertos(iqoption, 'B'))
             #Atualiza a lista de top traders que serão copiadas as entradas (ocorre a cada 10 minutos)
-            if refreshRank < now:
-                if config.getTipoFollow() == 'followRank' or config.getTipoFollow() == 'followAmbos':
-                    config.getTradersToFollow().clear()
-                    config.setTradersToFollow(filtro_ranking())
-                if config.getTipoFollow() == 'followId' or config.getTipoFollow() == 'followAmbos':
-                    appendIdToFollow()
+            if config.getTipoFollow() != "followNenhum":
+                if refreshRank < now:
+                    if config.getTipoFollow() == 'followRank' or config.getTipoFollow() == 'followAmbos':
+                        config.getTradersToFollow().clear()
+                        config.setTradersToFollow(filtro_ranking())
+                    if config.getTipoFollow() == 'followId' or config.getTipoFollow() == 'followAmbos':
+                        appendIdToFollow()
 
             for paridade in config.getAtivosAbertosDigitais():
                 iqoption.unscribe_live_deal('live-deal-digital-option', paridade, timeFrame)
@@ -391,8 +401,7 @@ else:
                         direction = trades[0]['instrument_dir']
                         expiration = trades[0]['expiration_type'].replace("PT", "").replace("M","")
                         amount_enrolled = round(float(trades[0]['amount_enrolled']),2)
-                        #if user_id in config.getTradersToFollow():
-                        if amount_enrolled >= config.getValorMinimoTrader():
+                        if checkConditions(user_id, amount_enrolled):
                             statusBuy, id = iqoption.buy_digital_spot(paridade, config.getValorEntradaAtual(), direction, int(1))
                             if statusBuy:
                                 status, lucro = Utils.check_win_digital_v3(iqoption, id)
@@ -400,7 +409,7 @@ else:
                                     calculaSaldoAtual(lucro)
                                     logActivities(True, "A operação <b>{}</b> realizada nas opções <b>DIGITAIS</b> foi finalizada:".format(id))
                                     logActivities(False, "Resultado: <b>{}</b><br>Saldo: <b>{}</b><br>Lucro/Prejuizo: <b>{}</b>".format("WIN" if lucro > 0 else "LOSS", config.getSaldoAtual(),round(float(lucro),2)))
-                                    logHistorico(user_id, "WIN" if lucro > 0 else "LOSS", paridade, round(float(lucro),2), direction, name, "PT{}M".format(expiration), int(str(created)[0:10]))
+                                    logHistorico(user_id, "WIN" if lucro > 0 else "LOSS", paridade, round(float(amount_enrolled),2), direction, name, "PT{}M".format(expiration), int(str(created)[0:10]))
                                     if config.getSaldoAtual() >= config.getValorStopWin() or (config.getSaldoAtual()*-1) >= config.getValorStopLoss():
                                         sys.exit()
                                     if lucro > 0:
