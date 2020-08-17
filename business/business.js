@@ -1,4 +1,23 @@
 
+function initBusiness(){
+    checkFiles();
+    $("#idDivAccessLogo").removeClass('slide_logo')
+    document.getElementById("idAccessKey").value = "9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d"
+    //getAccess()
+}
+
+function checkFiles(){
+    const fs = require('fs')
+    const path = 'system.config'
+    
+    if (!fs.existsSync(path)) {
+        fs.writeFileSync(path, '', 'utf8', function(err) {
+            if (err) 
+                isSaved = false;
+        });
+    }
+}
+
 function onEntrar(){
     getAccess();
 }
@@ -29,12 +48,6 @@ function verifyAccess(data){
         showAccessDiv();
         return;
     }
-}
-
-function initBusiness(){
-    $("#idDivAccessLogo").removeClass('slide_logo')
-    document.getElementById("idAccessKey").value = "9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d"
-    //getAccess()
 }
 
 function onSaveConfig(){
@@ -134,7 +147,9 @@ function createSystemData(_formData){
 function getDataFromSystemFile(){
     var fs = require('fs');
     const data = fs.readFileSync('system.config', {encoding:'utf8', flag:'r'}); 
-    processDataSystem(data); 
+    if(data != ""){
+        processDataSystem(data); 
+    }
 }
 
 function processDataSystem(_data) {

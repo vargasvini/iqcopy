@@ -1,4 +1,5 @@
 function initBehavior(){
+    checkFiles();
     getDataFromSystemFile();
     getMenuItemsAndSetEvent();
     getInputFieldAndSetEvent();
