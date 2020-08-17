@@ -4,6 +4,9 @@ function initBehavior(){
     getInputFieldAndSetEvent();
     verifyStartInputsBehavior();
     getHistoryData();
+    setInterval(() => {
+        getHistoryData();    
+    }, 10000);
     clearLogsContent(); 
     setCountryOptions();   
     setSelectType();

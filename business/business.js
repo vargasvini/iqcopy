@@ -172,6 +172,7 @@ function getHistoryData(){
 
 function processHistoryData(_data) {
     const historyData = JSON.parse(_data);
+    historyData.sort(customSort)    
     paginationHistoryData(historyData);
 }
 
@@ -203,9 +204,14 @@ function historyDataTemplate(data) {
             </tr>
         `
         });
+        
     return html;
 }
 
 function range(start, end) {
     return Array.from({ length: end - start + 1 }, (_, i) => i)
+}
+
+function customSort(a, b) {    
+    return new Date(b.data).getTime() - new Date(a.data).getTime();
 }
