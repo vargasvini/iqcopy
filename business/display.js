@@ -1,3 +1,19 @@
+function enableStartCopy(){
+    document.getElementById("idBtnStartCopy").disabled = false;   
+}
+
+function disableStartCopy(){
+    document.getElementById("idBtnStartCopy").disabled = true;
+}
+
+function enableStartFinder(){
+    document.getElementById("idBtnStopCopy").disabled = false;
+}
+
+function disableStartFinder(){
+    document.getElementById("idBtnStopCopy").disabled = true;
+}
+
 function hideAccessItem(){
     document.getElementById("divAccessKey").style="display:none";
     document.getElementById("divAccessBtn").style="display:none";

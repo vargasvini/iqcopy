@@ -4,18 +4,44 @@ const {promisify} = require('util');
 
 
 var pyshell;
+var pyshellCopy;
 var idIntervalFinderBackend = "";
 var idIntervalFinderFile = "";
+var idIntervalCopyFile = "";
 var progress = 1;
 
 
 async function onStartCopy(){
-    // removeMenuClick();
-    // hideCopiarDiv();
-    // showLoaderDiv();
-    callCopy();
-    setInterval(readActivitiesLog, 2000)
-    //setTimeout(readActivitiesLog, 30)
+    if (pyshellCopy != undefined){
+        pyshellCopy.childProcess.kill();
+    }
+    if (idIntervalFinderBackend != ""){
+        clearInterval(idIntervalCopyFile)
+    }
+
+    clearCopyLogsContent();
+    disableStartCopy();
+
+    var options = {
+        scriptPath: path.join(__dirname, './backend/'),
+    }
+    
+    idIntervalCopyFile = setInterval(readActivitiesLog, 2000)
+
+    const callCopyTrader = promisify(this.runPyShellCopy);
+    const returnPyshell = await callCopyTrader("copytrade.py", options);
+    
+
+    //callCopy();
+    
+
+}
+
+function onEndCopy(){
+    if (pyshellCopy != undefined){
+        pyshellCopy.childProcess.kill();
+        enableStartCopy();
+    }
 }
 
 function setUserData(_data){
@@ -24,12 +50,17 @@ function setUserData(_data){
 }
 
 async function callCopy(){    
+    if (pyshellCopy != undefined){
+        pyshellCopy.childProcess.kill();
+    }
+
     var options = {
         scriptPath: path.join(__dirname, './backend/'),
     }
     
-    var login = new PythonShell('copytrade.py', options);
-    
+    const callCopyTrader = promisify(this.runPyShellCopy);
+    const returnPyshell = await callCopyTrader("copytrade.py", options);
+        
     login.on('message', function(message){
         var userData = JSON.parse(message);
         if (userData.message == 'error'){
@@ -55,6 +86,11 @@ async function readActivitiesLog(){
 function clearLogsContent(){
     const fs = require('fs')
     fs.writeFile('findtrader.log', '', function(){})
+}
+
+function clearCopyLogsContent(){
+    const fs = require('fs')
+    fs.writeFile('atividades.log', '', function(){})
 }
 
 function startProgressBar(){
@@ -123,6 +159,16 @@ function runPyShell(scriptPath, options, callback) {
     pyshell = new PythonShell(scriptPath, options);
     let output = [];
     return pyshell.on('message', function (message) {
+        output.push(message);
+    }).end(function (err) {
+        return callback(err ? err : null, output.length ? output : null);
+    });
+}
+
+function runPyShellCopy(scriptPath, options, callback) {
+    pyshellCopy = new PythonShell(scriptPath, options);
+    let output = [];
+    return pyshellCopy.on('message', function (message) {
         output.push(message);
     }).end(function (err) {
         return callback(err ? err : null, output.length ? output : null);
