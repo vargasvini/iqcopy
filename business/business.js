@@ -211,7 +211,7 @@ function historyDataTemplate(data) {
                 <td>${item.id}</td>
                 <td>${item.nome}</td>
                 <td>${item.resultado}</td>
-                <td>${item.valor}</td>
+                <td>${item.valor.toFixed(2).replace(".",",")}</td>
                 <td>${item.operacao.toUpperCase()}</td>
                 <td>${item.timeframe.replace("PT","")}</td>
                 <td>${item.paridade}</td>
