@@ -7,11 +7,11 @@ function disableStartCopy(){
 }
 
 function enableStartFinder(){
-    document.getElementById("idBtnStopCopy").disabled = false;
+    document.getElementById("idBtnPesquisarTrader").disabled = false;
 }
 
 function disableStartFinder(){
-    document.getElementById("idBtnStopCopy").disabled = true;
+    document.getElementById("idBtnPesquisarTrader").disabled = true;
 }
 
 function hideAccessItem(){

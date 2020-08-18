@@ -214,9 +214,14 @@
                                                         <label for="idStartTop" class="input-label">A partir do</label>
                                                     </div> 
                                                 </div>
-                                                <div class="input-field col s4" style="text-align: right;">
+                                                <div class="input-field col s2" style="text-align: right;">
                                                     <button id="idBtnPesquisarTrader" class="btn waves-effect waves-light btn-custom" type="submit"  name="btnPesquisarTrader" onclick="onStartFinder()">PESQUISAR
                                                         <i class="material-icons right">search</i>
+                                                    </button>
+                                                </div>
+                                                <div class="input-field col s2" style="text-align: right;">
+                                                    <button id="idBtnPararPesquisa" class="btn waves-effect waves-light btn-custom-cancel" type="submit"  name="btnPararPesquisa" onclick="onStopFinder()">PARAR
+                                                        <i class="material-icons right">stop</i>
                                                     </button>
                                                 </div>
                                             </div>
@@ -387,7 +392,7 @@
                             <button id="idBtnStartCopy" class="btn waves-effect waves-light btn-custom" type="submit" name="btnStartCopy" onclick="onStartCopy()">INICIAR
                                 <i class="material-icons right">play_arrow</i>
                             </button>
-                            <button id="idBtnStopCopy" class="btn waves-effect waves-light btn-custom-cancel" type="submit" name="btnStopCopy" onclick="onEndCopy()">PARAR
+                            <button id="idBtnStopCopy" class="btn waves-effect waves-light btn-custom-cancel" type="submit" name="btnStopCopy" onclick="onStopCopy()">PARAR
                                 <i class="material-icons right">stop</i>
                             </button>
                         </div>

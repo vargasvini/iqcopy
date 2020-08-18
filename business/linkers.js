@@ -30,17 +30,21 @@ async function onStartCopy(){
 
     const callCopyTrader = promisify(this.runPyShellCopy);
     const returnPyshell = await callCopyTrader("copytrade.py", options);
-    
-
     //callCopy();
-    
-
 }
 
-function onEndCopy(){
+function onStopCopy(){
     if (pyshellCopy != undefined){
         pyshellCopy.childProcess.kill();
         enableStartCopy();
+    }
+}
+
+function onStopFinder(){
+    if (pyshell != undefined){
+        pyshell.childProcess.kill();
+        checkFinderTimeRemaining(new Date(Date.now()))
+        enableStartFinder();
     }
 }
 
@@ -136,6 +140,7 @@ async function onStartFinder(){
 
     clearLogsContent();
     startProgressBar();
+    disableStartFinder();
 
     idIntervalFinderBackend = setInterval(checkFinderTimeRemaining, 1000, dt)
     idIntervalFinderFile = setInterval(getFindTraderData, 1000)
