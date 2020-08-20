@@ -10,6 +10,8 @@ from iqoptionapi.expiration import get_expiration_time
 import asyncio
 from config import startConfig
 
+import concurrent.futures
+
 logging, handler = Utils.setup_logger('copylogger', 'atividades.log', 'w')
 loggingHistory, handlerHistory = Utils.setup_logger('historylogger', 'resultados.log.config', 'a')
 
@@ -27,6 +29,11 @@ def logActivities(isHeader, msg):
         logging.info('<blockquote class="blockquote-custom-body">{}</blockquote>'.format(msg))
     handler.flush()
 
+def checkRunningDeals():
+    if config.getIsBinariasRunning() == True or config.getIsDigitaisRunning() == True:
+        return True
+    else:
+        return False
 
 def checkConditions(_userId, _valorEntrada):
     isValido = False
@@ -193,125 +200,13 @@ else:
     config.setValorEntradaAnterior(config.getValorEntrada())
     logActivities(True, "Iniciando cópia:")
     logActivities(False, "Buscando operações...")
+  
 
-    def getLiveDealBinarySync():
-        old = 0
-        now = datetime.now() #Hora atual rsrs
-        refreshTime =  now + timedelta(hours=1) #Intervalo de tempo entre as verificações dos ativos abertos
-        refreshRank =  now + timedelta(minutes=10) #Intervalo de tempo entre as verificações dos ativos abertos
-
-        #Atualiza a lista de ativos que estão abertos (ocorre a cada 1h)
-        if refreshTime < now:
-            refreshTime =  now + timedelta(hours=1)
-            config.getAtivosAbertosBinarias().clear()
-            config.setAtivosAbertosBinarias(Utils.buscaAtivosAbertos(iqoption, 'B'))
-        #Atualiza a lista de top traders que serão copiadas as entradas (ocorre a cada 10 minutos)
-        if refreshRank < now:
-            if config.getTipoFollow() == 'followRank' or config.getTipoFollow() == 'followAmbos':
-                config.getTradersToFollow().clear()
-                config.setTradersToFollow(filtro_ranking())
-            if config.getTipoFollow() == 'followId' or config.getTipoFollow() == 'followAmbos':
-                appendIdToFollow()
-
-        for paridade in config.getAtivosAbertosBinarias():
-            iqoption.unscribe_live_deal('live-deal-binary-option-placed', paridade, 'turbo')
-            iqoption.subscribe_live_deal('live-deal-binary-option-placed', paridade, 'turbo', 10)
-            trades = iqoption.get_live_deal("live-deal-binary-option-placed", paridade, 'turbo')
-            #logActivities(True, 'TRUE' if old != int(trades[0]['user_id']) else 'FALSE')
-            if len(trades) > 0:
-                user_id = trades[0]['user_id']
-                name = trades[0]['name']
-                direction = trades[0]['direction']
-                created = trades[0]['created_at']
-                expiration = trades[0]['expiration']
-                amount_enrolled = round(float(trades[0]['amount_enrolled']),2)
-
-                #if user_id in config.getTradersToFollow():
-                if amount_enrolled >= config.getValorMinimoTrader():
-                    #if old != int(new):
-                    res = round(time.time() - datetime.timestamp(timestamp_converter(created / 1000, 2)), 2)
-                    expiration_calc = Utils.getDifferenceInMinutes(int(str(created)[0:10]), int(str(expiration)[0:10]))
-                    if res <= float(15):
-                        status, id = iqoption.buy(config.getValorEntradaAtual(), paridade, direction, expiration_calc)
-                        if status:
-                            # if id != old:
-                            #     old = id
-                            lucro = iqoption.check_win_v3(id)
-                            calculaSaldoAtual(lucro)
-                            logActivities(True, "A operação <b>{}</b> realizada nas opções <b>BINÁRIAS</b> foi finalizada:".format(id))
-                            logActivities(False, "Resultado: <b>{}</b><br>Saldo: <b>{}</b><br>Lucro/Prejuizo: <b>{}</b>".format("WIN" if lucro > 0 else "LOSS", config.getSaldoAtual(),round(float(lucro),2)))
-                            logHistorico(user_id, "WIN" if lucro > 0 else "LOSS", paridade, round(float(lucro),2), direction, name, "PT{}M".format(expiration_calc), int(str(expiration)[0:10]))
-                            if config.getSaldoAtual() >= config.getValorStopWin() or (config.getSaldoAtual()*-1) >= config.getValorStopLoss():
-                                sys.exit()
-                            if lucro > 0:
-                                setVariaveisMartingale('win')
-                                config.setValorEntradaAnterior(config.getValorEntradaAtual())
-                                config.setValorEntradaAtual(getValorEntradaCalculada())
-                            else:
-                                setVariaveisMartingale('loss')
-                                config.setValorEntradaAnterior(config.getValorEntradaAtual())
-                                config.setValorEntradaAtual(getValorEntradaCalculada())
-
-    def getLiveDealDigitalSync(timeFrame):
-        old = 0
-        now = datetime.now() #Hora atual rsrs
-        refreshTime =  now + timedelta(hours=1) #Intervalo de tempo entre as verificações dos ativos abertos
-        refreshRank =  now + timedelta(minutes=10) #Intervalo de tempo entre as verificações dos ativos abertos
-        if refreshTime < now:
-            refreshTime =  now + timedelta(hours=1)
-            config.getAtivosAbertosBinarias().clear()
-            config.setAtivosAbertosBinarias(Utils.buscaAtivosAbertos(iqoption, 'B'))
-        #Atualiza a lista de top traders que serão copiadas as entradas (ocorre a cada 10 minutos)
-        if refreshRank < now:
-            if config.getTipoFollow() == 'followRank' or config.getTipoFollow() == 'followAmbos':
-                config.getTradersToFollow().clear()
-                config.setTradersToFollow(filtro_ranking())
-            if config.getTipoFollow() == 'followId' or config.getTipoFollow() == 'followAmbos':
-                appendIdToFollow()
-
-        for paridade in config.getAtivosAbertosDigitais():
-            iqoption.unscribe_live_deal('live-deal-digital-option', paridade, timeFrame)
-            iqoption.subscribe_live_deal('live-deal-digital-option', paridade, timeFrame, 10)
-            trades = iqoption.get_live_deal('live-deal-digital-option', paridade, timeFrame)
-            if len(trades) > 0:
-                user_id = trades[0]['user_id']
-                name = trades[0]['name']
-                direction = trades[0]['instrument_dir']
-                created = trades[0]['created_at']
-                expiration = trades[0]['expiration_type'].replace("PT", "").replace("M","")
-                amount_enrolled = round(float(trades[0]['amount_enrolled']),2)
-                #if user_id in config.getTradersToFollow():
-                if amount_enrolled >= config.getValorMinimoTrader():
-                    res = round(time.time() - datetime.timestamp(timestamp_converter(created / 1000, 2)), 2)
-                    if res <= float(15):
-                        statusBuy, id = iqoption.buy_digital_spot(paridade, config.getValorEntradaAtual(), direction, int(expiration))
-                        if statusBuy:
-                            # if id != old:
-                            #     old = id
-                            status, lucro = Utils.check_win_digital_v3(iqoption, id)
-                            if status:
-                                calculaSaldoAtual(lucro)
-                                logActivities(True, "A operação <b>{}</b> realizada nas opções <b>DIGITAIS</b> foi finalizada:".format(id))
-                                logActivities(False, "Resultado: <b>{}</b><br>Saldo: <b>{}</b><br>Lucro/Prejuizo: <b>{}</b>".format("WIN" if lucro > 0 else "LOSS", config.getSaldoAtual(),round(float(lucro),2)))
-                                logHistorico(user_id, "WIN" if lucro > 0 else "LOSS", paridade, round(float(lucro),2), direction, name, "PT{}M".format(expiration), int(str(created)[0:10]))
-                                if config.getSaldoAtual() >= config.getValorStopWin() or (config.getSaldoAtual()*-1) >= config.getValorStopLoss():
-                                    sys.exit()
-                                if lucro > 0:
-                                    setVariaveisMartingale('win')
-                                    config.setValorEntradaAnterior(config.getValorEntradaAtual())
-                                    config.setValorEntradaAtual(getValorEntradaCalculada())
-                                else:
-                                    setVariaveisMartingale('loss')
-                                    config.setValorEntradaAnterior(config.getValorEntradaAtual())
-                                    config.setValorEntradaAtual(getValorEntradaCalculada())
-
-    def getLiveDealBinaryAsync():
-        old = 0
+    def startCopy():
         now = datetime.now() #Hora atual rsrs
         refreshTime =  now + timedelta(hours=1) #Intervalo de tempo entre as verificações dos ativos abertos
         refreshRank =  now + timedelta(minutes=10) #Intervalo de tempo entre as verificações dos ativos abertos
         while True:
-            #Atualiza a lista de ativos que estão abertos (ocorre a cada 1h)
             if refreshTime < now:
                 refreshTime =  now + timedelta(hours=1)
                 config.getAtivosAbertosBinarias().clear()
@@ -323,127 +218,119 @@ else:
                     config.setTradersToFollow(filtro_ranking())
                 if config.getTipoFollow() == 'followId' or config.getTipoFollow() == 'followAmbos':
                     appendIdToFollow()
+            with concurrent.futures.ThreadPoolExecutor() as executor:
+                if config.getTipoOpcoes() == 'binarias' or config.getTipoOpcoes() == 'opcoesAmbas':
+                    executor.map(findDealBinary, config.getAtivosAbertosBinarias())
+                if config.getTipoOpcoes() == 'digitais' or config.getTipoOpcoes() == 'opcoesAmbas':
+                    if config.getTipoExpiracao() == 'um' or config.getTipoExpiracao() == 'expiracaoAmbos':
+                        executor.map(findDealDigital1M, config.getAtivosAbertosDigitais())
+                    if config.getTipoExpiracao() == 'cinco' or config.getTipoExpiracao() == 'expiracaoAmbos':
+                        executor.map(findDealDigital5M, config.getAtivosAbertosDigitais())
 
-            for paridade in config.getAtivosAbertosBinarias():
-                iqoption.unscribe_live_deal('live-deal-binary-option-placed', paridade, 'turbo')
-                iqoption.subscribe_live_deal('live-deal-binary-option-placed', paridade, 'turbo', 10)
-                trades = iqoption.get_live_deal("live-deal-binary-option-placed", paridade, 'turbo')
-                if len(trades) > 0:
-                    res = 0
-                    created = trades[0]['created_at']
-                    # print(timestamp_converter(time.time() / 1000, 2))
-                    # print(timestamp_converter(created / 1000, 2))
-                    #res = round(time.time() - datetime.timestamp(timestamp_converter(created / 1000, 2)), 2)
-                    res = Utils.getDifferenceInSeconds(int(str(time.time())[0:10]), int(str(created)[0:10]))
-                    if res <= float(3): 
-                        user_id = trades[0]['user_id']
-                        name = trades[0]['name']
-                        direction = trades[0]['direction']
-                        #created = trades[0]['created_at']
-                        expiration = trades[0]['expiration']
-                        amount_enrolled = round(float(trades[0]['amount_enrolled']),2)
-                        #if user_id in config.getTradersToFollow():
-                        #if amount_enrolled >= config.getValorMinimoTrader():
-                        if checkConditions(user_id, amount_enrolled):
-                            expiration_calc = Utils.getDifferenceInMinutes(int(str(created)[0:10]), int(str(expiration)[0:10]))
-                            status, id = iqoption.buy(config.getValorEntradaAtual(), paridade, direction, 1)
-                            if status:
-                                lucro = iqoption.check_win_v3(id)
-                                calculaSaldoAtual(lucro)
-                                logActivities(True, "A operação <b>{}</b> realizada nas opções <b>BINÁRIAS</b> foi finalizada:".format(id))
-                                logActivities(False, "Resultado: <b>{}</b><br>Saldo: <b>{}</b><br>Lucro/Prejuizo: <b>{}</b>".format("WIN" if lucro > 0 else "LOSS", config.getSaldoAtual(),round(float(lucro),2)))
-                                logHistorico(user_id, "WIN" if lucro > 0 else "LOSS", paridade, round(float(amount_enrolled),2), direction, name, "PT{}M".format(expiration_calc), int(str(expiration)[0:10]))
-                                if config.getSaldoAtual() >= config.getValorStopWin() or (config.getSaldoAtual()*-1) >= config.getValorStopLoss():
-                                    sys.exit()
-                                if lucro > 0:
-                                    setVariaveisMartingale('win')
-                                    config.setValorEntradaAnterior(config.getValorEntradaAtual())
-                                    config.setValorEntradaAtual(getValorEntradaCalculada())
-                                else:
-                                    setVariaveisMartingale('loss')
-                                    config.setValorEntradaAnterior(config.getValorEntradaAtual())
-                                    config.setValorEntradaAtual(getValorEntradaCalculada())
-                    iqoption.pop_live_deal("live-deal-binary-option-placed", paridade, "turbo")
+    def findDealBinary(paridade):
+        iqoption.unscribe_live_deal('live-deal-binary-option-placed', paridade, 'turbo')
+        iqoption.subscribe_live_deal('live-deal-binary-option-placed', paridade, 'turbo', 10)
+        trades = iqoption.get_live_deal("live-deal-binary-option-placed", paridade, 'turbo')
+        if len(trades) > 0:
+            if checkRunningDeals() == False:
+                res = 0
+                created = trades[0]['created_at']
+                res = Utils.getDifferenceInSeconds(int(str(time.time())[0:10]), int(str(created)[0:10]))
+                if res <= float(3): 
+                    user_id = trades[0]['user_id']
+                    name = trades[0]['name']
+                    direction = trades[0]['direction']
+                    expiration = trades[0]['expiration']
+                    amount_enrolled = round(float(trades[0]['amount_enrolled']),2)
+                    if checkConditions(user_id, amount_enrolled):
+                        config.setIsBinariasRunning(True)
+                        expiration_calc = Utils.getDifferenceInMinutes(int(str(created)[0:10]), int(str(expiration)[0:10]))
+                        buyPositionBinary(paridade, direction, expiration_calc, user_id, name, amount_enrolled, expiration)
+                        config.setIsBinariasRunning(False)
+        iqoption.pop_live_deal("live-deal-binary-option-placed", paridade, "turbo")
 
-    def getLiveDealDigitalAsync(timeFrame):
-        old = 0
-        now = datetime.now() #Hora atual rsrs
-        refreshTime =  now + timedelta(hours=1) #Intervalo de tempo entre as verificações dos ativos abertos
-        refreshRank =  now + timedelta(minutes=10) #Intervalo de tempo entre as verificações dos ativos abertos
-        while True:
-            if refreshTime < now:
-                refreshTime =  now + timedelta(hours=1)
-                config.getAtivosAbertosBinarias().clear()
-                config.setAtivosAbertosBinarias(Utils.buscaAtivosAbertos(iqoption, 'B'))
-            #Atualiza a lista de top traders que serão copiadas as entradas (ocorre a cada 10 minutos)
-            if config.getTipoFollow() != "followNenhum":
-                if refreshRank < now:
-                    if config.getTipoFollow() == 'followRank' or config.getTipoFollow() == 'followAmbos':
-                        config.getTradersToFollow().clear()
-                        config.setTradersToFollow(filtro_ranking())
-                    if config.getTipoFollow() == 'followId' or config.getTipoFollow() == 'followAmbos':
-                        appendIdToFollow()
+    def buyPositionBinary(paridade, direction, expiration_calc, user_id, name, amount_enrolled, expiration):
+        status, id = iqoption.buy(config.getValorEntradaAtual(), paridade, direction, expiration_calc)
+        if status:
+            lucro = iqoption.check_win_v3(id)
+            calculaSaldoAtual(lucro)
+            logActivities(True, "A operação <b>{}</b> realizada nas opções <b>BINÁRIAS</b> foi finalizada:".format(id))
+            logActivities(False, "Resultado: <b>{}</b><br>Saldo: <b>{}</b><br>Lucro/Prejuizo: <b>{}</b>".format("WIN" if lucro > 0 else "LOSS", config.getSaldoAtual(),round(float(lucro),2)))
+            logHistorico(user_id, "WIN" if lucro > 0 else "LOSS", paridade, round(float(amount_enrolled),2), direction, name, "PT{}M".format(expiration_calc), int(str(expiration)[0:10]))
+            if config.getSaldoAtual() >= config.getValorStopWin() or (config.getSaldoAtual()*-1) >= config.getValorStopLoss():
+                sys.exit()
+            if lucro > 0:
+                setVariaveisMartingale('win')   
+                config.setValorEntradaAnterior(config.getValorEntradaAtual())
+                config.setValorEntradaAtual(getValorEntradaCalculada())
+            else:
+                setVariaveisMartingale('loss')
+                config.setValorEntradaAnterior(config.getValorEntradaAtual())
+                config.setValorEntradaAtual(getValorEntradaCalculada())
+                 
+    def findDealDigital1M(paridade):
+        timeframe = "PT1M"
+        iqoption.unscribe_live_deal('live-deal-digital-option', paridade, timeframe)
+        iqoption.subscribe_live_deal('live-deal-digital-option', paridade, timeframe, 10)
+        trades = iqoption.get_live_deal('live-deal-digital-option', paridade, timeframe)
+        if len(trades) > 0:
+            if checkRunningDeals() == False:
+                res = 0
+                created = trades[0]['created_at']
+                res = Utils.getDifferenceInSeconds(int(str(time.time())[0:10]), int(str(created)[0:10]))
+                if res <= float(3):    
+                    user_id = trades[0]['user_id']
+                    name = trades[0]['name']
+                    direction = trades[0]['instrument_dir']
+                    expiration = trades[0]['expiration_type'].replace("PT", "").replace("M","")
+                    amount_enrolled = round(float(trades[0]['amount_enrolled']),2)
+                    if checkConditions(user_id, amount_enrolled):
+                        config.setIsDigitaisRunning(True)
+                        buyPositionDigital(paridade, direction, expiration, user_id, name, amount_enrolled, created)
+                        config.setIsDigitaisRunning(False)
+        iqoption.pop_live_deal('live-deal-digital-option', paridade, timeframe)
 
-            for paridade in config.getAtivosAbertosDigitais():
-                iqoption.unscribe_live_deal('live-deal-digital-option', paridade, timeFrame)
-                iqoption.subscribe_live_deal('live-deal-digital-option', paridade, timeFrame, 10)
-                trades = iqoption.get_live_deal('live-deal-digital-option', paridade, timeFrame)
-                if len(trades) > 0:
-                    res = 0
-                    created = trades[0]['created_at']
-                    # print(timestamp_converter(time.time() / 1000, 2))
-                    # print(timestamp_converter(created / 1000, 2))
-                    #res = round(time.time() - datetime.timestamp(timestamp_converter(created / 1000, 2)), 2)
-                    res = Utils.getDifferenceInSeconds(int(str(time.time())[0:10]), int(str(created)[0:10]))
-                    if res <= float(3):    
-                        user_id = trades[0]['user_id']
-                        name = trades[0]['name']
-                        direction = trades[0]['instrument_dir']
-                        expiration = trades[0]['expiration_type'].replace("PT", "").replace("M","")
-                        amount_enrolled = round(float(trades[0]['amount_enrolled']),2)
-                        if checkConditions(user_id, amount_enrolled):
-                            statusBuy, id = iqoption.buy_digital_spot(paridade, config.getValorEntradaAtual(), direction, int(1))
-                            if statusBuy:
-                                status, lucro = Utils.check_win_digital_v3(iqoption, id)
-                                if status:
-                                    calculaSaldoAtual(lucro)
-                                    logActivities(True, "A operação <b>{}</b> realizada nas opções <b>DIGITAIS</b> foi finalizada:".format(id))
-                                    logActivities(False, "Resultado: <b>{}</b><br>Saldo: <b>{}</b><br>Lucro/Prejuizo: <b>{}</b>".format("WIN" if lucro > 0 else "LOSS", config.getSaldoAtual(),round(float(lucro),2)))
-                                    logHistorico(user_id, "WIN" if lucro > 0 else "LOSS", paridade, round(float(amount_enrolled),2), direction, name, "PT{}M".format(expiration), int(str(created)[0:10]))
-                                    if config.getSaldoAtual() >= config.getValorStopWin() or (config.getSaldoAtual()*-1) >= config.getValorStopLoss():
-                                        sys.exit()
-                                    if lucro > 0:
-                                        setVariaveisMartingale('win')
-                                        config.setValorEntradaAnterior(config.getValorEntradaAtual())
-                                        config.setValorEntradaAtual(getValorEntradaCalculada())
-                                    else:
-                                        setVariaveisMartingale('loss')
-                                        config.setValorEntradaAnterior(config.getValorEntradaAtual())
-                                        config.setValorEntradaAtual(getValorEntradaCalculada())
-                    iqoption.pop_live_deal('live-deal-digital-option', paridade, timeFrame)
+    def findDealDigital5M(paridade):
+        timeframe = "PT5M"
+        iqoption.unscribe_live_deal('live-deal-digital-option', paridade, timeframe)
+        iqoption.subscribe_live_deal('live-deal-digital-option', paridade, timeframe, 10)
+        trades = iqoption.get_live_deal('live-deal-digital-option', paridade, timeframe)
+        if len(trades) > 0:
+            if checkRunningDeals() == False:
+                res = 0
+                created = trades[0]['created_at']
+                res = Utils.getDifferenceInSeconds(int(str(time.time())[0:10]), int(str(created)[0:10]))
+                if res <= float(3):    
+                    user_id = trades[0]['user_id']
+                    name = trades[0]['name']
+                    direction = trades[0]['instrument_dir']
+                    expiration = trades[0]['expiration_type'].replace("PT", "").replace("M","")
+                    amount_enrolled = round(float(trades[0]['amount_enrolled']),2)
+                    if checkConditions(user_id, amount_enrolled):
+                        buyPositionDigital(paridade, direction, expiration, user_id, name, amount_enrolled, created)
+        iqoption.pop_live_deal('live-deal-digital-option', paridade, timeframe)
 
-    def callTradesAsync():
-        if config.getTipoOpcoes() == 'binarias' or config.getTipoOpcoes() == 'opcoesAmbas':
-            threading.Thread(target=getLiveDealBinaryAsync).start()
-        if config.getTipoOpcoes() == 'digitais' or config.getTipoOpcoes() == 'opcoesAmbas':
-            if config.getTipoExpiracao() == 'um' or config.getTipoExpiracao() == 'expiracaoAmbos':
-                threading.Thread(target=getLiveDealDigitalAsync, args=["PT1M"]).start()
-            if config.getTipoExpiracao() == 'cinco' or config.getTipoExpiracao() == 'expiracaoAmbos':
-                threading.Thread(target=getLiveDealDigitalAsync, args=["PT5M"]).start()
+    def buyPositionDigital(paridade, direction, expiration, user_id, name, amount_enrolled, created):
+        statusBuy, id = iqoption.buy_digital_spot(paridade, config.getValorEntradaAtual(), direction, int(expiration))
+        if statusBuy:
+            status, lucro = Utils.check_win_digital_v3(iqoption, id)
+            if status:
+                calculaSaldoAtual(lucro)
+                logActivities(True, "A operação <b>{}</b> realizada nas opções <b>DIGITAIS</b> foi finalizada:".format(id))
+                logActivities(False, "Resultado: <b>{}</b><br>Saldo: <b>{}</b><br>Lucro/Prejuizo: <b>{}</b>".format("WIN" if lucro > 0 else "LOSS", config.getSaldoAtual(),round(float(lucro),2)))
+                logHistorico(user_id, "WIN" if lucro > 0 else "LOSS", paridade, round(float(amount_enrolled),2), direction, name, "PT{}M".format(expiration), int(str(created)[0:10]))
+                if config.getSaldoAtual() >= config.getValorStopWin() or (config.getSaldoAtual()*-1) >= config.getValorStopLoss():
+                    sys.exit()
+                if lucro > 0:
+                    setVariaveisMartingale('win')
+                    config.setValorEntradaAnterior(config.getValorEntradaAtual())
+                    config.setValorEntradaAtual(getValorEntradaCalculada())
+                else:
+                    setVariaveisMartingale('loss')
+                    config.setValorEntradaAnterior(config.getValorEntradaAtual())
+                    config.setValorEntradaAtual(getValorEntradaCalculada())
 
-    def callTradesSync():
-        while True:
-            if config.getTipoOpcoes() == 'binarias' or config.getTipoOpcoes() == 'opcoesAmbas':
-                getLiveDealBinarySync()
-            if config.getTipoOpcoes() == 'digitais' or config.getTipoOpcoes() == 'opcoesAmbas':
-                if config.getTipoExpiracao() == 'um' or config.getTipoExpiracao() == 'expiracaoAmbos':
-                    getLiveDealDigitalSync("PT1M")
-                if config.getTipoExpiracao() == 'cinco' or config.getTipoExpiracao() == 'expiracaoAmbos':
-                    getLiveDealDigitalSync("PT5M")
+    def runCopyThread():
+        threading.Thread(target=startCopy).start()
 
-    if config.getTipoGerenciamento() == 'maofixa':
-        callTradesAsync()
-    elif config.getTipoGerenciamento() == 'martingale':
-        threading.Thread(target=callTradesSync).start()
-
-
+    runCopyThread()
