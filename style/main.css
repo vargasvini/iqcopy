@@ -300,7 +300,7 @@ input:not([type]):focus:not([readonly])+label, input[type=text]:not(.browser-def
 }
 
 .input-card{
-    color: 101326;
+    color: #101326;
 }
 .header-search-trader{
     padding: 10px; 
@@ -389,4 +389,10 @@ input:not([type]):focus:not([readonly])+label, input[type=text]:not(.browser-def
     font-size: 40px;
     cursor: pointer;
     color: #69F3A8;
+}
+
+.finder-block-icon{
+    font-size: 40px;
+    cursor: pointer;
+    color: #101326;
 }

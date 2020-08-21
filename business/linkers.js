@@ -216,7 +216,9 @@ async function appendFindTraderData(data) {
                 <td><img src="${item.img}" alt="" class="circle" style="height: 50px;"></td>
                 `
             }
-            html += `<td id="idBtnAdd${item.userid}"><i class="material-icons right finder-add-icon">add_box</i></td>
+            html += `
+            <td id="idBtnAdd${item.userid}" style="width:20px"><i class="material-icons right finder-add-icon" style="margin-left:0px">add_box</i></td>
+            <td id="idBtnBlock${item.userid}" style="width:20px"><i class="material-icons right finder-block-icon" style="margin-left:0px">block</i></td>
             </tr>`
             userIdList.push(`${item.userid}`)
         });
@@ -227,12 +229,20 @@ async function appendFindTraderData(data) {
             event.preventDefault();
         });
     }
+    for (let index = 0; index < userIdList.length; index++) {
+        document.getElementById(`idBtnBlock${userIdList[index]}`).addEventListener('click', function (event) {
+            addToBlockList(`${userIdList[index]}`)
+            event.preventDefault();
+        });
+    }
 
 }
 
 function addToFollowList(userId){
+    msg = 'O TRADER SELECIONADO JÁ FOI ADICIONADO!';
     var idsToFollow = $('#idFollowIds').val();
-    if(verifyIdAlreadyAdded(idsToFollow, userId)){
+    if(verifyIdAlreadyAdded(idsToFollow, userId, msg)){
+        removeFromBlockList(userId)
         $('#idFollowIds').val('');
         if(idsToFollow == ''){
             idsToFollow  = userId
@@ -242,14 +252,72 @@ function addToFollowList(userId){
         idsToFollow.replace(/,\s*$/, "");
         $('#idFollowIds').val(idsToFollow);
         document.getElementById('idFollowIdsLabel').classList.add("active");
+        M.toast({html: "TRADER ADICIONADO COM SUCESSO NA LISTA PARA SEGUIR", classes: 'toast-custom-success valign-wrapper', displayLength: 1000})
     }
 }
 
-function verifyIdAlreadyAdded(idList, currId){
+function addToBlockList(userId){
+    msg = 'O TRADER SELECIONADO JÁ FOI ADICIONADO NA LISTA DE BLOQUEIO!';
+    var idsToBlock = $('#idBlockIds').val();
+    if(verifyIdAlreadyAdded(idsToBlock, userId, msg)){
+        removeFromFollowList(userId)
+        $('#idBlockIds').val('');
+        if(idsToBlock == ''){
+            idsToBlock  = userId
+        }else{   
+            idsToBlock += "," + userId
+        }
+        idsToBlock.replace(/,\s*$/, "");
+        $('#idBlockIds').val(idsToBlock);
+        document.getElementById('idBlockIdsLabel').classList.add("active");
+        M.toast({html: "TRADER ADICIONADO COM SUCESSO NA LISTA DE BLOQUEADOS", classes: 'toast-custom-success valign-wrapper', displayLength: 1000})
+    }
+}
+
+function removeFromFollowList(currId){
+    var idsToFollow = '';
+    var idList = $('#idFollowIds').val();
     idArr = idList.split(',');
     for (let index = 0; index < idArr.length; index++) {
         if(idArr[index] == currId){
-            M.toast({html: 'O TRADER SELECIONADO JÁ FOI ADICIONADO NA LISTA!', classes: 'toast-custom-warning valign-wrapper', displayLength: 1000})
+            idArr.splice(index, 0)
+        }else {
+            if(idsToFollow == ''){
+                idsToFollow  = idArr[index]
+            }else{   
+                idsToFollow += "," + idArr[index]
+            }
+        }
+    }
+    idsToFollow.replace(/,\s*$/, "");
+    $('#idFollowIds').val(idsToFollow);
+}
+
+function removeFromBlockList(currId){
+    debugger;
+    var idsToBlock = '';
+    var idList = $('#idBlockIds').val();
+    idArr = idList.split(',');
+    for (let index = 0; index < idArr.length; index++) {
+        if(idArr[index] == currId){
+            idArr.splice(index, 0)
+        }else {
+            if(idsToBlock == ''){
+                idsToBlock  = idArr[index]
+            }else{   
+                idsToBlock += "," + idArr[index]
+            }
+        }
+    }
+    idsToBlock.replace(/,\s*$/, "");
+    $('#idBlockIds').val(idsToBlock);
+}
+
+function verifyIdAlreadyAdded(idList, currId, msg){
+    idArr = idList.split(',');
+    for (let index = 0; index < idArr.length; index++) {
+        if(idArr[index] == currId){
+            M.toast({html: msg, classes: 'toast-custom-warning valign-wrapper', displayLength: 1000})
             return false;
         }
     }
