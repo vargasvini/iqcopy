@@ -215,7 +215,7 @@ function historyDataTemplate(data) {
                 <td>${item.operacao.toUpperCase()}</td>
                 <td>${item.timeframe.replace("PT","")}</td>
                 <td>${item.paridade}</td>
-                <td>${moment(item.data).format("DD/MM/YYYY hh:mm")}</td>
+                <td>${moment(item.data).format("DD/MM/YYYY HH:mm")}</td>
             </tr>
         `
         });
