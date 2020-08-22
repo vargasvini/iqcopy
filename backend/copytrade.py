@@ -80,6 +80,16 @@ def filtro_ranking():
             user_id.append(id)
     return user_id
 
+def appendBlockIds():
+    blocklist_ids = config.getBlockId().replace(" ", "")
+    if blocklist_ids != '':
+        if ',' in blocklist_ids:
+            x = blocklist_ids.split(',')
+            for old in x:
+                config.getTradersToBlock().append(int(old))
+        else:
+            config.getTradersToBlock().append(int(blocklist_ids))
+
 def appendIdToFollow():
     seguir_ids = config.getFollowId().replace(" ", "")
     if seguir_ids != '':
@@ -288,33 +298,26 @@ else:
     ###############################################
     # ETAPA 2
     ###############################################
-    logActivities(True, "Montando lista de ids dos traders que você está seguindo:")
+    if config.getTipoFollow() != "followNenhum":
+        logActivities(True, "Montando lista de ids dos traders que você está seguindo:")
 
-    if config.getTipoFollow() == 'followRank' or config.getTipoFollow() == 'followAmbos':
-        config.setTradersToFollow(filtro_ranking())
-    # Monta lista de IDs dos traders que serão seguidos
-    if config.getTipoFollow() == 'followId' or config.getTipoFollow() == 'followAmbos':
-        appendIdToFollow()
-
-    #logActivities(False, str(config.getTradersToFollow()).replace("[","").replace("]","").replace("'",""))
-    logActivities(False, "Você selecionou um total de <b>{}</b> traders".format(len(config.getTradersToFollow())))
+        if config.getTipoFollow() == 'followRank' or config.getTipoFollow() == 'followAmbos':
+            config.setTradersToFollow(filtro_ranking())
+        # Monta lista de IDs dos traders que serão seguidos
+        if config.getTipoFollow() == 'followId' or config.getTipoFollow() == 'followAmbos':
+            appendIdToFollow()
+        
+        #logActivities(False, str(config.getTradersToFollow()).replace("[","").replace("]","").replace("'",""))
+        logActivities(False, "Você selecionou um total de <b>{}</b> traders".format(len(config.getTradersToFollow())))
     ###############################################
     # ETAPA 3
     ###############################################
-    # logActivities(True, "Montando lista de ids dos traders que você está evitando:")
+    if config.getBlockId() != '':
+        logActivities(True, "Montando lista de ids dos traders que você está evitando:")
 
-    # blacklist_ids = ''
-    # filtro_black_list = []
-    # # # Monta lista de IDs dos traders que estão errando muito (dias ruins pra todos)
-    # if blacklist_ids != '':
-    #     if ',' in blacklist_ids:
-    #         x = blacklist_ids.split(',')
-    #         for old in x:
-    #             filtro_black_list.append(int(old))
-    #     else:
-    #         filtro_black_list.append(int(blacklist_ids))
+        appendBlockIds()
 
-    # logActivities(False, "Você não está evitando nenhum trader" if blacklist_ids == '' else str(filtro_black_list).replace("[","").replace("]","").replace("'",""))
+        logActivities(False, "Você está evitando um total de <b>{}</b> traders".format(len(config.getTradersToBlock())))
     ###############################################
     # ETAPA 4
     ###############################################

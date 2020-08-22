@@ -80,6 +80,12 @@ function getInputFieldAndSetEvent(){
         var fixedInput = currentInput.replace(/[A-Za-z!@#$%^&*()]/g, '');
         $(this).val(fixedInput);        
     });
+
+    $('#idBlockIds').on('change, keyup', function() {
+        var currentInput = $(this).val();
+        var fixedInput = currentInput.replace(/[A-Za-z!@#$%^&*()]/g, '');
+        $(this).val(fixedInput);        
+    });
 }
 
 

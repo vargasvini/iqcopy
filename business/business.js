@@ -71,6 +71,7 @@ function createFormData(){
         tipoFollow: getRadioVal(document.getElementById('divFollowOptions'), 'groupFollowOpcoes'),
         followRank: document.getElementById("idFollowRank").value,
         followId: document.getElementById("idFollowIds").value,
+        blockId: document.getElementById("idBlockIds").value,
         /*Gerenciamento*/
         tipoGerenciamento: getRadioVal(document.getElementById('divOptionsGerenciamento'), 'groupTipoEntrada'),
         valorEntrada: $('#idValorEntrada').maskMoney('unmasked')[0],
@@ -109,6 +110,7 @@ function createConfig(_formData){
     config += `\ntipoFollow=${_formData.tipoFollow.trim()}`
     config += `\nfollowRank=${_formData.followRank.trim()}`
     config += `\nfollowId=${_formData.followId.trim()}`
+    config += `\nblockId=${_formData.blockId.trim()}`
 
     config += `\n[gerenciamento]`
     config += `\ntipoGerenciamento=${_formData.tipoGerenciamento.trim()}`
@@ -161,6 +163,7 @@ function processDataSystem(_data) {
     document.querySelectorAll(`input[value=${formData.tipoFollow}]`)[0].checked = true;
     document.getElementById("idFollowRank").value = formData.followRank;
     document.getElementById("idFollowIds").value = formData.followId;
+    document.getElementById("idBlockIds").value = formData.blockId;
     /*Gerenciamento*/
     document.querySelectorAll(`input[value=${formData.tipoGerenciamento}]`)[0].checked = true;
     $('#idValorEntrada').val(`R$ ${formData.valorEntrada.toFixed(2).replace(".",",")}`);

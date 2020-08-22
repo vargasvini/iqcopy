@@ -7,6 +7,7 @@ def copyTradeConfig():
             self.tipoFollow = ''
             self.followRank = 1
             self.followId = ''
+            self.blockId = ''
             # GERENCIAMENTO #
             self.tipoGerenciamento = ''
             self.valorEntrada = float(2)
@@ -29,6 +30,7 @@ def copyTradeConfig():
             self.qtdMartingaleAtual = int(0)
             self.saldoAtual = float(0)
             self.tradersToFollow = []
+            self.tradersToBlock = []
             self.ativosAbertosBinarias = []
             self.ativosAbertosDigitais = []
             # THREAD CONTROL #
@@ -43,6 +45,8 @@ def copyTradeConfig():
             return int(self.followRank)
         def getFollowId(self):
             return self.followId
+        def getBlockId(self):
+            return self.blockId
         # GERENCIAMENTO #
         def getTipoGerenciamento(self):
             return self.tipoGerenciamento
@@ -81,6 +85,8 @@ def copyTradeConfig():
             return round(float(self.saldoAtual),2)
         def getTradersToFollow(self):
             return self.tradersToFollow
+        def getTradersToBlock(self):
+            return self.tradersToBlock
         def getAtivosAbertosBinarias(self):
             return self.ativosAbertosBinarias
         def getAtivosAbertosDigitais(self):
@@ -99,6 +105,8 @@ def copyTradeConfig():
             self.followRank = _followRank
         def setFollowId(self, _followId):
             self.followId = _followId
+        def setBlockId(self, _blockId):
+            self.blockId = _blockId
         # GERENCIAMENTO #
         def setTipoGerenciamento(self, _tipoGerenciamento):
             self.tipoGerenciamento = _tipoGerenciamento
@@ -130,6 +138,8 @@ def copyTradeConfig():
             self.saldoAtual = _saldoAtual
         def setTradersToFollow(self, _tradersToFollow):
             self.tradersToFollow = _tradersToFollow
+        def setTradersToBlock(self, _tradersToBlock):
+            self.tradersToBlock = _tradersToBlock
         def setAtivosAbertosBinarias(self, _ativosAbertosBinarias):
             self.ativosAbertosBinarias = _ativosAbertosBinarias
         def setAtivosAbertosDigitais(self, _ativosAbertosDigitais):
@@ -157,6 +167,7 @@ def startConfig():
             self.config.setTipoFollow(parser.get('seguirTrader', 'tipoFollow'))
             self.config.setFollowRank(parser.get('seguirTrader', 'followRank'))
             self.config.setFollowId(parser.get('seguirTrader', 'followId'))
+            self.config.setBlockId(parser.get('seguirTrader', 'blockId'))
             # GERENCIAMENTO #
             self.config.setTipoGerenciamento(parser.get('gerenciamento', 'tipoGerenciamento'))
             self.config.setValorEntrada(parser.get('gerenciamento', 'valorEntrada'))
