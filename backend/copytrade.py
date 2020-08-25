@@ -157,12 +157,16 @@ def startCopy():
                     threading.Thread(target=executor.map, args=(findDealBinary, config.getAtivosAbertosBinarias(),)).start()
                     threading.Thread(target=executor.map, args=(findDealDigital1M, config.getAtivosAbertosDigitais(),)).start()
                     threading.Thread(target=executor.map, args=(findDealDigital5M, config.getAtivosAbertosDigitais(),)).start()
+                    threading.Thread(target=executor.map, args=(findDealDigital15M, config.getAtivosAbertosDigitais(),)).start()
                 elif config.getTipoExpiracao() == 'um':
                     threading.Thread(target=executor.map, args=(findDealBinary, config.getAtivosAbertosBinarias(),)).start()
                     threading.Thread(target=executor.map, args=(findDealDigital1M, config.getAtivosAbertosDigitais(),)).start()
                 elif config.getTipoExpiracao() == 'cinco':
                     threading.Thread(target=executor.map, args=(findDealBinary, config.getAtivosAbertosBinarias(),)).start()
                     threading.Thread(target=executor.map, args=(findDealDigital5M, config.getAtivosAbertosDigitais(),)).start()
+                elif config.getTipoExpiracao() == 'quinze':
+                    threading.Thread(target=executor.map, args=(findDealBinary, config.getAtivosAbertosBinarias(),)).start()
+                    threading.Thread(target=executor.map, args=(findDealDigital15M, config.getAtivosAbertosDigitais(),)).start()
             elif config.getTipoOpcoes() == 'binarias':
                 threading.Thread(target=executor.map, args=(findDealBinary, config.getAtivosAbertosBinarias(),)).start()
             elif config.getTipoOpcoes() == 'digitais':
@@ -170,6 +174,8 @@ def startCopy():
                     threading.Thread(target=executor.map, args=(findDealDigital1M, config.getAtivosAbertosDigitais(),)).start()
                 elif config.getTipoExpiracao() == 'cinco':
                     threading.Thread(target=executor.map, args=(findDealDigital5M, config.getAtivosAbertosDigitais(),)).start()
+                elif config.getTipoExpiracao() == 'quinze':
+                    threading.Thread(target=executor.map, args=(findDealDigital15M, config.getAtivosAbertosDigitais(),)).start()
 
 def findDealBinary(paridade):
     iqoption.unscribe_live_deal('live-deal-binary-option-placed', paridade, 'turbo')
@@ -236,6 +242,26 @@ def findDealDigital1M(paridade):
 
 def findDealDigital5M(paridade):
     timeframe = "PT5M"
+    iqoption.unscribe_live_deal('live-deal-digital-option', paridade, timeframe)
+    iqoption.subscribe_live_deal('live-deal-digital-option', paridade, timeframe, 10)
+    trades = iqoption.get_live_deal('live-deal-digital-option', paridade, timeframe)
+    if len(trades) > 0:
+        if checkRunningDeals() == False:
+            res = 0
+            created = trades[0]['created_at']
+            res = Utils.getDifferenceInSeconds(int(str(time.time())[0:10]), int(str(created)[0:10]))
+            if res <= float(3):    
+                user_id = trades[0]['user_id']
+                name = trades[0]['name']
+                direction = trades[0]['instrument_dir']
+                expiration = trades[0]['expiration_type'].replace("PT", "").replace("M","")
+                amount_enrolled = round(float(trades[0]['amount_enrolled']),2)
+                if checkConditions(user_id, amount_enrolled):
+                    buyPositionDigital(paridade, direction, expiration, user_id, name, amount_enrolled, created)
+    iqoption.pop_live_deal('live-deal-digital-option', paridade, timeframe)
+
+def findDealDigital15M(paridade):
+    timeframe = "PT15M"
     iqoption.unscribe_live_deal('live-deal-digital-option', paridade, timeframe)
     iqoption.subscribe_live_deal('live-deal-digital-option', paridade, timeframe, 10)
     trades = iqoption.get_live_deal('live-deal-digital-option', paridade, timeframe)
