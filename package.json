@@ -4,13 +4,47 @@
   "description": "Config of copybot",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "build-installer": "electron-builder",
+    "package": "electron-forge package",
+    "make": "electron-forge make",
+    "publish": "electron-forge publish",
+    "dist-all": "electron-builder -mw"
+  },
+  "build": {
+    "appId": "configbot",
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "requestedExecutionLevel": "requireAdministrator"
+    },
+    "mac":{
+      "target": "dmg",
+      "category":"public.app-category.developer-tools",
+      "type":"distribution"
+    },
+    "nsis": {
+      "uninstallDisplayName": "Meu Trader",
+      "license": "license.txt",
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
   },
   "author": "Vargas Vini",
   "license": "ISC",
   "dependencies": {
-    "electron": "^9.1.0",
+    "electron-forge": "^5.2.4",
     "electron-squirrel-startup": "^1.0.0",
     "python-shell": "^2.0.1"
+  },
+  "devDependencies": {
+    "@electron-forge/cli": "^6.0.0-beta.51",
+    "@electron-forge/maker-deb": "^6.0.0-beta.51",
+    "@electron-forge/maker-rpm": "^6.0.0-beta.51",
+    "@electron-forge/maker-squirrel": "^6.0.0-beta.51",
+    "@electron-forge/maker-zip": "^6.0.0-beta.51",
+    "electron": "9.0.0",
+    "electron-builder": "^22.8.0"
   }
 }
