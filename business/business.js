@@ -19,7 +19,12 @@ function checkFiles(){
 }
 
 function onEntrar(){
-    getAccess();
+    //getAccess();
+    hideAccessItem();
+    $("#idDivAccessLogo").addClass('slide_logo')
+    setTimeout(() => {
+    hideAccessDiv();
+    }, 495);
 }
 
 function getAccess(){
@@ -82,7 +87,8 @@ function createFormData(){
         /*Configurações*/
         tipoConta: getRadioVal(document.getElementById('divOptionsConta'), 'groupTipoConta'),
         tipoOpcoes: getRadioVal(document.getElementById('divOptionsOpcoes'), 'groupTipoOpcoes'),
-        tipoExpiracao: getRadioVal(document.getElementById('divOptionsExpiracao'), 'groupTempExpiracao')
+        tipoExpiracao: getRadioVal(document.getElementById('divOptionsExpiracao'), 'groupTempExpiracao'),
+        selectedParidades: getParidadesSelected()
     }
     return formData;
 }
@@ -124,6 +130,7 @@ function createConfig(_formData){
     config += `\ntipoConta=${_formData.tipoConta.trim()}`
     config += `\ntipoOpcoes=${_formData.tipoOpcoes.trim()}`
     config += `\ntipoExpiracao=${_formData.tipoExpiracao.trim()}`
+    config += `\nselectedParidades=${_formData.selectedParidades.trim()}`
     
     return config;
 }
@@ -175,6 +182,39 @@ function processDataSystem(_data) {
     document.querySelectorAll(`input[value=${formData.tipoConta}]`)[0].checked = true;
     document.querySelectorAll(`input[value=${formData.tipoOpcoes}]`)[0].checked = true;
     document.querySelectorAll(`input[value=${formData.tipoExpiracao}]`)[0].checked = true;
+    setParidadesSelected(formData.selectedParidades);
+}
+
+
+/*PARIDADES*/
+function getParidadesSelected(){
+    var selected = "";
+    for (var option of document.getElementById('idParidadesSelect').options) {
+        if (option.selected) {
+            if(selected == ""){
+                selected = option.value
+            }
+            else{
+                selected += "," + option.value
+            }   
+        }
+    }
+    return selected;
+}
+function setParidadesSelected(_paridades){
+    try{
+        var arrayParidades = _paridades.split(",");
+        for (var option of document.getElementById('idParidadesSelect').options) {
+            if(arrayParidades.includes(option.value)){
+                option.selected = true
+            }else{
+                option.selected = false
+            }
+        }
+    }
+    catch{
+        return
+    }
 }
 
 /*GET HISTORY DATA*/

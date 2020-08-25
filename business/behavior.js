@@ -1,5 +1,7 @@
 function initBehavior(){
     checkFiles();
+    setCountryOptions();  
+    setParidadesOptions(); 
     getDataFromSystemFile();
     getMenuItemsAndSetEvent();
     getInputFieldAndSetEvent();
@@ -9,12 +11,12 @@ function initBehavior(){
         getHistoryData();    
     }, 10000);
     clearLogsContent(); 
-    setCountryOptions();   
     setSelectType();
     applyMasks();
     applyDefaultValueOnBlur();
     applyDefaultValues();
     setOptionsClick();
+    selectParidadesBehavior();
     
 }
 
@@ -88,6 +90,46 @@ function getInputFieldAndSetEvent(){
     });
 }
 
+function selectParidadesBehavior(){    
+    var elementParidadeParent = $("#idDivParidadesSelect")
+    var elementParidadeChildId = elementParidadeParent.children()[0].children[1].children[0]
+    
+    elementParidadeChildId.addEventListener('click', function (event) {
+        if($('#idParidadesTodas').prop("selected")){
+            selectAll()
+        }
+        else{
+            $('#idParidadesSelect options').prop("selected", false)
+            selectNone()
+        }
+    });
+    
+}
+
+function selectAll() {
+    $('idParidadesSelect option:not(:disabled)').not(':selected').prop('selected', true);
+    $('.dropdown-content.multiple-select-dropdown input[type="checkbox"]:not(:checked)').not(':disabled').prop('checked', 'checked');
+    var values = $('.dropdown-content.multiple-select-dropdown input[type="checkbox"]:checked').not(':disabled').parent().map(function() {
+        return $(this).text();
+    }).get();
+    $('input.select-dropdown').val(values.join(', '));
+    
+    for (var option of document.getElementById('idParidadesSelect').options) {
+        option.selected = true;
+    }
+};
+
+function selectNone() {
+    $('idParidadesSelect option:selected').not(':disabled').prop('selected', false);
+    $('.dropdown-content.multiple-select-dropdown input[type="checkbox"]:checked').not(':disabled').prop('checked', '');
+    var values = $('.dropdown-content.multiple-select-dropdown input[type="checkbox"]:disabled').parent().text();
+    $('input.select-dropdown').val(values);
+    
+    for (var option of document.getElementById('idParidadesSelect').options) {
+        option.selected = false;
+    }
+};
+
 
 function changeBodyItem(_item){
     hideAllDivs();
@@ -129,6 +171,26 @@ function verifyStartInputsBehavior(){
             input.classList.add("active");
         }
     }
+}
+
+function setParidadesOptions(){
+    var sel = document.getElementById('idParidadesSelect'); 
+    var idParidades = { 
+        "TODAS":0,
+        "GBP/USD":1,
+        "CAD/CHF":2,
+        "USD/CAD":3
+    }
+    $.each(idParidades, function(index, item){
+        var opt = document.createElement('option');
+        opt.appendChild(document.createTextNode(index));
+        //opt.setAttribute("data-icon","./images/countries/"+index+".png")
+        opt.value = index;
+        if(index == "TODAS"){
+            opt.id = "idParidadesTodas"
+        }
+        sel.appendChild(opt); 
+    });
 }
 
 function setCountryOptions(){
