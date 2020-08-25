@@ -44,10 +44,11 @@ def checkRunningDeals():
 
 def checkConditions(_userId, _valorEntrada):
     isValido = False
-    if config.getTipoFollow() != "followNenhum" and _userId in config.getTradersToFollow() and _valorEntrada >= config.getValorMinimoTrader():
-        isValido = True 
-    elif config.getTipoFollow() == "followNenhum" and _valorEntrada >= config.getValorMinimoTrader():
-        isValido = True
+    if _userId not in config.getTradersToBlock():
+        if config.getTipoFollow() != "followNenhum" and _userId in config.getTradersToFollow() and _valorEntrada >= config.getValorMinimoTrader():
+            isValido = True 
+        elif config.getTipoFollow() == "followNenhum" and _valorEntrada >= config.getValorMinimoTrader():
+            isValido = True
     return isValido
 
 def logHistorico(id, resultado, paridade, valor, operacao, nome, timeframe, data):
