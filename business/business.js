@@ -180,12 +180,16 @@ function processDataSystem(_data) {
 /*GET HISTORY DATA*/
 function getHistoryData(){
     var fs = require('fs');
-    const data = fs.readFileSync('resultados.log.config', {encoding:'utf8', flag:'r'}); 
-    if(data != ""){
-        var dataFormat = "["+data.slice(0, -1)+"]";
-        processHistoryData(dataFormat); 
+    try{
+        const data = fs.readFileSync('resultados.log.config', {encoding:'utf8', flag:'r'}); 
+        if(data != ""){
+            var dataFormat = "["+data.slice(0, -1)+"]";
+            processHistoryData(dataFormat); 
+        }
     }
-    
+    catch{
+        return;
+    }   
 }
 
 function processHistoryData(_data) {
