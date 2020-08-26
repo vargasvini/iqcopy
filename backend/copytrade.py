@@ -412,7 +412,7 @@ else:
     else:
         getCommonData(config.getParidadesList(), config.getAtivosAbertosBinarias(), "B")
         getCommonData(config.getParidadesList(), config.getAtivosAbertosDigitais(), "D")
-        logActivities(False, "Você escolheu operar em TODAS as paridades abertas no momento.")
+        logActivities(False, "As paridades que você escolheu foram selecionadas com sucesso.".format())
     ###############################################
     # ETAPA 7
     ###############################################
