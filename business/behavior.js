@@ -7,9 +7,6 @@ function initBehavior(){
     getInputFieldAndSetEvent();
     verifyStartInputsBehavior();
     getHistoryData();
-    setInterval(() => {
-        getHistoryData();    
-    }, 10000);
     clearLogsContent(); 
     setSelectType();
     applyMasks();
@@ -153,6 +150,7 @@ function changeBodyItem(_item){
             showCopiarDiv();
             break;
         case "HISTÓRICO":
+            getHistoryData();
             showHistoricoDiv();
             break;
         default:
