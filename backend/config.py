@@ -19,6 +19,7 @@ def copyTradeConfig():
             self.tipoConta = ''
             self.tipoOpcoes = ''
             self.tipoExpiracao = ''
+            self.selectedParidades = ''
             # FUNCIONAMENTO #
             self.horaFinal = int(10)
             self.horaRefreshAtivos = int(1)
@@ -33,6 +34,7 @@ def copyTradeConfig():
             self.tradersToBlock = []
             self.ativosAbertosBinarias = []
             self.ativosAbertosDigitais = []
+            self.paridadesList = []
             # THREAD CONTROL #
             self.isBinarias = False
             self.isDigitais = False
@@ -67,6 +69,8 @@ def copyTradeConfig():
             return self.tipoOpcoes
         def getTipoExpiracao(self):
             return self.tipoExpiracao
+        def getSelectedParidades(self):
+            return self.selectedParidades
         # FUNCIONAMENTO #
         def getHoraFinal(self):
             return self.horaFinal
@@ -91,6 +95,8 @@ def copyTradeConfig():
             return self.ativosAbertosBinarias
         def getAtivosAbertosDigitais(self):
             return self.ativosAbertosDigitais
+        def getParidadesList(self):
+            return self.paridadesList
         # THREAD CONTROL #
         def getIsBinariasRunning(self):
             return self.isBinarias
@@ -127,6 +133,8 @@ def copyTradeConfig():
             self.tipoOpcoes = _tipoOpcoes
         def setTipoExpiracao(self, _tipoExpiracao):
             self.tipoExpiracao = _tipoExpiracao
+        def setSelectedParidades(self, _selectedParidades):
+            self.selectedParidades = _selectedParidades
         # EXTRAS #
         def setValorEntradaAtual(self, _valorEntradaAtual):
             self.valorEntradaAtual = _valorEntradaAtual
@@ -144,6 +152,8 @@ def copyTradeConfig():
             self.ativosAbertosBinarias = _ativosAbertosBinarias
         def setAtivosAbertosDigitais(self, _ativosAbertosDigitais):
             self.ativosAbertosDigitais = _ativosAbertosDigitais
+        def setParidadesList(self, _paridadesList):
+            self.paridadesList = _paridadesList
         # THREAD CONTROL #
         def setIsBinariasRunning(self, _isBinarias):
             self.isBinarias = _isBinarias
@@ -179,6 +189,7 @@ def startConfig():
             self.config.setTipoConta(parser.get('configuracoes', 'tipoConta'))
             self.config.setTipoOpcoes(parser.get('configuracoes', 'tipoOpcoes'))
             self.config.setTipoExpiracao(parser.get('configuracoes', 'tipoExpiracao'))
+            self.config.setSelectedParidades(parser.get('configuracoes', 'selectedParidades'))
 
         def getConfig(self):
             self.setValuesFromFile()

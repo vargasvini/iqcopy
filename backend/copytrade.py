@@ -101,6 +101,34 @@ def appendIdToFollow():
         else:
             config.getTradersToFollow().append(int(seguir_ids))
 
+def appendParidades():
+    paridades_list = config.getSelectedParidades().replace(" ","")
+    if paridades_list != '':
+        if ',' in paridades_list:
+            x = paridades_list.split(',')
+            for old in x:
+                config.getParidadesList().append(old.replace("/", ""))
+        else:
+            config.getParidadesList().append(paridades_list.replace("/", ""))
+
+def getCommonData(listParSelected, listParOpen, tipo):
+    listPar_aux = []
+    for x in listParSelected: 
+        if x in listParOpen:
+            listPar_aux.append(x)
+
+    if not listPar_aux:
+        return
+    
+    if tipo == "B":
+        config.getAtivosAbertosBinarias().clear()
+        config.setAtivosAbertosBinarias(listPar_aux)
+        return
+    else:
+        config.getAtivosAbertosDigitais().clear()
+        config.setAtivosAbertosDigitais(listPar_aux)
+        return
+
 def getValorEntradaCalculada():
     valEntrada = 2
     if config.getTipoGerenciamento() == 'maofixa':
@@ -134,8 +162,10 @@ def startCopy():
             refreshTime =  now + timedelta(hours=1)
             config.getAtivosAbertosBinarias().clear()
             config.setAtivosAbertosBinarias(Utils.buscaAtivosAbertos(iqoption, 'B'))
+            getCommonData(config.getParidadesList(), config.getAtivosAbertosBinarias(), "B")
             config.getAtivosAbertosDigitais().clear()
             config.setAtivosAbertosDigitais(Utils.buscaAtivosAbertos(iqoption, 'D'))
+            getCommonData(config.getParidadesList(), config.getAtivosAbertosDigitais(), "D")
         #Atualiza a lista de top traders que serão copiadas as entradas (ocorre a cada 10 minutos)
         if refreshRank < now:
             refreshRank =  now + timedelta(minutes=10)
@@ -375,15 +405,26 @@ else:
     ###############################################
     # ETAPA 6
     ###############################################
+    logActivities(True, "Selecionando apenas as paridades que você escolheu para operar:")
+    appendParidades()
+    if "TODAS" in config.getParidadesList():
+        logActivities(False, "Você escolheu operar em TODAS as paridades abertas no momento.")
+    else:
+        getCommonData(config.getParidadesList(), config.getAtivosAbertosBinarias(), "B")
+        getCommonData(config.getParidadesList(), config.getAtivosAbertosDigitais(), "D")
+        logActivities(False, "Você escolheu operar em TODAS as paridades abertas no momento.")
+    ###############################################
+    # ETAPA 7
+    ###############################################
     logActivities(True, "Aplicando o Stop Win e Stop Loss que você informou:")
     logActivities(False, "Valor informado para stop <b>WIN: R$ {}</b><br>Valor informado para stop <b>LOSS: R$ {}</b>".format(str(config.getValorStopWin()),str(config.getValorStopLoss())))
     ###############################################
-    # ETAPA 7
+    # ETAPA 8
     ###############################################
     logActivities(True, "Preparando-se para encontrar entradas com valor igual ou superior ao informado:")
     logActivities(False, "Apenas entradas de valor igual ou maior que <b> R$ {}</b> serão levadas em consideração".format(config.getValorMinimoTrader()))
     ###############################################
-    # ETAPA 8
+    # ETAPA 9
     ###############################################
 
     config.setValorEntradaAtual(config.getValorEntrada())

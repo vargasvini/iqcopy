@@ -294,7 +294,6 @@ function removeFromFollowList(currId){
 }
 
 function removeFromBlockList(currId){
-    debugger;
     var idsToBlock = '';
     var idList = $('#idBlockIds').val();
     idArr = idList.split(',');
