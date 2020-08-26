@@ -33,6 +33,8 @@ app.on('ready', function(){
     //Build menu from template
     const mainMenu = Menu.buildFromTemplate(mainMenuTempalte);
     Menu.setApplicationMenu(mainMenu);
+    mainWindow.setAutoHideMenuBar(true)
+    //Menu.setApplicationMenu(null);
 });
 
 //Handle createAddWindow
