@@ -1,3 +1,9 @@
+.div-main-html{
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+}
 .menu-item{
     font-size: 16px;
     font-weight: bold;
@@ -124,7 +130,8 @@ input:not([type]):focus:not([readonly])+label, input[type=text]:not(.browser-def
 }
 
 .div-copy-info{
-    height: 528px;
+    bottom: 1;
+    height: 73.5%;
     overflow: overlay;
     color:black;
 }
@@ -310,7 +317,7 @@ input:not([type]):focus:not([readonly])+label, input[type=text]:not(.browser-def
 .body-search-trader{
     padding-top: 0px;
     margin-top:0px;
-    height: 230px;
+    height: 31.5%;
     overflow: overlay;
 }
 

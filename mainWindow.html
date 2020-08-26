@@ -1,4 +1,4 @@
-<html>
+<html id="idDivHtml">
     <head>
         <script type="text/javascript" src="./utils/jquery.js" defer></script>
         <script type="text/javascript" src="./utils/jquery-masks.js" defer></script>
@@ -408,7 +408,7 @@
                 </div>
                 <!-- CÓPIA -->
                 <div id="idDivCopiar" class="col s9 div-content slide_in" style="display:none">
-                    <div class="row">
+                    <div class="row" id="idRowBtnCopy">
                         <div class="col s12 valign-wrapper">
                             <button id="idBtnStartCopy" class="btn waves-effect waves-light btn-custom" type="submit" name="btnStartCopy" onclick="onStartCopy()">INICIAR
                                 <i class="material-icons right">play_arrow</i>
@@ -418,12 +418,12 @@
                             </button>
                         </div>
                     </div>    
-                    <blockquote class="blockquote-custom">
+                    <blockquote class="blockquote-custom" id="idBqCopy" style="height: 20px;">
                         Abaixo você pode acompanhar sua informações em tempo real de suas operações.
                     </blockquote>
                     <div class="row">
                         <div class="col s12">
-                            <div id="idDivAtividadesLog" class="card-panel grey lighten-5 z-depth-1 div-copy-info"></div>
+                            <div id="idDivAtividadesLog" class="card-panel grey lighten-5 z-depth-1 div-copy-info "></div>
                         </div>
                     </div>            
                 </div>
