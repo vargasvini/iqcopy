@@ -188,6 +188,7 @@ function processDataSystem(_data) {
 
 /*PARIDADES*/
 function getParidadesSelected(){
+    debugger;
     var selected = "";
     for (var option of document.getElementById('idParidadesSelect').options) {
         if (option.selected) {
@@ -199,6 +200,8 @@ function getParidadesSelected(){
             }   
         }
     }
+    if(selected == "")
+        selected = "TODAS"
     return selected;
 }
 function setParidadesSelected(_paridades){
