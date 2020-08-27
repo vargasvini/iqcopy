@@ -27,10 +27,19 @@ async function onStartCopy(){
     }
     
     idIntervalCopyFile = setInterval(readActivitiesLog, 2000)
-
     const callCopyTrader = promisify(this.runPyShellCopy);
     const returnPyshell = await callCopyTrader("copytrade.py", options);
-    //callCopy();
+    if(returnPyshell != null){
+        verifyLoginError(returnPyshell)
+    }
+}
+
+function verifyLoginError(returnPyshell){
+    var userData = JSON.parse(returnPyshell);    
+    if (userData.message == 'error'){
+        M.toast({html: 'Autenticação inválida! Por favor, verifique os dados informados na área "LOGIN CORRETORA".', classes: 'toast-custom-error valign-wrapper'}) 
+    }
+    onStopCopy()
 }
 
 function onStopCopy(){
@@ -51,26 +60,6 @@ function onStopFinder(){
 function setUserData(_data){
     document.getElementById("idNome").innerHTML = _data.name.toUpperCase();
     document.getElementById("idCurrencyBalance").innerHTML = _data.currency + " " + _data.balance;
-}
-
-async function callCopy(){    
-    if (pyshellCopy != undefined){
-        pyshellCopy.childProcess.kill();
-    }
-
-    var options = {
-        scriptPath: path.join(__dirname, './backend/'),
-    }
-    
-    const callCopyTrader = promisify(this.runPyShellCopy);
-    const returnPyshell = await callCopyTrader("copytrade.py", options);
-        
-    login.on('message', function(message){
-        var userData = JSON.parse(message);
-        if (userData.message == 'error'){
-            M.toast({html: 'Autenticação inválida! Por favor, verifique os dados informados na área "LOGIN CORRETORA".', classes: 'toast-custom-error valign-wrapper'}) 
-        }
-    })
 }
 
 async function readActivitiesLog(){

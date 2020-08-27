@@ -3,7 +3,7 @@ function initBusiness(){
     checkFiles();
     $("#idDivAccessLogo").removeClass('slide_logo')
     document.getElementById("idAccessKey").value = "9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d"
-    getAccess()
+    //getAccess()
 }
 
 function checkFiles(){
@@ -19,12 +19,12 @@ function checkFiles(){
 }
 
 function onEntrar(){
-    //getAccess();
-    hideAccessItem();
-    $("#idDivAccessLogo").addClass('slide_logo')
-    setTimeout(() => {
-    hideAccessDiv();
-    }, 495);
+    getAccess();
+    // hideAccessItem();
+    // $("#idDivAccessLogo").addClass('slide_logo')
+    // setTimeout(() => {
+    // hideAccessDiv();
+    // }, 495);
 }
 
 function getAccess(){
@@ -34,7 +34,7 @@ function getAccess(){
 
 async function getUserAsync() 
 {
-  let response = await fetch(`http://meutrader-com.umbler.net/users`);
+  let response = await fetch(`http://meutrader-com.umbler.net/getUsers`);
   let data = await response.json()
   return data;
 }
@@ -42,7 +42,7 @@ async function getUserAsync()
 function verifyAccess(data){
     var aKey = document.getElementById("idAccessKey").value
     // 9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d
-    if (data.some(item => item.accesskey === aKey.trim() && item.isActive == true))
+    if (data.some(item => item.accessKey === aKey.trim() && item.isActive == true))
     {
         hideAccessItem();
         $("#idDivAccessLogo").addClass('slide_logo')
@@ -50,6 +50,7 @@ function verifyAccess(data){
         hideAccessDiv();
         }, 495);
     }else{
+        M.toast({html: 'ERRO AO ACESSAR O SISTEMA: CHAVE INVÁLIDA!', classes: 'toast-custom-error valign-wrapper', displayLength: 2000})
         showAccessDiv();
         return;
     }
@@ -188,7 +189,6 @@ function processDataSystem(_data) {
 
 /*PARIDADES*/
 function getParidadesSelected(){
-    debugger;
     var selected = "";
     for (var option of document.getElementById('idParidadesSelect').options) {
         if (option.selected) {
