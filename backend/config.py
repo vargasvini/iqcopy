@@ -3,6 +3,8 @@ import configparser
 def copyTradeConfig():
     class copyTradeStructure:
         def __init__(self):
+            # ACESSO #
+            self.userKey = ''
             # SELECIONAR TRADER #
             self.tipoFollow = ''
             self.followRank = 1
@@ -40,6 +42,9 @@ def copyTradeConfig():
             self.isDigitais = False
 
         ###### GETTERS #######
+        # ACESSO #
+        def getUserKey(self):
+            return self.userKey
         # SELECIONAR TRADER #
         def getTipoFollow(self):
             return self.tipoFollow
@@ -104,6 +109,9 @@ def copyTradeConfig():
             return self.isDigitais
 
         ###### SETTERS #######
+        # ACESSO #
+        def setUserKey(self, _userKey):
+            self.userKey = _userKey
         # SELECIONAR TRADER #
         def setTipoFollow(self, _tipoFollow):
             self.tipoFollow = _tipoFollow
@@ -172,7 +180,9 @@ def startConfig():
         def setValuesFromFile(self):           
             parser = configparser.ConfigParser()
             parser.read("copy.config")
-
+            
+            # ACESSO #
+            self.config.setUserKey(parser.get('acesso', 'userKey'))
             # SELECIONAR TRADER #
             self.config.setTipoFollow(parser.get('seguirTrader', 'tipoFollow'))
             self.config.setFollowRank(parser.get('seguirTrader', 'followRank'))

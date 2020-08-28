@@ -73,6 +73,8 @@ function createFormData(){
         /*Login Corretora*/
         login: document.getElementById("idLoginUser").value,
         password: document.getElementById("idLoginPass").value,
+        /*Acesso*/
+        userKey: document.getElementById("idAccessKey").value,
         /*Selecionar Trader*/
         tipoFollow: getRadioVal(document.getElementById('divFollowOptions'), 'groupFollowOpcoes'),
         followRank: document.getElementById("idFollowRank").value,
@@ -112,6 +114,7 @@ function createConfig(_formData){
     config += `[acesso]`
     config += `\nlogin=${_formData.login.trim()}`
     config += `\nsenha=${_formData.password.trim()}`
+    config += `\nuserKey=${_formData.userKey.trim()}`
 
     config += `\n[seguirTrader]`
     config += `\ntipoFollow=${_formData.tipoFollow.trim()}`
@@ -179,11 +182,11 @@ function processDataSystem(_data) {
     $('#idValorStopWin').val(`R$ ${formData.valorStopWin.toFixed(2).replace(".",",")}`);
     $('#idValorStopLoss').val(`R$ ${formData.valorStopLoss.toFixed(2).replace(".",",")}`);
     $('#idValorMinimoTrader').val(`R$ ${formData.valorMinimoTrader.toFixed(2).replace(".",",")}`);
-    // /*Configurações*/
+    /*Configurações*/
     document.querySelectorAll(`input[value=${formData.tipoConta}]`)[0].checked = true;
     document.querySelectorAll(`input[value=${formData.tipoOpcoes}]`)[0].checked = true;
     document.querySelectorAll(`input[value=${formData.tipoExpiracao}]`)[0].checked = true;
-    setParidadesSelected(formData.selectedParidades);
+    setParidadesSelected(formData.selectedParidades);    
 }
 
 
@@ -256,6 +259,7 @@ function paginationHistoryData(item){
 function historyDataTemplate(data) {
     var html = '';
     $.each(data, function(index, item){
+        console.log(item)
         html += `
             <tr>
                 <td>${item.id}</td>

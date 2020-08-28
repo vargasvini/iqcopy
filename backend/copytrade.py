@@ -29,6 +29,21 @@ def logActivities(isHeader, msg):
         logging.info('<blockquote class="blockquote-custom-body">{}</blockquote>'.format(msg))
     handler.flush()
 
+def logHistorico(traderId, resultado, paridade, valor, operacao, nome, timeframe, data, operationId, userId, userKey, isAtServer):
+    ok = True
+    while ok:
+        try:
+            myfile = open("resultados.log.config", "a+")
+            ok = False
+        except IOError:
+            ok = True
+    with myfile:
+        historicoJson = {'message':'','id': traderId, 'resultado': resultado.upper(), 'paridade': paridade.upper(), 'valor': valor, 'operacao': operacao.upper(), 'nome': nome, 'timeframe': timeframe, 'data': timestamp_converter(data), 'operationId': operationId, 'userId': userId, 'userKey': userKey, 'isAtServer': isAtServer}
+        python2json = json.dumps(historicoJson)
+        loggingHistory.info(python2json + ",")
+        handlerHistory.flush()
+        myfile.close()
+
 def checkConnection():
     if iqoption.check_connect() == False:
         iqoption.connect()
@@ -50,21 +65,6 @@ def checkConditions(_userId, _valorEntrada):
         elif config.getTipoFollow() == "followNenhum" and _valorEntrada >= config.getValorMinimoTrader():
             isValido = True
     return isValido
-
-def logHistorico(id, resultado, paridade, valor, operacao, nome, timeframe, data):
-    ok = True
-    while ok:
-        try:
-            myfile = open("resultados.log.config", "a+")
-            ok = False
-        except IOError:
-            ok = True
-    with myfile:
-        historicoJson = {'message':'','id': id, 'resultado': resultado.upper(), 'paridade': paridade.upper(), 'valor': valor, 'operacao': operacao.upper(), 'nome': nome, 'timeframe': timeframe, 'data': timestamp_converter(data)}
-        python2json = json.dumps(historicoJson)
-        loggingHistory.info(python2json + ",")
-        handlerHistory.flush()
-        myfile.close()
 
 def timestamp_converter(x, retorno = 1):
 	hora = datetime.strptime(datetime.utcfromtimestamp(x).strftime('%Y-%m-%d %H:%M:%S'), '%Y-%m-%d %H:%M:%S')
@@ -236,7 +236,8 @@ def buyPositionBinary(paridade, direction, expiration_calc, user_id, name, amoun
         calculaSaldoAtual(lucro)
         logActivities(True, "A operação <b>{}</b> realizada nas opções <b>BINÁRIAS</b> foi finalizada:".format(id))
         logActivities(False, "Resultado: <b>{}</b><br>Saldo: <b>{}</b><br>Lucro/Prejuizo: <b>{}</b>".format("WIN" if lucro > 0 else "LOSS", config.getSaldoAtual(),round(float(lucro),2)))
-        logHistorico(user_id, "WIN" if lucro > 0 else "LOSS", paridade, round(float(amount_enrolled),2), direction, name, "PT{}M".format(expiration_calc), int(str(expiration)[0:10]))
+        #operationId, userId, userKey, isAtServer
+        logHistorico(user_id, "WIN" if lucro > 0 else "LOSS", paridade, round(float(amount_enrolled),2), direction, name, "PT{}M".format(expiration_calc), int(str(expiration)[0:10]), str(id), str(result["user_id"]), str(config.getUserKey()), False)
         if config.getSaldoAtual() >= config.getValorStopWin() or (config.getSaldoAtual()*-1) >= config.getValorStopLoss():
             sys.exit()
         if lucro > 0:
@@ -318,7 +319,7 @@ def buyPositionDigital(paridade, direction, expiration, user_id, name, amount_en
             calculaSaldoAtual(lucro)
             logActivities(True, "A operação <b>{}</b> realizada nas opções <b>DIGITAIS</b> foi finalizada:".format(id))
             logActivities(False, "Resultado: <b>{}</b><br>Saldo: <b>{}</b><br>Lucro/Prejuizo: <b>{}</b>".format("WIN" if lucro > 0 else "LOSS", config.getSaldoAtual(),round(float(lucro),2)))
-            logHistorico(user_id, "WIN" if lucro > 0 else "LOSS", paridade, round(float(amount_enrolled),2), direction, name, "PT{}M".format(expiration), int(str(created)[0:10]))
+            logHistorico(user_id, "WIN" if lucro > 0 else "LOSS", paridade, round(float(amount_enrolled),2), direction, name, "PT{}M".format(expiration), int(str(created)[0:10]), str(id), str(result["user_id"]), str(config.getUserKey()), False)
             if config.getSaldoAtual() >= config.getValorStopWin() or (config.getSaldoAtual()*-1) >= config.getValorStopLoss():
                 sys.exit()
             if lucro > 0:
@@ -346,10 +347,6 @@ else:
         iqoption.change_balance("REAL")
     else:
         iqoption.change_balance("PRACTICE")
-
-    userData = {'message': '','name': result["first_name"], 'currency': result["currency"], 'balance': iqoption.get_balance(), 'avatar': result["avatar"]}
-    python2json = json.dumps(userData)
-    print(python2json)
 
     logActivities(False, "Conectado com sucesso em sua conta <b>{}</b>".format('REAL' if str(config.getTipoConta().upper())=='REAL' else 'de TREINAMENTO'))
     ###############################################
