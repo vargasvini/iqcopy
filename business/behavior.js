@@ -17,6 +17,27 @@ function initBehavior(){
     
 }
 
+function postData(){
+    const payload = {
+        nome:"testePost",
+        accessKey: "999999-3b7d-4bad-9bdd-2b0d7b3dcb6d",
+        isActive: true
+    };
+    console.log(JSON.stringify(payload))
+
+	return fetch(`http://meutrader-com.umbler.net/users`,{
+        method: 'post',
+        headers: {
+            "Content-Type": "application/json"
+        },  
+		body: JSON.stringify(payload)
+	})
+	.then(function(response){
+	   console.log(response)
+	});
+
+}
+
 function setSelectType(){
     var elems = document.querySelectorAll('select');
     var instances = M.FormSelect.init(elems, elems.options);
@@ -175,9 +196,29 @@ function setParidadesOptions(){
     var sel = document.getElementById('idParidadesSelect'); 
     var idParidades = { 
         "TODAS":0,
-        "GBP/USD":1,
-        "CAD/CHF":2,
-        "USD/CAD":3
+        "AUD/USD":1,
+        "AUD/CAD":2,
+        "AUD/JPY":3,
+        "AUD/CHF":4,
+        "AUD/NZD":5,
+        "CAD/CHF":6,
+        "EUR/AUD":7,
+        "EUR/CAD":8,
+        "EUR/GBP":9,
+        "EUR/JPY":10,
+        "EUR/USD":11,
+        "EUR/NZD":12,
+        "GBP/AUD":13,
+        "GBP/CAD":14,
+        "GBP/CHF":15,
+        "GBP/JPY":16,
+        "GBP/USD":17,
+        "GBP/NZD":18,
+        "USD/CAD":19,
+        "USD/CHF":20,
+        "USD/JPY":21,
+        "NZD/USD":22,
+        "USD/NOK":23
     }
     $.each(idParidades, function(index, item){
         var opt = document.createElement('option');
