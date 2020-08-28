@@ -259,7 +259,6 @@ function paginationHistoryData(item){
 function historyDataTemplate(data) {
     var html = '';
     $.each(data, function(index, item){
-        console.log(item)
         html += `
             <tr>
                 <td>${item.id}</td>
@@ -275,6 +274,35 @@ function historyDataTemplate(data) {
         });
         
     return html;
+}
+
+function postTrades(){
+    const payload = {
+        "traderId":"40899928",
+        "resultado":"WIN",
+        "paridade":"AUDJPY",
+        "valor":30.0,
+        "operacao":"CALL",
+        "nome":"OSCAR J. C. R.",
+        "timeframe":"PT1M",
+        "data":"2020-08-28 01:02:06",
+        "operationId":"12450146510",
+        "userId":"66441796",
+        "userKey":"9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d",
+    };
+    console.log(JSON.stringify(payload))
+
+	return fetch(`http://meutrader-com.umbler.net/postTrades`,{
+        method: 'post',
+        headers: {
+            "Content-Type": "application/json"
+        },  
+		body: JSON.stringify(payload)
+	})
+	.then(function(response){
+	   console.log(response)
+	});
+
 }
 
 function range(start, end) {
