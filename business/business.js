@@ -230,7 +230,8 @@ function getHistoryData(){
         const data = fs.readFileSync('resultados.log.config', {encoding:'utf8', flag:'r'}); 
         if(data != ""){
             var dataFormat = "["+data.slice(0, -1)+"]";
-            processHistoryData(dataFormat); 
+            processHistoryData(dataFormat);
+            getTradesToPost(dataFormat);
         }
     }
     catch{
@@ -271,28 +272,62 @@ function historyDataTemplate(data) {
                 <td>${moment(item.data).format("DD/MM/YYYY HH:mm")}</td>
             </tr>
         `
-        });
+    });
         
     return html;
 }
 
-function postTrades(){
-    const payload = {
-        "traderId":"40899928",
-        "resultado":"WIN",
-        "paridade":"AUDJPY",
-        "valor":30.0,
-        "operacao":"CALL",
-        "nome":"OSCAR J. C. R.",
-        "timeframe":"PT1M",
-        "data":"2020-08-28 01:02:06",
-        "operationId":"12450146510",
-        "userId":"66441796",
-        "userKey":"9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d",
-    };
-    console.log(JSON.stringify(payload))
+function getTradesToPost(dataFormat){
+    const historyData = JSON.parse(dataFormat); 
+    gAuxHistory = []
+    try{
+        var result = verifyTrades(historyData)
+        if((Array.isArray(result[0]) && result[0].length) && (Array.isArray(result[1]))){
+            for (let index = 0; index < result[0].length; index++) {
+                postTrades(result[0][index], result[1])
+                .then(function(response){
+                    writeNewHistoryFileAfterPost()
+                })
+            }          
+        }
+    }
+    catch (e){
+        console.log(e)
+        return;
+    }   
+}
 
-	return fetch(`http://meutrader-com.umbler.net/postTrades`,{
+function verifyTrades(data){
+    tradesToPost = [];
+    tradesToUpdate = [];
+
+    $.each(data, function(index, item){
+        if(!item.isAtServer){
+            tradesToPost.push(item);
+        }else{
+            tradesToUpdate.push(item);
+        }
+    });
+    return [tradesToPost, tradesToUpdate];
+}
+
+function postTrades(item, dataToUpdate){
+    gAuxHistory = gAuxHistory.concat(dataToUpdate)
+    const payload = {
+        "traderId": item.id,
+        "resultado": item.resultado,
+        "paridade": item.paridade,
+        "valor": item.valor,
+        "operacao": item.operacao,
+        "nome": item.nome,
+        "timeframe": item.timeframe,
+        "data": item.data,
+        "operationId": item.operationId,
+        "userId": item.userId,
+        "userKey": item.userKey,
+    };
+
+    return fetch(`http://meutrader-com.umbler.net/postTrades`,{
         method: 'post',
         headers: {
             "Content-Type": "application/json"
@@ -300,9 +335,33 @@ function postTrades(){
 		body: JSON.stringify(payload)
 	})
 	.then(function(response){
-	   console.log(response)
-	});
+        if(response.status == 200){
+            item.isAtServer = true;
+        }
+        gAuxHistory.push(item)
+    });
+}
 
+async function fetchPostHistory(_payload){
+    fetch(`http://meutrader-com.umbler.net/postTrades`,{
+        method: 'post',
+        headers: {
+            "Content-Type": "application/json"
+        },  
+        body: JSON.stringify(_payload)
+    })
+    .then(function(response){
+        return response
+    })
+}
+
+function writeNewHistoryFileAfterPost(){
+    var fs = require('fs');
+    var itensUpdated = JSON.stringify(gAuxHistory).replace("[","").replace("]","") +",";
+    fs.writeFileSync('resultados.log.config', itensUpdated, 'utf8', function(err) {
+        if (err) 
+            console.log(err)
+    });
 }
 
 function range(start, end) {

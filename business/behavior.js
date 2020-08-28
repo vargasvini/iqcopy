@@ -17,27 +17,6 @@ function initBehavior(){
     
 }
 
-function postData(){
-    const payload = {
-        nome:"testePost",
-        accessKey: "999999-3b7d-4bad-9bdd-2b0d7b3dcb6d",
-        isActive: true
-    };
-    console.log(JSON.stringify(payload))
-
-	return fetch(`http://meutrader-com.umbler.net/users`,{
-        method: 'post',
-        headers: {
-            "Content-Type": "application/json"
-        },  
-		body: JSON.stringify(payload)
-	})
-	.then(function(response){
-	   console.log(response)
-	});
-
-}
-
 function setSelectType(){
     var elems = document.querySelectorAll('select');
     var instances = M.FormSelect.init(elems, elems.options);
