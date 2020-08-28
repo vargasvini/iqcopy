@@ -1,7 +1,7 @@
 const electron = require('electron');
 const url = require('url');
 const path = require('path');
-const {app, BrowserWindow, Menu} = electron;
+const {app, BrowserWindow, Menu, screen} = electron;
 
 let mainWindow;
 let addWindow;
@@ -11,8 +11,15 @@ if(handleSquirrelEvent(app)){
 }
 // Listen for app to be ready
 app.on('ready', function(){
+    // const { width, height } = screen.getPrimaryDisplay().workAreaSize
+    // let displays = screen.getAllDisplays()
+    // let externalDisplay = displays.find((display) => {
+    //     return display.bounds.x !== 0 || display.bounds.y !== 0
+    // })
     //Create new window
     mainWindow = new BrowserWindow({
+        // x: externalDisplay.bounds.x + 50,
+        // y: externalDisplay.bounds.y + 50,
         width:1024,
         height:768,
         webPreferences: {
