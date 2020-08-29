@@ -279,14 +279,18 @@ function historyDataTemplate(data) {
 
 function getTradesToPost(dataFormat){
     const historyData = JSON.parse(dataFormat); 
-    gAuxHistory = []
     try{
         var result = verifyTrades(historyData)
+        gAuxHistory = []
+        var lenTrades = 0;
         if((Array.isArray(result[0]) && result[0].length) && (Array.isArray(result[1]))){
+            lenTrades = result[0].length+result[1].length == 0? 1 : result[0].length+result[1].length;
             for (let index = 0; index < result[0].length; index++) {
                 postTrades(result[0][index], result[1])
                 .then(function(response){
-                    writeNewHistoryFileAfterPost()
+                    if(lenTrades == gAuxHistory.length){
+                        writeNewHistoryFileAfterPost()
+                    }
                 })
             }          
         }
@@ -322,6 +326,7 @@ function postTrades(item, dataToUpdate){
         "nome": item.nome,
         "timeframe": item.timeframe,
         "data": item.data,
+        "opcao": item.opcao,
         "operationId": item.operationId,
         "userId": item.userId,
         "userKey": item.userKey,
