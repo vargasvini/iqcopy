@@ -257,7 +257,7 @@ def buyPositionBinary(paridade, direction, expiration_calc, user_id, name, amoun
     if status:
         lucro = iqoption.check_win_v3(id)
         calculaSaldoAtual(lucro)
-        logActivities(True, "A operação <b>{}</b> realizada nas opções <b>BINÁRIAS</b> foi finalizada:".format(id))
+        logActivities(True, "A operação realizada nas opções <b>BINÁRIAS</b> foi finalizada:")
         logActivities(False, "Resultado: <b>{}</b><br>Saldo: <b>{}</b><br>Lucro/Prejuizo: <b>{}</b>".format("WIN" if lucro > 0 else "LOSS", config.getSaldoAtual(),round(float(lucro),2)))
         #operationId, userId, userKey, isAtServer
         logHistorico(user_id, "WIN" if lucro > 0 else "LOSS", paridade, round(float(amount_enrolled),2), direction, name, "PT{}M".format(expiration_calc), int(str(expiration)[0:10]), "B", str(id), str(result["user_id"]), str(config.getUserKey()), False)
@@ -344,7 +344,7 @@ def buyPositionDigital(paridade, direction, expiration, user_id, name, amount_en
         status, lucro = Utils.check_win_digital_v3(iqoption, id)
         if status:
             calculaSaldoAtual(lucro)
-            logActivities(True, "A operação <b>{}</b> realizada nas opções <b>DIGITAIS</b> foi finalizada:".format(id))
+            logActivities(True, "A operação realizada nas opções <b>DIGITAIS</b> foi finalizada:")
             logActivities(False, "Resultado: <b>{}</b><br>Saldo: <b>{}</b><br>Lucro/Prejuizo: <b>{}</b>".format("WIN" if lucro > 0 else "LOSS", config.getSaldoAtual(),round(float(lucro),2)))
             logHistorico(user_id, "WIN" if lucro > 0 else "LOSS", paridade, round(float(amount_enrolled),2), direction, name, "PT{}M".format(expiration), int(str(created)[0:10]), "D", str(id), str(result["user_id"]), str(config.getUserKey()), False)
             if config.getSaldoAtual() >= config.getValorStopWin() or (config.getSaldoAtual()*-1) >= config.getValorStopLoss():
@@ -422,8 +422,10 @@ else:
             timeFrames = '1 Minuto'
         elif config.getTipoExpiracao() == 'cinco':
             timeFrames = '5 Minutos'
+        elif config.getTipoExpiracao() == 'quinze':
+            timeFrames = '15 Minutos'
         elif config.getTipoExpiracao() == 'expiracaoAmbos':
-            timeFrames = '1 Minuto e 5 Minutos'
+            timeFrames = '1 Minuto, 5 Minutos e 15 Minutos'
         # Inicializa timeframes PT1M / PT5M / PT15M
         logActivities(False, timeFrames)
     ###############################################
