@@ -29,7 +29,7 @@ def logActivities(isHeader, msg):
         logging.info('<blockquote class="blockquote-custom-body">{}</blockquote>'.format(msg))
     handler.flush()
 
-def logHistorico(traderId, resultado, paridade, valor, operacao, nome, timeframe, data, operationId, userId, userKey, isAtServer):
+def logHistorico(traderId, resultado, paridade, valor, operacao, nome, timeframe, data, opcao, operationId, userId, userKey, isAtServer):
     ok = True
     while ok:
         try:
@@ -38,7 +38,7 @@ def logHistorico(traderId, resultado, paridade, valor, operacao, nome, timeframe
         except IOError:
             ok = True
     with myfile:
-        historicoJson = {'message':'','id': traderId, 'resultado': resultado.upper(), 'paridade': paridade.upper(), 'valor': valor, 'operacao': operacao.upper(), 'nome': nome, 'timeframe': timeframe, 'data': timestamp_converter(data), 'operationId': operationId, 'userId': userId, 'userKey': userKey, 'isAtServer': isAtServer}
+        historicoJson = {'message':'','id': traderId, 'resultado': resultado.upper(), 'paridade': paridade.upper(), 'valor': valor, 'operacao': operacao.upper(), 'nome': nome, 'timeframe': timeframe, 'data': timestamp_converter(data), 'opcao': opcao, 'operationId': operationId, 'userId': userId, 'userKey': userKey, 'isAtServer': isAtServer}
         python2json = json.dumps(historicoJson)
         loggingHistory.info(python2json + ",")
         handlerHistory.flush()
@@ -116,6 +116,8 @@ def getCommonData(listParSelected, listParOpen, tipo):
     for x in listParSelected: 
         if x in listParOpen:
             listPar_aux.append(x)
+        elif x+"-OTC" in listParOpen:
+            listPar_aux.append(x+"-OTC")
 
     if not listPar_aux:
         return
@@ -156,6 +158,7 @@ def startCopy():
     refreshTime =  now + timedelta(hours=1) #Intervalo de tempo entre as verificações dos ativos abertos
     refreshRank =  now + timedelta(minutes=10) #Intervalo de tempo entre as verificações dos ativos abertos
     refreshConnection = now + timedelta(minutes=5)
+    funcs = []
     while True:
         now = datetime.now()
         if refreshTime < now:
@@ -180,54 +183,74 @@ def startCopy():
 
         config.setAtivosAbertosBinarias(rotate(config.getAtivosAbertosBinarias(), 1))
         config.setAtivosAbertosDigitais(rotate(config.getAtivosAbertosDigitais(), 1))
-
-        with concurrent.futures.ThreadPoolExecutor() as executor:
-            if config.getTipoOpcoes() == 'opcoesAmbas':
-                if config.getTipoExpiracao() == 'expiracaoAmbos':
+        
+        with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
+            try:
+                if config.getTipoOpcoes() == 'opcoesAmbas':
+                    if config.getTipoExpiracao() == 'expiracaoAmbos':
+                        threading.Thread(target=executor.map, args=(findDealBinary,config.getAtivosAbertosBinarias(),)).start()
+                        time.sleep(0.70)
+                        threading.Thread(target=executor.map, args=(findDealDigital1M, config.getAtivosAbertosDigitais(),)).start()
+                        time.sleep(0.70)
+                        threading.Thread(target=executor.map, args=(findDealDigital5M, config.getAtivosAbertosDigitais(),)).start()
+                        time.sleep(0.70)
+                        threading.Thread(target=executor.map, args=(findDealDigital15M, config.getAtivosAbertosDigitais(),)).start()
+                        time.sleep(0.70)
+                    elif config.getTipoExpiracao() == 'um':
+                        threading.Thread(target=executor.map, args=(findDealBinary, config.getAtivosAbertosBinarias(),)).start()
+                        time.sleep(0.70)
+                        threading.Thread(target=executor.map, args=(findDealDigital1M, config.getAtivosAbertosDigitais(),)).start()
+                        time.sleep(0.70)
+                    elif config.getTipoExpiracao() == 'cinco':
+                        threading.Thread(target=executor.map, args=(findDealBinary, config.getAtivosAbertosBinarias(),)).start()
+                        time.sleep(0.70)
+                        threading.Thread(target=executor.map, args=(findDealDigital5M, config.getAtivosAbertosDigitais(),)).start()
+                        time.sleep(0.70)
+                    elif config.getTipoExpiracao() == 'quinze':
+                        threading.Thread(target=executor.map, args=(findDealBinary, config.getAtivosAbertosBinarias(),)).start()
+                        time.sleep(0.70)
+                        threading.Thread(target=executor.map, args=(findDealDigital15M, config.getAtivosAbertosDigitais(),)).start()
+                        time.sleep(0.70)
+                elif config.getTipoOpcoes() == 'binarias':
                     threading.Thread(target=executor.map, args=(findDealBinary, config.getAtivosAbertosBinarias(),)).start()
-                    threading.Thread(target=executor.map, args=(findDealDigital1M, config.getAtivosAbertosDigitais(),)).start()
-                    threading.Thread(target=executor.map, args=(findDealDigital5M, config.getAtivosAbertosDigitais(),)).start()
-                    threading.Thread(target=executor.map, args=(findDealDigital15M, config.getAtivosAbertosDigitais(),)).start()
-                elif config.getTipoExpiracao() == 'um':
-                    threading.Thread(target=executor.map, args=(findDealBinary, config.getAtivosAbertosBinarias(),)).start()
-                    threading.Thread(target=executor.map, args=(findDealDigital1M, config.getAtivosAbertosDigitais(),)).start()
-                elif config.getTipoExpiracao() == 'cinco':
-                    threading.Thread(target=executor.map, args=(findDealBinary, config.getAtivosAbertosBinarias(),)).start()
-                    threading.Thread(target=executor.map, args=(findDealDigital5M, config.getAtivosAbertosDigitais(),)).start()
-                elif config.getTipoExpiracao() == 'quinze':
-                    threading.Thread(target=executor.map, args=(findDealBinary, config.getAtivosAbertosBinarias(),)).start()
-                    threading.Thread(target=executor.map, args=(findDealDigital15M, config.getAtivosAbertosDigitais(),)).start()
-            elif config.getTipoOpcoes() == 'binarias':
-                threading.Thread(target=executor.map, args=(findDealBinary, config.getAtivosAbertosBinarias(),)).start()
-            elif config.getTipoOpcoes() == 'digitais':
-                if config.getTipoExpiracao() == 'um':
-                    threading.Thread(target=executor.map, args=(findDealDigital1M, config.getAtivosAbertosDigitais(),)).start()
-                elif config.getTipoExpiracao() == 'cinco':
-                    threading.Thread(target=executor.map, args=(findDealDigital5M, config.getAtivosAbertosDigitais(),)).start()
-                elif config.getTipoExpiracao() == 'quinze':
-                    threading.Thread(target=executor.map, args=(findDealDigital15M, config.getAtivosAbertosDigitais(),)).start()
+                    time.sleep(0.70)
+                elif config.getTipoOpcoes() == 'digitais':
+                    if config.getTipoExpiracao() == 'um':
+                        threading.Thread(target=executor.map, args=(findDealDigital1M, config.getAtivosAbertosDigitais(),)).start()
+                        time.sleep(0.70)
+                    elif config.getTipoExpiracao() == 'cinco':
+                        threading.Thread(target=executor.map, args=(findDealDigital5M, config.getAtivosAbertosDigitais(),)).start()
+                        time.sleep(0.70)
+                    elif config.getTipoExpiracao() == 'quinze':
+                        threading.Thread(target=executor.map, args=(findDealDigital15M, config.getAtivosAbertosDigitais(),)).start()
+                        time.sleep(0.70)
+            finally:
+                executor.shutdown(wait=True)
 
 def findDealBinary(paridade):
-    iqoption.unscribe_live_deal('live-deal-binary-option-placed', paridade, 'turbo')
-    iqoption.subscribe_live_deal('live-deal-binary-option-placed', paridade, 'turbo', 10)
-    trades = iqoption.get_live_deal("live-deal-binary-option-placed", paridade, 'turbo')
-    if len(trades) > 0:
-        if checkRunningDeals() == False:
-            res = 0
-            created = trades[0]['created_at']
-            res = Utils.getDifferenceInSeconds(int(str(time.time())[0:10]), int(str(created)[0:10]))
-            if res <= float(3): 
-                user_id = trades[0]['user_id']
-                name = trades[0]['name']
-                direction = trades[0]['direction']
-                expiration = trades[0]['expiration']
-                amount_enrolled = round(float(trades[0]['amount_enrolled']),2)
-                if checkConditions(user_id, amount_enrolled):
-                    config.setIsBinariasRunning(True)
-                    expiration_calc = Utils.getDifferenceInMinutes(int(str(created)[0:10]), int(str(expiration)[0:10]))
-                    buyPositionBinary(paridade, direction, expiration_calc, user_id, name, amount_enrolled, expiration)
-                    config.setIsBinariasRunning(False)
-    iqoption.pop_live_deal("live-deal-binary-option-placed", paridade, "turbo")
+    try:
+        iqoption.unscribe_live_deal('live-deal-binary-option-placed', paridade, 'turbo')
+        iqoption.subscribe_live_deal('live-deal-binary-option-placed', paridade, 'turbo', 10)
+        trades = iqoption.get_live_deal("live-deal-binary-option-placed", paridade, 'turbo')
+        if len(trades) > 0:
+            if checkRunningDeals() == False:
+                res = 0
+                created = trades[0]['created_at']
+                res = Utils.getDifferenceInSeconds(int(str(time.time())[0:10]), int(str(created)[0:10]))
+                if res <= float(1.5): 
+                    user_id = trades[0]['user_id']
+                    name = trades[0]['name']
+                    direction = trades[0]['direction']
+                    expiration = trades[0]['expiration']
+                    amount_enrolled = round(float(trades[0]['amount_enrolled']),2)
+                    if checkConditions(user_id, amount_enrolled):
+                        config.setIsBinariasRunning(True)
+                        expiration_calc = Utils.getDifferenceInMinutes(int(str(created)[0:10]), int(str(expiration)[0:10]))
+                        buyPositionBinary(paridade, direction, expiration_calc, user_id, name, amount_enrolled, expiration)
+                        config.setIsBinariasRunning(False)
+        iqoption.pop_live_deal("live-deal-binary-option-placed", paridade, "turbo")
+    except:
+        pass
 
 def buyPositionBinary(paridade, direction, expiration_calc, user_id, name, amount_enrolled, expiration):
     status, id = iqoption.buy(config.getValorEntradaAtual(), paridade, direction, expiration_calc)
@@ -237,7 +260,7 @@ def buyPositionBinary(paridade, direction, expiration_calc, user_id, name, amoun
         logActivities(True, "A operação <b>{}</b> realizada nas opções <b>BINÁRIAS</b> foi finalizada:".format(id))
         logActivities(False, "Resultado: <b>{}</b><br>Saldo: <b>{}</b><br>Lucro/Prejuizo: <b>{}</b>".format("WIN" if lucro > 0 else "LOSS", config.getSaldoAtual(),round(float(lucro),2)))
         #operationId, userId, userKey, isAtServer
-        logHistorico(user_id, "WIN" if lucro > 0 else "LOSS", paridade, round(float(amount_enrolled),2), direction, name, "PT{}M".format(expiration_calc), int(str(expiration)[0:10]), str(id), str(result["user_id"]), str(config.getUserKey()), False)
+        logHistorico(user_id, "WIN" if lucro > 0 else "LOSS", paridade, round(float(amount_enrolled),2), direction, name, "PT{}M".format(expiration_calc), int(str(expiration)[0:10]), "B", str(id), str(result["user_id"]), str(config.getUserKey()), False)
         if config.getSaldoAtual() >= config.getValorStopWin() or (config.getSaldoAtual()*-1) >= config.getValorStopLoss():
             sys.exit()
         if lucro > 0:
@@ -259,7 +282,7 @@ def findDealDigital1M(paridade):
             res = 0
             created = trades[0]['created_at']
             res = Utils.getDifferenceInSeconds(int(str(time.time())[0:10]), int(str(created)[0:10]))
-            if res <= float(3):    
+            if res <= float(1.5):    
                 user_id = trades[0]['user_id']
                 name = trades[0]['name']
                 direction = trades[0]['instrument_dir']
@@ -281,14 +304,16 @@ def findDealDigital5M(paridade):
             res = 0
             created = trades[0]['created_at']
             res = Utils.getDifferenceInSeconds(int(str(time.time())[0:10]), int(str(created)[0:10]))
-            if res <= float(3):    
+            if res <= float(1.5):    
                 user_id = trades[0]['user_id']
                 name = trades[0]['name']
                 direction = trades[0]['instrument_dir']
                 expiration = trades[0]['expiration_type'].replace("PT", "").replace("M","")
                 amount_enrolled = round(float(trades[0]['amount_enrolled']),2)
                 if checkConditions(user_id, amount_enrolled):
+                    config.setIsDigitaisRunning(True)
                     buyPositionDigital(paridade, direction, expiration, user_id, name, amount_enrolled, created)
+                    config.setIsDigitaisRunning(False)
     iqoption.pop_live_deal('live-deal-digital-option', paridade, timeframe)
 
 def findDealDigital15M(paridade):
@@ -301,14 +326,16 @@ def findDealDigital15M(paridade):
             res = 0
             created = trades[0]['created_at']
             res = Utils.getDifferenceInSeconds(int(str(time.time())[0:10]), int(str(created)[0:10]))
-            if res <= float(3):    
+            if res <= float(1.5):    
                 user_id = trades[0]['user_id']
                 name = trades[0]['name']
                 direction = trades[0]['instrument_dir']
                 expiration = trades[0]['expiration_type'].replace("PT", "").replace("M","")
                 amount_enrolled = round(float(trades[0]['amount_enrolled']),2)
                 if checkConditions(user_id, amount_enrolled):
+                    config.setIsDigitaisRunning(True)
                     buyPositionDigital(paridade, direction, expiration, user_id, name, amount_enrolled, created)
+                    config.setIsDigitaisRunning(False)
     iqoption.pop_live_deal('live-deal-digital-option', paridade, timeframe)
 
 def buyPositionDigital(paridade, direction, expiration, user_id, name, amount_enrolled, created):
@@ -319,7 +346,7 @@ def buyPositionDigital(paridade, direction, expiration, user_id, name, amount_en
             calculaSaldoAtual(lucro)
             logActivities(True, "A operação <b>{}</b> realizada nas opções <b>DIGITAIS</b> foi finalizada:".format(id))
             logActivities(False, "Resultado: <b>{}</b><br>Saldo: <b>{}</b><br>Lucro/Prejuizo: <b>{}</b>".format("WIN" if lucro > 0 else "LOSS", config.getSaldoAtual(),round(float(lucro),2)))
-            logHistorico(user_id, "WIN" if lucro > 0 else "LOSS", paridade, round(float(amount_enrolled),2), direction, name, "PT{}M".format(expiration), int(str(created)[0:10]), str(id), str(result["user_id"]), str(config.getUserKey()), False)
+            logHistorico(user_id, "WIN" if lucro > 0 else "LOSS", paridade, round(float(amount_enrolled),2), direction, name, "PT{}M".format(expiration), int(str(created)[0:10]), "D", str(id), str(result["user_id"]), str(config.getUserKey()), False)
             if config.getSaldoAtual() >= config.getValorStopWin() or (config.getSaldoAtual()*-1) >= config.getValorStopLoss():
                 sys.exit()
             if lucro > 0:
