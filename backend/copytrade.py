@@ -9,7 +9,7 @@ import threading
 from iqoptionapi.expiration import get_expiration_time
 import asyncio
 from config import startConfig
-
+import iqoptionapi.global_value as global_value
 import concurrent.futures
 
 logging, handler = Utils.setup_logger('copylogger', 'atividades.log', 'w')
@@ -45,8 +45,25 @@ def logHistorico(traderId, resultado, paridade, valor, operacao, nome, timeframe
         myfile.close()
 
 def checkConnection():
-    if iqoption.check_connect() == False:
-        iqoption.connect()
+    if not check_connect_v3():
+        check_connect_v2()
+
+def check_connect_v2():
+    check, reason = iqoption.connect()
+    if not check:
+        while iqoption.check_connect() == False:
+            check, reason = iqoption.connect()
+            if check:
+                break
+    return check
+
+def check_connect_v3():
+    idle_time = abs(iqoption.api.timesync.server_timestamp - time.time())
+    if idle_time > 6:
+        return False
+    if global_value.check_websocket_if_connect == 0:
+        return False
+    return True
 
 def rotate(l, n):
     return l[n:] + l[:n]
@@ -158,74 +175,77 @@ def startCopy():
     refreshTime =  now + timedelta(hours=1) #Intervalo de tempo entre as verificações dos ativos abertos
     refreshRank =  now + timedelta(minutes=10) #Intervalo de tempo entre as verificações dos ativos abertos
     refreshConnection = now + timedelta(minutes=5)
-    funcs = []
-    while True:
-        now = datetime.now()
-        if refreshTime < now:
-            refreshTime =  now + timedelta(hours=1)
-            config.getAtivosAbertosBinarias().clear()
-            config.setAtivosAbertosBinarias(Utils.buscaAtivosAbertos(iqoption, 'B'))
-            getCommonData(config.getParidadesList(), config.getAtivosAbertosBinarias(), "B")
-            config.getAtivosAbertosDigitais().clear()
-            config.setAtivosAbertosDigitais(Utils.buscaAtivosAbertos(iqoption, 'D'))
-            getCommonData(config.getParidadesList(), config.getAtivosAbertosDigitais(), "D")
-        #Atualiza a lista de top traders que serão copiadas as entradas (ocorre a cada 10 minutos)
-        if refreshRank < now:
-            refreshRank =  now + timedelta(minutes=10)
-            if config.getTipoFollow() == 'followRank' or config.getTipoFollow() == 'followAmbos':
-                config.getTradersToFollow().clear()
-                config.setTradersToFollow(filtro_ranking())
-            if config.getTipoFollow() == 'followId' or config.getTipoFollow() == 'followAmbos':
-                appendIdToFollow()
-        if refreshConnection < now:
-            refreshConnection =  now + timedelta(minutes=10)
-            checkConnection()
 
-        config.setAtivosAbertosBinarias(rotate(config.getAtivosAbertosBinarias(), 1))
-        config.setAtivosAbertosDigitais(rotate(config.getAtivosAbertosDigitais(), 1))
-        
-        with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
-            try:
-                if config.getTipoOpcoes() == 'opcoesAmbas':
-                    if config.getTipoExpiracao() == 'expiracaoAmbos':
-                        threading.Thread(target=executor.map, args=(findDealBinary,config.getAtivosAbertosBinarias(),)).start()
-                        time.sleep(0.70)
-                        threading.Thread(target=executor.map, args=(findDealDigital1M, config.getAtivosAbertosDigitais(),)).start()
-                        time.sleep(0.70)
-                        threading.Thread(target=executor.map, args=(findDealDigital5M, config.getAtivosAbertosDigitais(),)).start()
-                        time.sleep(0.70)
-                        threading.Thread(target=executor.map, args=(findDealDigital15M, config.getAtivosAbertosDigitais(),)).start()
-                        time.sleep(0.70)
-                    elif config.getTipoExpiracao() == 'um':
+    while True:
+        try:
+            now = datetime.now()
+            if refreshTime < now:
+                refreshTime =  now + timedelta(hours=1)
+                config.getAtivosAbertosBinarias().clear()
+                config.setAtivosAbertosBinarias(Utils.buscaAtivosAbertos(iqoption, 'B'))
+                getCommonData(config.getParidadesList(), config.getAtivosAbertosBinarias(), "B")
+                config.getAtivosAbertosDigitais().clear()
+                config.setAtivosAbertosDigitais(Utils.buscaAtivosAbertos(iqoption, 'D'))
+                getCommonData(config.getParidadesList(), config.getAtivosAbertosDigitais(), "D")
+            #Atualiza a lista de top traders que serão copiadas as entradas (ocorre a cada 10 minutos)
+            if refreshRank < now:
+                refreshRank =  now + timedelta(minutes=10)
+                if config.getTipoFollow() == 'followRank' or config.getTipoFollow() == 'followAmbos':
+                    config.getTradersToFollow().clear()
+                    config.setTradersToFollow(filtro_ranking())
+                if config.getTipoFollow() == 'followId' or config.getTipoFollow() == 'followAmbos':
+                    appendIdToFollow()
+            if refreshConnection < now:
+                refreshConnection =  now + timedelta(minutes=5)
+                checkConnection()
+
+            config.setAtivosAbertosBinarias(rotate(config.getAtivosAbertosBinarias(), 1))
+            config.setAtivosAbertosDigitais(rotate(config.getAtivosAbertosDigitais(), 1))
+
+            with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
+                try:
+                    if config.getTipoOpcoes() == 'opcoesAmbas':
+                        if config.getTipoExpiracao() == 'expiracaoAmbos':
+                            threading.Thread(target=executor.map, args=(findDealBinary,config.getAtivosAbertosBinarias(),)).start()
+                            time.sleep(0.70)
+                            threading.Thread(target=executor.map, args=(findDealDigital1M, config.getAtivosAbertosDigitais(),)).start()
+                            time.sleep(0.70)
+                            threading.Thread(target=executor.map, args=(findDealDigital5M, config.getAtivosAbertosDigitais(),)).start()
+                            time.sleep(0.70)
+                            threading.Thread(target=executor.map, args=(findDealDigital15M, config.getAtivosAbertosDigitais(),)).start()
+                            time.sleep(0.70)
+                        elif config.getTipoExpiracao() == 'um':
+                            threading.Thread(target=executor.map, args=(findDealBinary, config.getAtivosAbertosBinarias(),)).start()
+                            time.sleep(0.70)
+                            threading.Thread(target=executor.map, args=(findDealDigital1M, config.getAtivosAbertosDigitais(),)).start()
+                            time.sleep(0.70)
+                        elif config.getTipoExpiracao() == 'cinco':
+                            threading.Thread(target=executor.map, args=(findDealBinary, config.getAtivosAbertosBinarias(),)).start()
+                            time.sleep(0.70)
+                            threading.Thread(target=executor.map, args=(findDealDigital5M, config.getAtivosAbertosDigitais(),)).start()
+                            time.sleep(0.70)
+                        elif config.getTipoExpiracao() == 'quinze':
+                            threading.Thread(target=executor.map, args=(findDealBinary, config.getAtivosAbertosBinarias(),)).start()
+                            time.sleep(0.70)
+                            threading.Thread(target=executor.map, args=(findDealDigital15M, config.getAtivosAbertosDigitais(),)).start()
+                            time.sleep(0.70)
+                    elif config.getTipoOpcoes() == 'binarias':
                         threading.Thread(target=executor.map, args=(findDealBinary, config.getAtivosAbertosBinarias(),)).start()
                         time.sleep(0.70)
-                        threading.Thread(target=executor.map, args=(findDealDigital1M, config.getAtivosAbertosDigitais(),)).start()
-                        time.sleep(0.70)
-                    elif config.getTipoExpiracao() == 'cinco':
-                        threading.Thread(target=executor.map, args=(findDealBinary, config.getAtivosAbertosBinarias(),)).start()
-                        time.sleep(0.70)
-                        threading.Thread(target=executor.map, args=(findDealDigital5M, config.getAtivosAbertosDigitais(),)).start()
-                        time.sleep(0.70)
-                    elif config.getTipoExpiracao() == 'quinze':
-                        threading.Thread(target=executor.map, args=(findDealBinary, config.getAtivosAbertosBinarias(),)).start()
-                        time.sleep(0.70)
-                        threading.Thread(target=executor.map, args=(findDealDigital15M, config.getAtivosAbertosDigitais(),)).start()
-                        time.sleep(0.70)
-                elif config.getTipoOpcoes() == 'binarias':
-                    threading.Thread(target=executor.map, args=(findDealBinary, config.getAtivosAbertosBinarias(),)).start()
-                    time.sleep(0.70)
-                elif config.getTipoOpcoes() == 'digitais':
-                    if config.getTipoExpiracao() == 'um':
-                        threading.Thread(target=executor.map, args=(findDealDigital1M, config.getAtivosAbertosDigitais(),)).start()
-                        time.sleep(0.70)
-                    elif config.getTipoExpiracao() == 'cinco':
-                        threading.Thread(target=executor.map, args=(findDealDigital5M, config.getAtivosAbertosDigitais(),)).start()
-                        time.sleep(0.70)
-                    elif config.getTipoExpiracao() == 'quinze':
-                        threading.Thread(target=executor.map, args=(findDealDigital15M, config.getAtivosAbertosDigitais(),)).start()
-                        time.sleep(0.70)
-            finally:
-                executor.shutdown(wait=True)
+                    elif config.getTipoOpcoes() == 'digitais':
+                        if config.getTipoExpiracao() == 'um':
+                            threading.Thread(target=executor.map, args=(findDealDigital1M, config.getAtivosAbertosDigitais(),)).start()
+                            time.sleep(0.70)
+                        elif config.getTipoExpiracao() == 'cinco':
+                            threading.Thread(target=executor.map, args=(findDealDigital5M, config.getAtivosAbertosDigitais(),)).start()
+                            time.sleep(0.70)
+                        elif config.getTipoExpiracao() == 'quinze':
+                            threading.Thread(target=executor.map, args=(findDealDigital15M, config.getAtivosAbertosDigitais(),)).start()
+                            time.sleep(0.70)
+                finally:
+                    executor.shutdown(wait=True)
+        except:
+            checkConnection()
 
 def findDealBinary(paridade):
     try:
