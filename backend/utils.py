@@ -154,7 +154,7 @@ class Utils:
         # seconds = (total_seconds/60)/60
         # if seconds < 1:
         #     seconds = 1
-        return int(total_seconds)
+        return float(total_seconds)
 
     def getLiveDealDigital(paridade):
         return True
