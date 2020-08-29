@@ -13,16 +13,25 @@
   },
   "build": {
     "appId": "configbot",
+    "asarUnpack": [
+      "backend/copytrade.py",
+      "backend/api.py",
+      "backend/config.py",
+      "backend/copytrade.py",
+      "backend/findtrader.py",
+      "backend/utils.py",
+      "backend/iqoptionapi"
+    ],
     "win": {
       "target": [
         "nsis"
       ],
       "requestedExecutionLevel": "requireAdministrator"
     },
-    "mac":{
+    "mac": {
       "target": "dmg",
-      "category":"public.app-category.developer-tools",
-      "type":"distribution"
+      "category": "public.app-category.developer-tools",
+      "type": "distribution"
     },
     "nsis": {
       "uninstallDisplayName": "Meu Trader",
@@ -35,6 +44,7 @@
   "license": "ISC",
   "dependencies": {
     "electron-forge": "^5.2.4",
+    "electron-is-dev": "^1.2.0",
     "electron-squirrel-startup": "^1.0.0",
     "python-shell": "^2.0.1"
   },

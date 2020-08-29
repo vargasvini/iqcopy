@@ -9,8 +9,17 @@ async function onStartCopy(){
     clearCopyLogsContent();
     disableStartCopy();
 
+    debugger;
+    if(isDev){
+        filepath = path.join(__dirname, "./backend/");
+    } else {
+        filepath = path.join(__dirname, "./backend/");
+        filepath = filepath.replace("app.asar", "app.asar.unpacked");
+    }
+
     var options = {
-        scriptPath: path.join(__dirname, './backend/'),
+        //scriptPath: path.join(__dirname, "./backend/"),
+        scriptPath: filepath
     }
     
     idIntervalCopyFile = setInterval(readActivitiesLog, 2000)
@@ -126,8 +135,15 @@ async function onStartFinder(){
     var pais = document.getElementById('idCountrySelect').value;
     var start = document.getElementById('idStartTop').value;
 
+    if(isDev){
+        filepath = path.join(__dirname, "./backend/");
+    } else {
+        filepath = path.join(process.resourcesPath, "iqcopy/backend/");
+    }
+
     var options = {
-        scriptPath: path.join(__dirname, './backend/'),
+
+        scriptPath: filepath,
         args: [nome, pais, start]
     }
 
