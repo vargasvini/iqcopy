@@ -33,7 +33,7 @@ async function onStartCopy(){
 function verifyLoginError(returnPyshell){
     var userData = JSON.parse(returnPyshell);    
     if (userData.message == 'error'){
-        M.toast({html: 'Autenticação inválida! Por favor, verifique os dados informados na área "LOGIN CORRETORA".', classes: 'toast-custom-error valign-wrapper'}) 
+        M.toast({html: 'Autenticação inválida! Por favor, verifique os dados informados na área "LOGIN CORRETORA".', classes: 'toast-custom-error valign-wrapper', displayLength: 5000}) 
     }
     onStopCopy()
 }

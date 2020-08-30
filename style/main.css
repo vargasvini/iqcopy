@@ -375,7 +375,6 @@ input:not([type]):focus:not([readonly])+label, input[type=text]:not(.browser-def
     width: 650;
     height: 300px;
     background-position-x: center;
-    
 }
 
 .access-key{
@@ -402,4 +401,16 @@ input:not([type]):focus:not([readonly])+label, input[type=text]:not(.browser-def
     font-size: 40px;
     cursor: pointer;
     color: #101326;
+}
+
+.iq-login-logo{
+    margin-top: 10px;
+    background-image: url('../images/iq-option-logo.png');
+    background-size: contain;
+    background-repeat: no-repeat, repeat;
+    height: 100%;
+    pointer-events: none;
+    width: 650;
+    height: 200px;
+    background-position-x: center;
 }
