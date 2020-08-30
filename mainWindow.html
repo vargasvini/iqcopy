@@ -27,7 +27,7 @@
                             <div class="col s4"></div>
                             <div class="input-field col s4" style="width: 35%;">
                                 <input id="idAccessKey" class="input-value" type="text" class="validate" style="text-align: center;">
-                                <label for="idAccessKey" class="input-label">Chave de Acesso</label>
+                                <label for="idAccessKey" class="input-label">Insira sua chave de acesso para entrar:</label>
                             </div>
                             <div class="col s4"></div>             
                         </div>
@@ -124,6 +124,9 @@
             <div class="">
                 <!-- LOGIN -->
                 <div id="idDivLogin" class="col s9 div-content slide_in" style="display:block;">
+                    <blockquote class="blockquote-custom">
+                        Insira aqui seus dados de login da corretora:
+                    </blockquote>
                     <div class="row">
                         <div class="input-field col s6">
                             <input id="idLoginUser" class="input-value" type="text" class="validate">
@@ -140,14 +143,14 @@
                 <!-- SELECIONAR TRADER -->
                 <div id="idDivSelecionarTrader" class="col s9 div-content slide_in" style="display:none">                 
                     <blockquote class="blockquote-custom">
-                        Abaixo você pode acompanhar sua informações em tempo real de suas operações.
+                        Acompanhe em tempo real as informações de suas operações a seguir:
                     </blockquote>
                     <div class="row">
                         <div class="col s12">
                             <div class="card-panel grey lighten-5 z-depth-1" style="height: 200px;">
                                 <div>
                                     <blockquote class="blockquote-header col s12">
-                                        Selecione abaixo a maneira que deseja seguir os traders</b>
+                                        Como você deseja seguir os traders?
                                     </blockquote>
                                     <div class="blockquote-body col s12">
                                         <form action="#" id="divFollowOptions">
@@ -174,7 +177,7 @@
                                             Selecione o intervalo do rank</b>
                                         </blockquote>
                                         <blockquote class="blockquote-header col s8">
-                                            Informe um ou mais traders utilizando seus identificadores</b>
+                                            Informe os IDs dos traders que deseja seguir ou ignorar:
                                         </blockquote>
                                         <div class="blockquote-body col s4" style="margin-bottom: 0px;">
                                             <div class="input-field col s12">
@@ -185,7 +188,7 @@
                                         <div class="blockquote-body col s4" style="margin-bottom: 0px;">
                                             <div class="input-field col s12">
                                                 <textarea id="idFollowIds" class="input-value input-card" type="text" style="resize: none;"></textarea>
-                                                <label id="idFollowIdsLabel" for="idFollowIds" class="input-label"><b>SEGUIR</b> OS IDs</label>
+                                                <label id="idFollowIdsLabel" for="idFollowIds" class="input-label"><b>IGNORAR</b> OS IDs</label>
                                             </div> 
                                         </div>
                                         <div class="blockquote-body col s4" style="margin-bottom: 0px;">
@@ -197,11 +200,10 @@
                                     </div>
                                 </div>
                             </div>
-
                             <div class="row">
                                 <div class="col s12">
                                     <blockquote class="blockquote-custom"  style="margin-top: 0px;">
-                                        Abaixo você pode pesquisar qualquer trader pelo nome, país ou posição no rank.
+                                        Pesquise o(s) trader(s) de seu interesse pelo nome, país ou rank:
                                     </blockquote>
                                     <div class="card-panel grey lighten-5 z-depth-1 header-search-trader" >
                                         <div>
@@ -260,14 +262,14 @@
                 <!-- GERENCIAMENTO -->
                 <div id="idDivGerenciamento" class="col s9 div-content slide_in" style="display:none">
                     <blockquote class="blockquote-custom">
-                        Abaixo você pode acompanhar sua informações em tempo real de suas operações.
+                        Gerencie suas entradas a seguir:
                     </blockquote>
                     <div class="row">
                         <div class="col s12">
                             <div class="card-panel grey lighten-5 z-depth-1" style="height: 420px;">
                                 <div>
                                     <blockquote class="blockquote-header col s12">
-                                        Selecione abaixo se deseja operar com entradas de <b>Mão Fixa</b> ou aplicando <b>Martingale</b>
+                                        Com qual tipo de entrada você deseja operar?
                                     </blockquote>
                                     <div class="blockquote-body col s12">
                                         <form action="#" id="divOptionsGerenciamento">
@@ -282,7 +284,7 @@
                                         </form>
                                     </div>
                                     <blockquote class="blockquote-header col s12">
-                                        Selecione abaixo o <b>valor</b> das suas entradas e a <b>quantidade de martingales</b>
+                                        Defina o <b>valor</b> de suas entradas e a <b>quantidade de Martingales</b>:
                                     </blockquote>
                                     <div class="blockquote-body col s3" style="margin-bottom: 0px;">
                                         <div class="input-field col s12">
@@ -297,7 +299,7 @@
                                         </div> 
                                     </div>
                                     <blockquote class="blockquote-header col s12">
-                                        Selecione abaixo o <b>Stop Win</b> e <b>Stop Loss</b>
+                                        Defina o valor do <b>Stop Win</b> e do <b>Stop Loss</b>:
                                     </blockquote>
                                     <div class="blockquote-body col s3" style="margin-bottom: 0px;">
                                         <div class="input-field col s12">
@@ -312,7 +314,7 @@
                                         </div> 
                                     </div>
                                     <blockquote class="blockquote-header col s12">
-                                        Selecione abaixo o <b>valor mínimo</b> das entradas realizadas pelos traders selecionados
+                                        Defina o <b>valor mínimo</b> das entradas realizadas pelos traders selecionados:
                                     </blockquote>
                                     <div class="blockquote-body col s3" style="margin-bottom: 0px;">
                                         <div class="input-field col s12">
@@ -328,14 +330,14 @@
                 <!-- CONFIGURAÇÕES -->
                 <div id="idDivConfig" class="col s9 div-content slide_in" style="display:none">
                     <blockquote class="blockquote-custom">
-                        Abaixo você pode acompanhar sua informações em tempo real de suas operações.
+                        Configure seus modos de operação a seguir:
                     </blockquote>
                     <div class="row">
                         <div class="col s12">
                             <div class="card-panel grey lighten-5 z-depth-1" style="height: 360px;">
                                 <div>
                                     <blockquote class="blockquote-header col s12">
-                                        Selecione abaixo se deseja operar em sua conta <b>Real</b> ou de <b>Treinamento</b>
+                                        Em qual conta você deseja operar?
                                     </blockquote>
                                     <div class="blockquote-body col s12">
                                         <form action="#" id="divOptionsConta">
@@ -350,7 +352,7 @@
                                         </form>
                                     </div>
                                     <blockquote class="blockquote-header col s12">
-                                        Selecione abaixo em qual <b>opção</b> você deseja operar
+                                        Em qual(is) <b>opção(ões)</b> você deseja operar?
                                     </blockquote>
                                     <div class="blockquote-body col s12">
                                         <form action="#" id="divOptionsOpcoes">
@@ -369,7 +371,7 @@
                                         </form>
                                     </div>
                                     <blockquote class="blockquote-header col s12">
-                                        Selecione abaixo o tempo de expiração para opções <b>DIGITAIS</b>
+                                        Defina o tempo de expiração para opões <b>DIGITAIS</b>
                                     </blockquote>
                                     <div class="blockquote-body col s12">
                                         <form action="#" id="divOptionsExpiracao">
@@ -392,14 +394,14 @@
                                         </form>
                                     </div>
                                     <blockquote class="blockquote-header col s12">
-                                        Selecione abaixo as <b>paridades</b> de moedas que você quer operar
+                                        Selecione as <b>paridades</b> de moedas nas quais deseja operar:
                                     </blockquote>
                                     <div class="blockquote-body col s12">
                                         <div class="input-field col s6" id="idDivParidadesSelect">
                                             <select class="icons" id="idParidadesSelect" multiple>  
                                                 <!-- <option value="TODAS" id="idParidadesTodas">TODAS</option>                                                   -->
                                             </select>
-                                            <label>Selecione as Paridades</label>
+                                            <label>Clique abaixo para selecionar</label>
                                         </div>
                                     </div>
                                 </div>
@@ -420,7 +422,7 @@
                         </div>
                     </div>    
                     <blockquote class="blockquote-custom" id="idBqCopy" style="height: 20px;">
-                        Abaixo você pode acompanhar sua informações em tempo real de suas operações.
+                        Veja suas operações na tela abaixo:
                     </blockquote>
                     <div class="row">
                         <div class="col s12">
@@ -430,9 +432,9 @@
                 </div>
                 <!-- HISTÓRICO DE OPERAÇÕES -->
                 <div id="idDivHistorico" class="col s9 div-content slide_in" style="display:none">
-                    <!-- <blockquote class="blockquote-custom">
-                        Abaixo você pode consultar o seu histórico de operações
-                    </blockquote> -->
+                    <blockquote class="blockquote-custom">
+                        Veja abaixo o histórico de operações que você copiou:
+                    </blockquote>
                     <div class="row" style="height: 520px;">
                         <div class="col s12">
                             <table class="striped">
