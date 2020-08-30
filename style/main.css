@@ -414,3 +414,16 @@ input:not([type]):focus:not([readonly])+label, input[type=text]:not(.browser-def
     height: 200px;
     background-position-x: center;
 }
+
+.idBtnAddFinder{
+    color: green;
+    width: 20px;
+    cursor: pointer;
+    text-decoration: underline;
+}
+.idBtnBlockFinder{
+    color: red;
+    width: 20px;
+    cursor: pointer;
+    text-decoration: underline;
+}

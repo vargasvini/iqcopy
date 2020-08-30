@@ -45,6 +45,8 @@ def logHistorico(traderId, resultado, paridade, valor, operacao, nome, timeframe
         myfile.close()
 
 def checkConnection():
+    api = start()
+    iqoption = api.getApi()
     if not check_connect_v3():
         check_connect_v2()
 
@@ -196,12 +198,12 @@ def startCopy():
                 if config.getTipoFollow() == 'followId' or config.getTipoFollow() == 'followAmbos':
                     appendIdToFollow()
             if refreshConnection < now:
-                refreshConnection =  now + timedelta(minutes=5)
+                refreshConnection =  now + timedelta(minutes=30)
                 checkConnection()
 
             config.setAtivosAbertosBinarias(rotate(config.getAtivosAbertosBinarias(), 1))
             config.setAtivosAbertosDigitais(rotate(config.getAtivosAbertosDigitais(), 1))
-
+            
             with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
                 try:
                     if config.getTipoOpcoes() == 'opcoesAmbas':
@@ -477,5 +479,5 @@ else:
     config.setValorEntradaAnterior(config.getValorEntrada())
     logActivities(True, "Iniciando cópia:")
     logActivities(False, "Buscando operações...")
-  
+
     startCopy()

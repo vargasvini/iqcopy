@@ -209,8 +209,8 @@ async function appendFindTraderData(data) {
                 `
             }
             html += `
-            <td id="idBtnAdd${item.userid}" style="width:20px"><i class="material-icons right finder-add-icon" style="margin-left:0px">add_box</i></td>
-            <td id="idBtnBlock${item.userid}" style="width:20px"><i class="material-icons right finder-block-icon" style="margin-left:0px">block</i></td>
+            <td id="idBtnAdd${item.userid}" style="color:green;" class="idBtnAddFinder">SEGUIR</td>
+            <td id="idBtnBlock${item.userid}" style="color:red;" class="idBtnBlockFinder">IGNORAR</td>
             </tr>`
             userIdList.push(`${item.userid}`)
         });
@@ -262,7 +262,7 @@ function addToBlockList(userId){
         idsToBlock.replace(/,\s*$/, "");
         $('#idBlockIds').val(idsToBlock);
         document.getElementById('idBlockIdsLabel').classList.add("active");
-        M.toast({html: "TRADER ADICIONADO COM SUCESSO NA LISTA DE BLOQUEADOS", classes: 'toast-custom-success valign-wrapper', displayLength: 1000})
+        M.toast({html: "TRADER ADICIONADO COM SUCESSO NA LISTA DE IGNORADOS", classes: 'toast-custom-success valign-wrapper', displayLength: 1000})
     }
 }
 

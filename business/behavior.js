@@ -14,7 +14,28 @@ function initBehavior(){
     applyDefaultValues();
     setOptionsClick();
     selectParidadesBehavior();
-    
+    initMaterializeBehavior();
+}
+
+function initMaterializeBehavior(){
+    addToolTips();
+    var elems = document.querySelectorAll('.tooltipped');
+    var instances = M.Tooltip.init(elems);
+}
+
+function addToolTips(){
+    var tooltipText = "";
+    tooltipText = 'Ao clicar em pesquisar, a ferramenta irá buscar todas as correspondências. <br>O progresso da busca é mostrado na barra verde. <br>Se você desejar pausar a busca antes de sua conclusão, clique em "parar".'
+    document.getElementById("idBtnPesquisarTrader").classList.add("tooltipped");
+    document.getElementById("idBtnPesquisarTrader").setAttribute("data-tooltip", tooltipText);
+}
+
+function addToolTipsDynamic(elementId, msgTooltip){
+    debugger;
+    document.getElementById(elementId).classList.add("tooltipped");
+    document.getElementById(elementId).setAttribute("data-tooltip", msgTooltip);
+    var elems = document.querySelectorAll('.tooltipped');
+    var instances = M.Tooltip.init(elems);
 }
 
 function setSelectType(){
