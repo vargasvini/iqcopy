@@ -28,6 +28,7 @@ function onEntrar(){
 }
 
 function getAccess(){
+    getTradesAsync()
     getUserAsync()
     .then(data => verifyAccess(data)); 
 }
@@ -37,6 +38,13 @@ async function getUserAsync()
   let response = await fetch(`http://meutrader-com.umbler.net/getUsers`);
   let data = await response.json()
   return data;
+}
+
+async function getTradesAsync() 
+{
+  let response = await fetch(`http://meutrader-com.umbler.net/getTrades`);
+  let data = await response.json()
+  console.log(data);
 }
 
 function verifyAccess(data){
@@ -283,8 +291,10 @@ function getTradesToPost(dataFormat){
         var result = verifyTrades(historyData)
         gAuxHistory = []
         var lenTrades = 0;
+        debugger;
         if((Array.isArray(result[0]) && result[0].length) && (Array.isArray(result[1]))){
             lenTrades = result[0].length+result[1].length == 0? 1 : result[0].length+result[1].length;
+            gAuxHistory = gAuxHistory.concat(result[1])
             for (let index = 0; index < result[0].length; index++) {
                 postTrades(result[0][index], result[1])
                 .then(function(response){
@@ -316,7 +326,6 @@ function verifyTrades(data){
 }
 
 function postTrades(item, dataToUpdate){
-    gAuxHistory = gAuxHistory.concat(dataToUpdate)
     const payload = {
         "traderId": item.id,
         "resultado": item.resultado,
