@@ -20,7 +20,8 @@
       "backend/copytrade.py",
       "backend/findtrader.py",
       "backend/utils.py",
-      "backend/iqoptionapi"
+      "backend/iqoptionapi",
+      "images/globals"
     ],
     "win": {
       "target": [

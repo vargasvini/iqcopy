@@ -2,9 +2,24 @@ const electron = require('electron');
 const url = require('url');
 const path = require('path');
 const {app, BrowserWindow, Menu, screen} = electron;
+const nativeImage = require('electron').nativeImage;
+const isDev = require('electron-is-dev');
 
 let mainWindow;
 let addWindow;
+var iconPath = "";
+
+if(isDev){
+    iconPath = path.join(__dirname, "/images/globals/icotest.jpg");
+} 
+else{
+    iconPath = path.join(__dirname, "/images/globals/icotest.jpg");
+    iconPath = iconPath.replace("app.asar", "app.asar.unpacked");
+}
+console.log(iconPath)
+
+var imageLogo = nativeImage.createFromPath(iconPath); 
+imageLogo.setTemplateImage(true);
 
 // Listen for app to be ready
 app.on('ready', function(){
@@ -22,7 +37,8 @@ app.on('ready', function(){
         webPreferences: {
             nodeIntegration: true
         },
-        resizable: false
+        resizable: false,
+        icon: imageLogo
     });
     //Load html file into window
     mainWindow.loadURL(url.format({
