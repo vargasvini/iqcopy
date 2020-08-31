@@ -7,27 +7,27 @@ async function onStartCopy(){
         clearInterval(idIntervalCopyFile)
     }
 
-    // clearCopyLogsContent();
-    // disableStartCopy();
+    clearCopyLogsContent();
+    disableStartCopy();
 
-    // if(isDev){
-    //     filepath = path.join(__dirname, "./backend/");
-    // } 
-    // else{
-    //     filepath = path.join(__dirname, "./backend/");
-    //     filepath = filepath.replace("app.asar", "app.asar.unpacked");
-    // }
+    if(isDev){
+        filepath = path.join(__dirname, "./backend/");
+    } 
+    else{
+        filepath = path.join(__dirname, "./backend/");
+        filepath = filepath.replace("app.asar", "app.asar.unpacked");
+    }
 
-    // var options = {
-    //     scriptPath: filepath
-    // }
+    var options = {
+        scriptPath: filepath
+    }
     
-    // idIntervalCopyFile = setInterval(readActivitiesLog, 2000)
-    // const callCopyTrader = promisify(this.runPyShellCopy);
-    // const returnPyshell = await callCopyTrader("copytrade.py", options);
-    // if(returnPyshell != null){
-    //     verifyLoginError(returnPyshell)
-    // }
+    idIntervalCopyFile = setInterval(readActivitiesLog, 2000)
+    const callCopyTrader = promisify(this.runPyShellCopy);
+    const returnPyshell = await callCopyTrader("copytrade.py", options);
+    if(returnPyshell != null){
+        verifyLoginError(returnPyshell)
+    }
 }
 
 function verifyLoginError(returnPyshell){
