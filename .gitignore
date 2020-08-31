@@ -2,3 +2,4 @@ system.config
 copy.config
 node_modules
 __pycache__/
+/dist
