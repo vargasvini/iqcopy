@@ -34,7 +34,6 @@ if check == False:
     userData = {'message': 'error','name': '', 'currency':'', 'balance': '', 'avatar': ''}
     python2json = json.dumps(userData)
     print(python2json)
-    sys.exit(0)
 else:
     if start == "":
         start = "1"

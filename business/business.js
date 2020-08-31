@@ -3,13 +3,41 @@ function initBusiness(){
     checkFiles();
     $("#idDivAccessLogo").removeClass('slide_logo')
     document.getElementById("idAccessKey").value = "9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d"
+    if(document.getElementById("idAccessKey").value != ""){
+        document.getElementById("idAccessKeyLabel").classList.add("active");
+    }
     //getAccess()
 }
 
 function checkFiles(){
     const fs = require('fs')
+    checkSystemConfig(fs);
+    checkCopyConfig(fs);
+    checkResultadosConfig(fs);
+}
+
+function checkSystemConfig(fs){
     const path = 'system.config'
-    
+    if (!fs.existsSync(path)) {
+        fs.writeFileSync(path, '', 'utf8', function(err) {
+            if (err) 
+                isSaved = false;
+        });
+    }
+}
+
+function checkCopyConfig(fs){
+    const path = 'copy.config'
+    if (!fs.existsSync(path)) {
+        fs.writeFileSync(path, createConfig(createFormData()), 'utf8', function(err) {
+            if (err) 
+                isSaved = false;
+        });
+    }
+}
+
+function checkResultadosConfig(fs){
+    const path = 'resultados.log.config'
     if (!fs.existsSync(path)) {
         fs.writeFileSync(path, '', 'utf8', function(err) {
             if (err) 
@@ -20,11 +48,6 @@ function checkFiles(){
 
 function onEntrar(){
     getAccess();
-    // hideAccessItem();
-    // $("#idDivAccessLogo").addClass('slide_logo')
-    // setTimeout(() => {
-    // hideAccessDiv();
-    // }, 495);
 }
 
 function getAccess(){
@@ -291,7 +314,6 @@ function getTradesToPost(dataFormat){
         var result = verifyTrades(historyData)
         gAuxHistory = []
         var lenTrades = 0;
-        debugger;
         if((Array.isArray(result[0]) && result[0].length) && (Array.isArray(result[1]))){
             lenTrades = result[0].length+result[1].length == 0? 1 : result[0].length+result[1].length;
             gAuxHistory = gAuxHistory.concat(result[1])

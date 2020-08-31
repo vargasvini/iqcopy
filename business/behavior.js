@@ -31,7 +31,6 @@ function addToolTips(){
 }
 
 function addToolTipsDynamic(elementId, msgTooltip){
-    debugger;
     document.getElementById(elementId).classList.add("tooltipped");
     document.getElementById(elementId).setAttribute("data-tooltip", msgTooltip);
     var elems = document.querySelectorAll('.tooltipped');

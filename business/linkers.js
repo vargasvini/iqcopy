@@ -9,16 +9,15 @@ async function onStartCopy(){
     clearCopyLogsContent();
     disableStartCopy();
 
-    debugger;
     if(isDev){
         filepath = path.join(__dirname, "./backend/");
-    } else {
+    } 
+    else{
         filepath = path.join(__dirname, "./backend/");
         filepath = filepath.replace("app.asar", "app.asar.unpacked");
     }
 
     var options = {
-        //scriptPath: path.join(__dirname, "./backend/"),
         scriptPath: filepath
     }
     
@@ -35,7 +34,8 @@ function verifyLoginError(returnPyshell){
     if (userData.message == 'error'){
         M.toast({html: 'Autenticação inválida! Por favor, verifique os dados informados na área "LOGIN CORRETORA".', classes: 'toast-custom-error valign-wrapper', displayLength: 5000}) 
     }
-    onStopCopy()
+    onStopCopy();
+    onStopFinder();
 }
 
 function onStopCopy(){
@@ -137,18 +137,23 @@ async function onStartFinder(){
 
     if(isDev){
         filepath = path.join(__dirname, "./backend/");
-    } else {
-        filepath = path.join(process.resourcesPath, "iqcopy/backend/");
+    } 
+    else{
+        filepath = path.join(__dirname, "./backend/");
+        filepath = filepath.replace("app.asar", "app.asar.unpacked");
     }
 
     var options = {
-
         scriptPath: filepath,
         args: [nome, pais, start]
     }
 
     const callTraderFinder = promisify(this.runPyShell);
     const returnPyshell = await callTraderFinder("findtrader.py", options);
+
+    if(returnPyshell != null){
+        verifyLoginError(returnPyshell)
+    }
 }
 
 
