@@ -87,6 +87,11 @@ function showLoaderDiv(){
 function removeMenuClick(){
     document.getElementById("idDivMenu").style="pointer-events: none";
 }
+
 function setMenuClick(){
     document.getElementById("idDivMenu").style="pointer-events: all";
+}
+
+function enableSaveBtn(){
+    document.getElementById("idBtnSaveConfig").disabled = false;
 }

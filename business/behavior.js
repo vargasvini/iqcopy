@@ -124,12 +124,14 @@ function selectParidadesBehavior(){
 }
 
 function selectAll() {
+    debugger;
     $('idParidadesSelect option:not(:disabled)').not(':selected').prop('selected', true);
     $('.dropdown-content.multiple-select-dropdown input[type="checkbox"]:not(:checked)').not(':disabled').prop('checked', 'checked');
     var values = $('.dropdown-content.multiple-select-dropdown input[type="checkbox"]:checked').not(':disabled').parent().map(function() {
         return $(this).text();
     }).get();
-    $('input.select-dropdown').val(values.join(', '));
+    //TODO
+    $('#idParidadesSelect').val(values.join(', '));
     
     for (var option of document.getElementById('idParidadesSelect').options) {
         option.selected = true;

@@ -87,11 +87,17 @@ function verifyAccess(data){
     }
 }
 
-function onSaveConfig(){
+function onSaveConfig(isCopy){
     event.preventDefault();
     if(writeToConfigFile() && writeToSystemFile()) {
         document.getElementById("idBtnSaveConfig").disabled = true;
-        M.toast({html: 'CONFIGURAÇÃO SALVA COM SUCESSO!', classes: 'toast-custom-success valign-wrapper', displayLength: 1000, completeCallback: function(){document.getElementById("idBtnSaveConfig").disabled = false;}})
+        if(!isCopy)
+            M.toast({html: 'CONFIGURAÇÃO SALVA COM SUCESSO!', classes: 'toast-custom-success valign-wrapper', displayLength: 1000, completeCallback: enableSaveBtn()})
+        else{
+            setTimeout(() => {
+                enableSaveBtn();
+            }, 2000); 
+        }
     } 
     else{
         document.getElementById("idBtnSaveConfig").disabled = true;
