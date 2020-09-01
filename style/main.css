@@ -361,10 +361,6 @@ input:not([type]):focus:not([readonly])+label, input[type=text]:not(.browser-def
     width: 100%;
 }
 
-.access-content{
-    /* margin-top: 35px; */
-}
-
 .access-logo{
     margin-top: 10px;
     background-image: url('../images/meutrader.png');
