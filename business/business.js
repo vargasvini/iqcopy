@@ -395,9 +395,14 @@ function writeNewHistoryFileAfterPost(){
     });
 }
 
-
 /*GET TOP TRADERS DATA*/
-async function getTradesAsync() 
+async function getTradesAsync(){
+    let response = await fetch(`http://meutrader-com.umbler.net/getAggregatedTrades`);
+    let data = await response.json()
+    processTopTradersData(data)
+}
+
+async function getTradesAsync_OLD() 
 {
     let response = await fetch(`http://meutrader-com.umbler.net/getTrades`);
     let data = await response.json()
@@ -433,36 +438,13 @@ async function getTradesAsync()
     }).toArray()
     
     processTopTradersData(grouped.sort(sortTradersSaldoMaxMin).slice(0, 100))
-
-    // console.log(grouped)
-    // console.log(Enumerable.from(grouped).where(x => x.saldo >=2).toArray()) //9wins
-    //console.log(Enumerable.from(data).where(x => x.traderId == "76085554").toArray()) //9wins
-
-    // var testMaxMin = Enumerable.from(grouped).where(x => x.saldo >=2).toArray();
-    // var testMinMax = Enumerable.from(grouped).where(x => x.saldo >=2).toArray();
-    
-    // console.log(testMaxMin.sort(sortTradersSaldoMaxMin))
-    // console.log(testMinMax.sort(sortTradersSaldoMinMax))
-
-    // console.log(test.sort(sortTradersWinsMaxMin))
-    // console.log(test.sort(sortTradersWinsMinMax))
-    // var tradId = ""
-    // for (let index = 0; index < test.length; index++) {
-    //     if(tradId == ""){
-    //         tradId = test[index].traderId;
-    //     }
-    //     else{
-    //         tradId = tradId + "," + test[index].traderId 
-    //     }
-        
-    // }
-    // console.log(tradId)
 }
 
 function processTopTradersData(_data) {
-    const topTradersData = _data;
-    topTradersData.sort(customSort)    
-    paginationTopTradersData(topTradersData);
+    for (let index = 0; index < _data.length; index++) {
+        _data[index].rank = index+1
+    }
+    paginationTopTradersData(_data);
 }
 
 function paginationTopTradersData(item){
@@ -470,7 +452,7 @@ function paginationTopTradersData(item){
         locator: 'data',
         dataSource: item,
         callback: function(data, pagination) {
-            // template method of yourself
+            // template method of yourself            
             var html = topTradersDataTemplate(data);
             $('#data-toptraders-container').html(html);
         }
@@ -482,8 +464,9 @@ function topTradersDataTemplate(data) {
     $.each(data, function(index, item){
         html += `
             <tr>
-                <td>${item.traderId}</td>
-                <td>${item.nome}</td>
+                <td>${item.rank + "º"}</td>
+                <td>${item._id.traderId}</td>
+                <td>${item._id.nome}</td>
                 <td>${item.saldo}</td>
                 <td>${item.qtdWin}</td>
                 <td>${item.qtdLoss}</td>

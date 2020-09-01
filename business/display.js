@@ -67,6 +67,11 @@ function showTopTradersDiv(){
     document.getElementById("idDivTopTraders").style="display:block";
 }
 
+function hideTopTradersDiv(){
+    document.getElementById("idDivTopTraders").style="display:none";
+}
+
+
 function hideCopiarDiv(){
     document.getElementById("idDivCopiar").style="display:none";    
 }
@@ -78,6 +83,7 @@ function hideAllDivs(){
     document.getElementById("idDivConfig").style="display:none";
     document.getElementById("idDivCopiar").style="display:none";
     document.getElementById("idDivHistorico").style="display:none";
+    document.getElementById("idDivTopTraders").style="display:none";
 }
 
 function hideLoaderDiv(){

@@ -7,6 +7,7 @@ function initBehavior(){
     getInputFieldAndSetEvent();
     verifyStartInputsBehavior();
     getHistoryData();
+    getTradesAsync();
     clearLogsContent(); 
     setSelectType();
     applyMasks();
