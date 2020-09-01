@@ -16,7 +16,6 @@ else{
     iconPath = path.join(__dirname, "/images/globals/icotest.jpg");
     iconPath = iconPath.replace("app.asar", "app.asar.unpacked");
 }
-console.log(iconPath)
 
 var imageLogo = nativeImage.createFromPath(iconPath); 
 imageLogo.setTemplateImage(true);

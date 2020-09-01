@@ -31,7 +31,7 @@
         "nsis"
       ],
       "requestedExecutionLevel": "requireAdministrator",
-      "icon":"build/icon.png"
+      "icon": "build/icon.png"
     },
     "mac": {
       "target": "dmg",
@@ -51,6 +51,7 @@
     "electron-forge": "^5.2.4",
     "electron-is-dev": "^1.2.0",
     "electron-squirrel-startup": "^1.0.0",
+    "linq": "^3.2.2",
     "python-shell": "^2.0.1"
   },
   "devDependencies": {
