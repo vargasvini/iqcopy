@@ -1,4 +1,3 @@
-var Enumerable = require('linq');
 function initBusiness(){
     checkFiles();
     $("#idDivAccessLogo").removeClass('slide_logo')
@@ -6,7 +5,6 @@ function initBusiness(){
     if(document.getElementById("idAccessKey").value != ""){
         document.getElementById("idAccessKeyLabel").classList.add("active");
     }
-    //getAccess()
 }
 
 function checkFiles(){
@@ -51,7 +49,6 @@ function onEntrar(){
 }
 
 function getAccess(){
-    getTradesAsync()
     getUserAsync()
     .then(data => verifyAccess(data)); 
 }
@@ -61,54 +58,6 @@ async function getUserAsync()
   let response = await fetch(`http://meutrader-com.umbler.net/getUsers`);
   let data = await response.json()
   return data;
-}
-
-async function getTradesAsync() 
-{
-    let response = await fetch(`http://meutrader-com.umbler.net/getTrades`);
-    let data = await response.json()
-    console.log(data);
-
-    var queryResult = Enumerable.from(data).toArray()
-
-    //CRIEI 3 NOVOS ATRIBUTOS
-    for (let index = 0; index < queryResult.length; index++) {
-        queryResult[index].saldo = 0
-        queryResult[index].qtdWin = 0
-        queryResult[index].qtdLoss = 0
-        if(queryResult[index].resultado == 'WIN'){
-            queryResult[index].qtdWin = 1
-        }else{
-            queryResult[index].qtdLoss = -1
-        }
-    }
-    
-    //AGRUPEI ELES: SALDO = WIN(1) + LOSS (-1)
-    var grouped = Enumerable.from(queryResult).groupBy("$.traderId", null, (key, g) => {
-        return { 
-            traderId: key, 
-            saldo: g.sum("$.qtdWin + $.qtdLoss | 0"),
-            nome: g.elementAt(0).nome,
-       }
-    }).toArray()
-
-    console.log(grouped)
-    console.log(Enumerable.from(grouped).where(x => x.saldo >=2).toArray()) //9wins
-    console.log(Enumerable.from(data).where(x => x.traderId == "76085554").toArray()) //9wins
-
-    var test = Enumerable.from(grouped).where(x => x.saldo >=2).toArray();
-    var tradId = ""
-    for (let index = 0; index < test.length; index++) {
-        if(tradId == ""){
-            tradId = test[index].traderId;
-        }
-        else{
-            tradId = tradId + "," + test[index].traderId 
-        }
-        
-    }
-    console.log(tradId)
-
 }
 
 function verifyAccess(data){
@@ -350,8 +299,7 @@ function historyDataTemplate(data) {
                 <td>${moment(item.data).format("DD/MM/YYYY HH:mm")}</td>
             </tr>
         `
-    });
-        
+    });  
     return html;
 }
 
@@ -447,10 +395,126 @@ function writeNewHistoryFileAfterPost(){
     });
 }
 
+
+/*GET TOP TRADERS DATA*/
+async function getTradesAsync() 
+{
+    let response = await fetch(`http://meutrader-com.umbler.net/getTrades`);
+    let data = await response.json()
+    console.log(data);
+
+    var queryResult = Enumerable.from(data).toArray()
+
+    //CRIEI 3 NOVOS ATRIBUTOS
+    for (let index = 0; index < queryResult.length; index++) {
+        queryResult[index].saldo = 0
+        queryResult[index].qtdWin = 0
+        queryResult[index].qtdLoss = 0
+        queryResult[index].valorOper = 0
+        if(queryResult[index].resultado == 'WIN'){
+            queryResult[index].qtdWin = 1
+            queryResult[index].valorOper = queryResult[index].valor
+        }else{
+            queryResult[index].qtdLoss = -1
+            queryResult[index].valorOper = queryResult[index].valor *-1
+        }
+    }
+    
+    //AGRUPEI ELES: SALDO = WIN(1) + LOSS (-1)
+    var grouped = Enumerable.from(queryResult).groupBy("$.traderId", null, (key, g) => {
+        return { 
+            traderId: key, 
+            nome: g.elementAt(0).nome,
+            saldo: g.sum("$.qtdWin + $.qtdLoss | 0"),
+            qtdWin: g.sum("$.qtdWin | 0"),
+            qtdLoss: g.sum("$.qtdLoss *-1 | 0"),
+            saldoValor: g.sum("$.valorOper | 0"),
+       }
+    }).toArray()
+    
+    processTopTradersData(grouped.sort(sortTradersSaldoMaxMin).slice(0, 100))
+
+    // console.log(grouped)
+    // console.log(Enumerable.from(grouped).where(x => x.saldo >=2).toArray()) //9wins
+    //console.log(Enumerable.from(data).where(x => x.traderId == "76085554").toArray()) //9wins
+
+    // var testMaxMin = Enumerable.from(grouped).where(x => x.saldo >=2).toArray();
+    // var testMinMax = Enumerable.from(grouped).where(x => x.saldo >=2).toArray();
+    
+    // console.log(testMaxMin.sort(sortTradersSaldoMaxMin))
+    // console.log(testMinMax.sort(sortTradersSaldoMinMax))
+
+    // console.log(test.sort(sortTradersWinsMaxMin))
+    // console.log(test.sort(sortTradersWinsMinMax))
+    // var tradId = ""
+    // for (let index = 0; index < test.length; index++) {
+    //     if(tradId == ""){
+    //         tradId = test[index].traderId;
+    //     }
+    //     else{
+    //         tradId = tradId + "," + test[index].traderId 
+    //     }
+        
+    // }
+    // console.log(tradId)
+}
+
+function processTopTradersData(_data) {
+    const topTradersData = _data;
+    topTradersData.sort(customSort)    
+    paginationTopTradersData(topTradersData);
+}
+
+function paginationTopTradersData(item){
+    $('#pagination-toptraders-container').pagination({
+        locator: 'data',
+        dataSource: item,
+        callback: function(data, pagination) {
+            // template method of yourself
+            var html = topTradersDataTemplate(data);
+            $('#data-toptraders-container').html(html);
+        }
+    })
+}
+
+function topTradersDataTemplate(data) {
+    var html = '';
+    $.each(data, function(index, item){
+        html += `
+            <tr>
+                <td>${item.traderId}</td>
+                <td>${item.nome}</td>
+                <td>${item.saldo}</td>
+                <td>${item.qtdWin}</td>
+                <td>${item.qtdLoss}</td>
+                <td>${item.saldoValor.toFixed(2).replace(".",",")}</td>
+            </tr>
+        `
+    });
+        
+    return html;
+}
+
 function range(start, end) {
     return Array.from({ length: end - start + 1 }, (_, i) => i)
 }
 
 function customSort(a, b) {    
     return new Date(b.data).getTime() - new Date(a.data).getTime();
+}
+
+function sortTradersWinsMaxMin(a, b) {    
+    return b.saldo - a.saldo;
+}
+
+function sortTradersWinsMinMax(a, b) {    
+    return b.saldo + a.saldo;
+}
+
+function sortTradersSaldoMaxMin(a, b) {    
+    return b.saldo - a.saldo;
+}
+
+function sortTradersSaldoMinMax(b, a) {    
+    return b.saldo - a.saldo;
 }

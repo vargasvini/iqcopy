@@ -175,6 +175,10 @@ function changeBodyItem(_item){
             getHistoryData();
             showHistoricoDiv();
             break;
+        case "TOP TRADERS":
+            getTradesAsync();
+            showTopTradersDiv();
+            break;
         default:
             break;
     }

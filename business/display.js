@@ -63,6 +63,10 @@ function showHistoricoDiv(){
     document.getElementById("idDivHistorico").style="display:block";
 }
 
+function showTopTradersDiv(){
+    document.getElementById("idDivTopTraders").style="display:block";
+}
+
 function hideCopiarDiv(){
     document.getElementById("idDivCopiar").style="display:none";    
 }

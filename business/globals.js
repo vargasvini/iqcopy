@@ -1,6 +1,7 @@
 var {PythonShell} = require("python-shell");
 var path = require("path");
 const {promisify} = require('util');
+var Enumerable = require('linq');
 
 var pyshell;
 var pyshellCopy;
