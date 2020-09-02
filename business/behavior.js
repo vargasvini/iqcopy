@@ -8,6 +8,7 @@ function initBehavior(){
     verifyStartInputsBehavior();
     getHistoryData();
     getTradesAsync();
+    thTopClicks();
     clearLogsContent(); 
     setSelectType();
     applyMasks();

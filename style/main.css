@@ -417,9 +417,17 @@ input:not([type]):focus:not([readonly])+label, input[type=text]:not(.browser-def
     cursor: pointer;
     text-decoration: underline;
 }
+
 .idBtnBlockFinder{
     color: red;
     width: 20px;
     cursor: pointer;
     text-decoration: underline;
+}
+
+.th-top-saldo{
+    cursor: pointer;
+}
+.th-top-saldo:hover{
+    color:white;
 }

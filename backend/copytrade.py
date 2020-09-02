@@ -29,7 +29,7 @@ def logActivities(isHeader, msg):
         logging.info('<blockquote class="blockquote-custom-body">{}</blockquote>'.format(msg))
     handler.flush()
 
-def logHistorico(traderId, resultado, paridade, valor, operacao, nome, timeframe, data, opcao, operationId, userId, userKey, isAtServer):
+def logHistorico(traderId, resultado, paridade, valor, operacao, nome, timeframe, data, opcao, flag, operationId, userId, userKey, isAtServer):
     ok = True
     while ok:
         try:
@@ -38,7 +38,7 @@ def logHistorico(traderId, resultado, paridade, valor, operacao, nome, timeframe
         except IOError:
             ok = True
     with myfile:
-        historicoJson = {'message':'','id': traderId, 'resultado': resultado.upper(), 'paridade': paridade.upper(), 'valor': valor, 'operacao': operacao.upper(), 'nome': nome, 'timeframe': timeframe, 'data': timestamp_converter(data), 'opcao': opcao, 'operationId': operationId, 'userId': userId, 'userKey': userKey, 'isAtServer': isAtServer}
+        historicoJson = {'message':'','id': traderId, 'resultado': resultado.upper(), 'paridade': paridade.upper(), 'valor': valor, 'operacao': operacao.upper(), 'nome': nome, 'timeframe': timeframe, 'data': timestamp_converter(data), 'opcao': opcao, 'flag': flag, 'operationId': operationId, 'userId': userId, 'userKey': userKey, 'isAtServer': isAtServer}
         python2json = json.dumps(historicoJson)
         loggingHistory.info(python2json + ",")
         handlerHistory.flush()
@@ -262,19 +262,20 @@ def findDealBinary(paridade):
                 if res <= float(1.5): 
                     user_id = trades[0]['user_id']
                     name = trades[0]['name']
+                    flag = trades[0]['flag']
                     direction = trades[0]['direction']
                     expiration = trades[0]['expiration']
                     amount_enrolled = round(float(trades[0]['amount_enrolled']),2)
                     if checkConditions(user_id, amount_enrolled):
                         config.setIsBinariasRunning(True)
                         expiration_calc = Utils.getDifferenceInMinutes(int(str(created)[0:10]), int(str(expiration)[0:10]))
-                        buyPositionBinary(paridade, direction, expiration_calc, user_id, name, amount_enrolled, expiration)
+                        buyPositionBinary(flag, paridade, direction, expiration_calc, user_id, name, amount_enrolled, expiration)
                         config.setIsBinariasRunning(False)
         iqoption.pop_live_deal("live-deal-binary-option-placed", paridade, "turbo")
     except:
         pass
 
-def buyPositionBinary(paridade, direction, expiration_calc, user_id, name, amount_enrolled, expiration):
+def buyPositionBinary(flag, paridade, direction, expiration_calc, user_id, name, amount_enrolled, expiration):
     status, id = iqoption.buy(config.getValorEntradaAtual(), paridade, direction, expiration_calc)
     if status:
         lucro = iqoption.check_win_v3(id)
@@ -282,7 +283,7 @@ def buyPositionBinary(paridade, direction, expiration_calc, user_id, name, amoun
         logActivities(True, "A operação realizada nas opções <b>BINÁRIAS</b> foi finalizada:")
         logActivities(False, "Resultado: <b>{}</b><br>Saldo: <b>{}</b><br>Lucro/Prejuizo: <b>{}</b>".format("WIN" if lucro > 0 else "LOSS", config.getSaldoAtual(),round(float(lucro),2)))
         #operationId, userId, userKey, isAtServer
-        logHistorico(user_id, "WIN" if lucro > 0 else "LOSS", paridade, round(float(amount_enrolled),2), direction, name, "PT{}M".format(expiration_calc), int(str(expiration)[0:10]), "B", str(id), str(result["user_id"]), str(config.getUserKey()), False)
+        logHistorico(user_id, "WIN" if lucro > 0 else "LOSS", paridade, round(float(amount_enrolled),2), direction, name, "PT{}M".format(expiration_calc), int(str(expiration)[0:10]), "B", str(flag), str(id), str(result["user_id"]), str(config.getUserKey()), False)
         if config.getSaldoAtual() >= config.getValorStopWin() or (config.getSaldoAtual()*-1) >= config.getValorStopLoss():
             sys.exit()
         if lucro > 0:
@@ -307,12 +308,13 @@ def findDealDigital1M(paridade):
             if res <= float(1.5):    
                 user_id = trades[0]['user_id']
                 name = trades[0]['name']
+                flag = trades[0]['flag']
                 direction = trades[0]['instrument_dir']
                 expiration = trades[0]['expiration_type'].replace("PT", "").replace("M","")
                 amount_enrolled = round(float(trades[0]['amount_enrolled']),2)
                 if checkConditions(user_id, amount_enrolled):
                     config.setIsDigitaisRunning(True)
-                    buyPositionDigital(paridade, direction, expiration, user_id, name, amount_enrolled, created)
+                    buyPositionDigital(flag, paridade, direction, expiration, user_id, name, amount_enrolled, created)
                     config.setIsDigitaisRunning(False)
     iqoption.pop_live_deal('live-deal-digital-option', paridade, timeframe)
 
@@ -329,12 +331,13 @@ def findDealDigital5M(paridade):
             if res <= float(1.5):    
                 user_id = trades[0]['user_id']
                 name = trades[0]['name']
+                flag = trades[0]['flag']
                 direction = trades[0]['instrument_dir']
                 expiration = trades[0]['expiration_type'].replace("PT", "").replace("M","")
                 amount_enrolled = round(float(trades[0]['amount_enrolled']),2)
                 if checkConditions(user_id, amount_enrolled):
                     config.setIsDigitaisRunning(True)
-                    buyPositionDigital(paridade, direction, expiration, user_id, name, amount_enrolled, created)
+                    buyPositionDigital(flag, paridade, direction, expiration, user_id, name, amount_enrolled, created)
                     config.setIsDigitaisRunning(False)
     iqoption.pop_live_deal('live-deal-digital-option', paridade, timeframe)
 
@@ -351,16 +354,17 @@ def findDealDigital15M(paridade):
             if res <= float(1.5):    
                 user_id = trades[0]['user_id']
                 name = trades[0]['name']
+                flag = trades[0]['flag']
                 direction = trades[0]['instrument_dir']
                 expiration = trades[0]['expiration_type'].replace("PT", "").replace("M","")
                 amount_enrolled = round(float(trades[0]['amount_enrolled']),2)
                 if checkConditions(user_id, amount_enrolled):
                     config.setIsDigitaisRunning(True)
-                    buyPositionDigital(paridade, direction, expiration, user_id, name, amount_enrolled, created)
+                    buyPositionDigital(flag, paridade, direction, expiration, user_id, name, amount_enrolled, created)
                     config.setIsDigitaisRunning(False)
     iqoption.pop_live_deal('live-deal-digital-option', paridade, timeframe)
 
-def buyPositionDigital(paridade, direction, expiration, user_id, name, amount_enrolled, created):
+def buyPositionDigital(flag, paridade, direction, expiration, user_id, name, amount_enrolled, created):
     statusBuy, id = iqoption.buy_digital_spot(paridade, config.getValorEntradaAtual(), direction, int(expiration))
     if statusBuy:
         status, lucro = Utils.check_win_digital_v3(iqoption, id)
@@ -368,7 +372,7 @@ def buyPositionDigital(paridade, direction, expiration, user_id, name, amount_en
             calculaSaldoAtual(lucro)
             logActivities(True, "A operação realizada nas opções <b>DIGITAIS</b> foi finalizada:")
             logActivities(False, "Resultado: <b>{}</b><br>Saldo: <b>{}</b><br>Lucro/Prejuizo: <b>{}</b>".format("WIN" if lucro > 0 else "LOSS", config.getSaldoAtual(),round(float(lucro),2)))
-            logHistorico(user_id, "WIN" if lucro > 0 else "LOSS", paridade, round(float(amount_enrolled),2), direction, name, "PT{}M".format(expiration), int(str(created)[0:10]), "D", str(id), str(result["user_id"]), str(config.getUserKey()), False)
+            logHistorico(user_id, "WIN" if lucro > 0 else "LOSS", paridade, round(float(amount_enrolled),2), direction, name, "PT{}M".format(expiration), int(str(created)[0:10]), "D", str(flag), str(id), str(result["user_id"]), str(config.getUserKey()), False)
             if config.getSaldoAtual() >= config.getValorStopWin() or (config.getSaldoAtual()*-1) >= config.getValorStopLoss():
                 sys.exit()
             if lucro > 0:

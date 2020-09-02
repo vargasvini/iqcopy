@@ -352,6 +352,7 @@ function postTrades(item, dataToUpdate){
         "nome": item.nome,
         "timeframe": item.timeframe,
         "data": item.data,
+        "flag": item.flag,
         "opcao": item.opcao,
         "operationId": item.operationId,
         "userId": item.userId,
@@ -396,10 +397,22 @@ function writeNewHistoryFileAfterPost(){
 }
 
 /*GET TOP TRADERS DATA*/
-async function getTradesAsync(){
+async function getTradesAsync(sort = ""){
     let response = await fetch(`http://meutrader-com.umbler.net/getAggregatedTrades`);
     let data = await response.json()
-    processTopTradersData(data)
+
+    if(sort == ""){
+        processTopTradersData(data)
+    }
+    else if (sort == "win") {
+        processTopTradersData(data.sort(sortTradersWinsMaxMin))
+    }
+    else if (sort == "loss") {
+        processTopTradersData(data.sort(sortTradersLossMaxMin))
+    }  
+    else if (sort == "lucro") {
+        processTopTradersData(data.sort(sortTradersLucroMaxMin))
+    }  
 }
 
 async function getTradesAsync_OLD() 
@@ -467,6 +480,7 @@ function topTradersDataTemplate(data) {
                 <td>${item.rank + "º"}</td>
                 <td>${item._id.traderId}</td>
                 <td>${item._id.nome}</td>
+                <td>${item._id.flag}</td>
                 <td>${item.saldo}</td>
                 <td>${item.qtdWin}</td>
                 <td>${item.qtdLoss}</td>
@@ -478,6 +492,30 @@ function topTradersDataTemplate(data) {
     return html;
 }
 
+function thTopClicks(){
+    var thSaldo = document.getElementById("idThSaldo");
+    var thWin = document.getElementById("idThWin");
+    var thLoss = document.getElementById("idThLoss");
+    var thLucro = document.getElementById("idThLucro");
+
+    thSaldo.addEventListener('click', function (event) {
+        getTradesAsync();
+        event.preventDefault();
+    });
+    thWin.addEventListener('click', function (event) {
+        getTradesAsync("win");
+        event.preventDefault();
+    });
+    thLoss.addEventListener('click', function (event) {
+        getTradesAsync("loss");
+        event.preventDefault();
+    });
+    thLucro.addEventListener('click', function (event) {
+        getTradesAsync("lucro");
+        event.preventDefault();
+    });
+}
+
 function range(start, end) {
     return Array.from({ length: end - start + 1 }, (_, i) => i)
 }
@@ -487,7 +525,7 @@ function customSort(a, b) {
 }
 
 function sortTradersWinsMaxMin(a, b) {    
-    return b.saldo - a.saldo;
+    return b.qtdWin - a.qtdWin;
 }
 
 function sortTradersWinsMinMax(a, b) {    
@@ -500,4 +538,12 @@ function sortTradersSaldoMaxMin(a, b) {
 
 function sortTradersSaldoMinMax(b, a) {    
     return b.saldo - a.saldo;
+}
+
+function sortTradersLossMaxMin(a, b) {    
+    return b.qtdLoss - a.qtdLoss;
+}
+
+function sortTradersLucroMaxMin(a, b) {    
+    return b.saldoValor - a.saldoValor;
 }

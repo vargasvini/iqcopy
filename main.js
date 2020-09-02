@@ -3,13 +3,13 @@ const url = require('url');
 const path = require('path');
 const {app, BrowserWindow, Menu, screen} = electron;
 const nativeImage = require('electron').nativeImage;
-const isDev = require('electron-is-dev');
+const isDevMain = require('electron-is-dev');
 
 let mainWindow;
 let addWindow;
 var iconPath = "";
 
-if(isDev){
+if(isDevMain){
     iconPath = path.join(__dirname, "/images/globals/icotest.jpg");
 } 
 else{
