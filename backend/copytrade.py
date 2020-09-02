@@ -171,6 +171,14 @@ def setVariaveisMartingale(status):
 def calculaSaldoAtual(valorResultado):
     config.setSaldoAtual(config.getSaldoAtual() + round(float(valorResultado),2))
 
+def verificaStopWinLoss():
+    if config.getSaldoAtual() >= config.getValorStopWin():
+        logActivities(True, "Você chegou no seu stop <b>WIN</b>, a cópia será finalizada!")
+        return True
+    elif (config.getSaldoAtual()*-1) >= config.getValorStopLoss():
+        logActivities(True, "Você chegou no seu stop <b>LOSS</b>, a cópia será finalizada!")
+        return True
+    return False
 
 def startCopy():
     now = datetime.now() #Hora atual rsrs
@@ -284,7 +292,7 @@ def buyPositionBinary(flag, paridade, direction, expiration_calc, user_id, name,
         logActivities(False, "Resultado: <b>{}</b><br>Saldo: <b>{}</b><br>Lucro/Prejuizo: <b>{}</b>".format("WIN" if lucro > 0 else "LOSS", config.getSaldoAtual(),round(float(lucro),2)))
         #operationId, userId, userKey, isAtServer
         logHistorico(user_id, "WIN" if lucro > 0 else "LOSS", paridade, round(float(amount_enrolled),2), direction, name, "PT{}M".format(expiration_calc), int(str(expiration)[0:10]), "B", str(flag), str(id), str(result["user_id"]), str(config.getUserKey()), False)
-        if config.getSaldoAtual() >= config.getValorStopWin() or (config.getSaldoAtual()*-1) >= config.getValorStopLoss():
+        if verificaStopWinLoss():
             sys.exit()
         if lucro > 0:
             setVariaveisMartingale('win')   
@@ -373,7 +381,7 @@ def buyPositionDigital(flag, paridade, direction, expiration, user_id, name, amo
             logActivities(True, "A operação realizada nas opções <b>DIGITAIS</b> foi finalizada:")
             logActivities(False, "Resultado: <b>{}</b><br>Saldo: <b>{}</b><br>Lucro/Prejuizo: <b>{}</b>".format("WIN" if lucro > 0 else "LOSS", config.getSaldoAtual(),round(float(lucro),2)))
             logHistorico(user_id, "WIN" if lucro > 0 else "LOSS", paridade, round(float(amount_enrolled),2), direction, name, "PT{}M".format(expiration), int(str(created)[0:10]), "D", str(flag), str(id), str(result["user_id"]), str(config.getUserKey()), False)
-            if config.getSaldoAtual() >= config.getValorStopWin() or (config.getSaldoAtual()*-1) >= config.getValorStopLoss():
+            if verificaStopWinLoss():
                 sys.exit()
             if lucro > 0:
                 setVariaveisMartingale('win')
