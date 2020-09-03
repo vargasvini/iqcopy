@@ -417,8 +417,17 @@ input:not([type]):focus:not([readonly])+label, input[type=text]:not(.browser-def
     cursor: pointer;
     text-decoration: underline;
 }
+.idBtnAddFinder:hover{
+    color: #05ff05;
+}
 
 .idBtnBlockFinder{
+    color: #ca0000;
+    width: 20px;
+    cursor: pointer;
+    text-decoration: underline;
+}
+.idBtnBlockFinder:hover{
     color: red;
     width: 20px;
     cursor: pointer;

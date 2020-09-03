@@ -11,3 +11,4 @@ var idIntervalFinderFile = "";
 var idIntervalCopyFile = "";
 var progress = 1;
 var gAuxHistory = []
+var gTopTradersList = []

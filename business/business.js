@@ -468,12 +468,26 @@ function paginationTopTradersData(item){
             // template method of yourself            
             var html = topTradersDataTemplate(data);
             $('#data-toptraders-container').html(html);
+
+            for (let index = 0; index < gTopTradersList.length; index++) {
+                document.getElementById(`idBtnAdd${gTopTradersList[index]}`).addEventListener('click', function (event) {
+                    addToFollowList(`${gTopTradersList[index]}`)
+                    event.preventDefault();
+                });
+            }
+            for (let index = 0; index < gTopTradersList.length; index++) {
+                document.getElementById(`idBtnBlock${gTopTradersList[index]}`).addEventListener('click', function (event) {
+                    addToBlockList(`${gTopTradersList[index]}`)
+                    event.preventDefault();
+                });
+            }
         }
     })
 }
 
 function topTradersDataTemplate(data) {
     var html = '';
+    gTopTradersList = []
     $.each(data, function(index, item){
         html += `
             <tr>
@@ -485,10 +499,13 @@ function topTradersDataTemplate(data) {
                 <td>${item.qtdWin}</td>
                 <td>${item.qtdLoss}</td>
                 <td>${item.saldoValor.toFixed(2).replace(".",",")}</td>
+                <td id="idBtnAdd${item._id.traderId}" class="idBtnAddFinder">SEGUIR</td>
+                <td id="idBtnBlock${item._id.traderId}" class="idBtnBlockFinder">IGNORAR</td>
             </tr>
         `
+        gTopTradersList.push(`${item._id.traderId}`)
     });
-        
+    
     return html;
 }
 
