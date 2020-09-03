@@ -130,6 +130,38 @@ def appendParidades():
         else:
             config.getParidadesList().append(paridades_list.replace("/", ""))
 
+def montaThreadList():
+    threadList = config.getThreadList()
+    if config.getTipoOpcoes() == 'opcoesAmbas':
+        if config.getTipoExpiracao() == 'expiracaoAmbos':
+            threadList.append('binarias')
+            threadList.append('um')
+            threadList.append('cinco')
+            threadList.append('quinze')
+        elif config.getTipoExpiracao() == 'um':
+            threadList.append('binarias')
+            threadList.append('um')
+        elif config.getTipoExpiracao() == 'cinco':
+            threadList.append('binarias')
+            threadList.append('cinco')
+        elif config.getTipoExpiracao() == 'quinze':
+            threadList.append('binarias')
+            threadList.append('quinze')
+    elif config.getTipoOpcoes() == 'binarias':
+        threadList.append('binarias')
+    elif config.getTipoOpcoes() == 'digitais':
+        if config.getTipoExpiracao() == 'expiracaoAmbos':
+            threadList.append('um')
+            threadList.append('cinco')
+            threadList.append('quinze')
+        elif config.getTipoExpiracao() == 'um':
+            threadList.append('um')
+        elif config.getTipoExpiracao() == 'cinco':
+            threadList.append('cinco')
+        elif config.getTipoExpiracao() == 'quinze':
+            threadList.append('quinze')
+    config.setThreadList(threadList)
+
 def getCommonData(listParSelected, listParOpen, tipo):
     listPar_aux = []
     for x in listParSelected: 
@@ -185,6 +217,7 @@ def startCopy():
     refreshTime =  now + timedelta(hours=1) #Intervalo de tempo entre as verificações dos ativos abertos
     refreshRank =  now + timedelta(minutes=10) #Intervalo de tempo entre as verificações dos ativos abertos
     refreshConnection = now + timedelta(minutes=5)
+    montaThreadList()
 
     while True:
         try:
@@ -209,53 +242,35 @@ def startCopy():
                 refreshConnection =  now + timedelta(minutes=30)
                 checkConnection()
 
-            config.setAtivosAbertosBinarias(rotate(config.getAtivosAbertosBinarias(), 1))
-            config.setAtivosAbertosDigitais(rotate(config.getAtivosAbertosDigitais(), 1))
+            try:
+                mapTipos()
+            except:
+                checkConnection()
             
-            with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
-                try:
-                    if config.getTipoOpcoes() == 'opcoesAmbas':
-                        if config.getTipoExpiracao() == 'expiracaoAmbos':
-                            threading.Thread(target=executor.map, args=(findDealBinary,config.getAtivosAbertosBinarias(),)).start()
-                            time.sleep(0.70)
-                            threading.Thread(target=executor.map, args=(findDealDigital1M, config.getAtivosAbertosDigitais(),)).start()
-                            time.sleep(0.70)
-                            threading.Thread(target=executor.map, args=(findDealDigital5M, config.getAtivosAbertosDigitais(),)).start()
-                            time.sleep(0.70)
-                            threading.Thread(target=executor.map, args=(findDealDigital15M, config.getAtivosAbertosDigitais(),)).start()
-                            time.sleep(0.70)
-                        elif config.getTipoExpiracao() == 'um':
-                            threading.Thread(target=executor.map, args=(findDealBinary, config.getAtivosAbertosBinarias(),)).start()
-                            time.sleep(0.70)
-                            threading.Thread(target=executor.map, args=(findDealDigital1M, config.getAtivosAbertosDigitais(),)).start()
-                            time.sleep(0.70)
-                        elif config.getTipoExpiracao() == 'cinco':
-                            threading.Thread(target=executor.map, args=(findDealBinary, config.getAtivosAbertosBinarias(),)).start()
-                            time.sleep(0.70)
-                            threading.Thread(target=executor.map, args=(findDealDigital5M, config.getAtivosAbertosDigitais(),)).start()
-                            time.sleep(0.70)
-                        elif config.getTipoExpiracao() == 'quinze':
-                            threading.Thread(target=executor.map, args=(findDealBinary, config.getAtivosAbertosBinarias(),)).start()
-                            time.sleep(0.70)
-                            threading.Thread(target=executor.map, args=(findDealDigital15M, config.getAtivosAbertosDigitais(),)).start()
-                            time.sleep(0.70)
-                    elif config.getTipoOpcoes() == 'binarias':
-                        threading.Thread(target=executor.map, args=(findDealBinary, config.getAtivosAbertosBinarias(),)).start()
-                        time.sleep(0.70)
-                    elif config.getTipoOpcoes() == 'digitais':
-                        if config.getTipoExpiracao() == 'um':
-                            threading.Thread(target=executor.map, args=(findDealDigital1M, config.getAtivosAbertosDigitais(),)).start()
-                            time.sleep(0.70)
-                        elif config.getTipoExpiracao() == 'cinco':
-                            threading.Thread(target=executor.map, args=(findDealDigital5M, config.getAtivosAbertosDigitais(),)).start()
-                            time.sleep(0.70)
-                        elif config.getTipoExpiracao() == 'quinze':
-                            threading.Thread(target=executor.map, args=(findDealDigital15M, config.getAtivosAbertosDigitais(),)).start()
-                            time.sleep(0.70)
-                finally:
-                    executor.shutdown(wait=True)
         except:
             checkConnection()
+
+def mapTipos():
+    with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
+        threading.Thread(target=executor.map, args=(callThreads, config.getThreadList(),)).start()
+        
+def callThreads(thread):
+    if thread == 'binarias':
+        config.setAtivosAbertosBinarias(rotate(config.getAtivosAbertosBinarias(), 1))
+        with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
+            threading.Thread(target=executor.map, args=(findDealBinary,config.getAtivosAbertosBinarias(),)).start() 
+    elif thread == 'um':
+        config.setAtivosAbertosDigitais(rotate(config.getAtivosAbertosDigitais(), 1))
+        with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
+            threading.Thread(target=executor.map, args=(findDealDigital1M, config.getAtivosAbertosDigitais(),)).start()
+    elif thread == 'cinco':
+        config.setAtivosAbertosDigitais(rotate(config.getAtivosAbertosDigitais(), 1))
+        with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
+            threading.Thread(target=executor.map, args=(findDealDigital5M, config.getAtivosAbertosDigitais(),)).start()
+    elif thread == 'quinze':
+        config.setAtivosAbertosDigitais(rotate(config.getAtivosAbertosDigitais(), 1))
+        with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
+            threading.Thread(target=executor.map, args=(findDealDigital15M, config.getAtivosAbertosDigitais(),)).start()
 
 def findDealBinary(paridade):
     try:
@@ -267,7 +282,7 @@ def findDealBinary(paridade):
                 res = 0
                 created = trades[0]['created_at']
                 res = Utils.getDifferenceInSeconds(int(str(time.time())[0:10]), int(str(created)[0:10]))
-                if res <= float(1.5): 
+                if res <= float(2): 
                     user_id = trades[0]['user_id']
                     name = trades[0]['name']
                     flag = trades[0]['flag']
@@ -313,7 +328,7 @@ def findDealDigital1M(paridade):
             res = 0
             created = trades[0]['created_at']
             res = Utils.getDifferenceInSeconds(int(str(time.time())[0:10]), int(str(created)[0:10]))
-            if res <= float(1.5):    
+            if res <= float(2):    
                 user_id = trades[0]['user_id']
                 name = trades[0]['name']
                 flag = trades[0]['flag']
@@ -336,7 +351,7 @@ def findDealDigital5M(paridade):
             res = 0
             created = trades[0]['created_at']
             res = Utils.getDifferenceInSeconds(int(str(time.time())[0:10]), int(str(created)[0:10]))
-            if res <= float(1.5):    
+            if res <= float(2):    
                 user_id = trades[0]['user_id']
                 name = trades[0]['name']
                 flag = trades[0]['flag']
@@ -359,7 +374,7 @@ def findDealDigital15M(paridade):
             res = 0
             created = trades[0]['created_at']
             res = Utils.getDifferenceInSeconds(int(str(time.time())[0:10]), int(str(created)[0:10]))
-            if res <= float(1.5):    
+            if res <= float(2):    
                 user_id = trades[0]['user_id']
                 name = trades[0]['name']
                 flag = trades[0]['flag']

@@ -40,6 +40,7 @@ def copyTradeConfig():
             # THREAD CONTROL #
             self.isBinarias = False
             self.isDigitais = False
+            self.threadList = []
 
         ###### GETTERS #######
         # ACESSO #
@@ -107,6 +108,8 @@ def copyTradeConfig():
             return self.isBinarias
         def getIsDigitaisRunning(self):
             return self.isDigitais
+        def getThreadList(self):
+            return self.threadList
 
         ###### SETTERS #######
         # ACESSO #
@@ -167,6 +170,8 @@ def copyTradeConfig():
             self.isBinarias = _isBinarias
         def setIsDigitaisRunning(self, _isDigitais):
             self.isDigitais = _isDigitais
+        def setThreadList(self, _threadList):
+            self.threadList = _threadList
 
 
     copyTradeConfig = copyTradeStructure()
