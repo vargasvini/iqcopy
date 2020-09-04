@@ -5,6 +5,24 @@ function initBusiness(){
     if(document.getElementById("idAccessKey").value != ""){
         document.getElementById("idAccessKeyLabel").classList.add("active");
     }
+    checkIfConfigIsEmpty()
+    
+}
+
+function checkIfConfigIsEmpty(){
+    var fs = require('fs');
+    const data = fs.readFileSync('system.config', {encoding:'utf8', flag:'r'}); 
+    if(data == ""){        
+        getUserConfig().then((data) => {
+            if(data[0]){
+                    data[0].login = ""
+                    data[0].password = ""
+                    processDataSystem(JSON.stringify(data[0]))
+                    initBehavior();
+                }
+            }
+        )
+    }
 }
 
 function checkFiles(){
@@ -17,10 +35,12 @@ function checkFiles(){
 function checkSystemConfig(fs){
     const path = 'system.config'
     if (!fs.existsSync(path)) {
-        fs.writeFileSync(path, '', 'utf8', function(err) {
-            if (err) 
-                isSaved = false;
-        });
+        // if (getUserConfig()){
+            fs.writeFileSync(path, '', 'utf8', function(err) {
+                if (err) 
+                    isSaved = false;
+            });
+        //}
     }
 }
 
@@ -196,6 +216,7 @@ function getDataFromSystemFile(){
 }
 
 function processDataSystem(_data) {
+    debugger;
     var formData = JSON.parse(_data);
     /*Login Corretora*/
     document.getElementById("idLoginUser").value = formData.login;
@@ -207,11 +228,11 @@ function processDataSystem(_data) {
     document.getElementById("idBlockIds").value = formData.blockId;
     /*Gerenciamento*/
     document.querySelectorAll(`input[value=${formData.tipoGerenciamento}]`)[0].checked = true;
-    $('#idValorEntrada').val(`R$ ${formData.valorEntrada.toFixed(2).replace(".",",")}`);
+    $('#idValorEntrada').val(`R$ ${parseFloat(formData.valorEntrada).toFixed(2).replace(".",",")}`);
     document.getElementById('idQtdMartingale').value = formData.qtdMartingales;
-    $('#idValorStopWin').val(`R$ ${formData.valorStopWin.toFixed(2).replace(".",",")}`);
-    $('#idValorStopLoss').val(`R$ ${formData.valorStopLoss.toFixed(2).replace(".",",")}`);
-    $('#idValorMinimoTrader').val(`R$ ${formData.valorMinimoTrader.toFixed(2).replace(".",",")}`);
+    $('#idValorStopWin').val(`R$ ${parseFloat(formData.valorStopWin).toFixed(2).replace(".",",")}`);
+    $('#idValorStopLoss').val(`R$ ${parseFloat(formData.valorStopLoss).toFixed(2).replace(".",",")}`);
+    $('#idValorMinimoTrader').val(`R$ ${parseFloat(formData.valorMinimoTrader).toFixed(2).replace(".",",")}`);
     /*Configurações*/
     document.querySelectorAll(`input[value=${formData.tipoConta}]`)[0].checked = true;
     document.querySelectorAll(`input[value=${formData.tipoOpcoes}]`)[0].checked = true;
@@ -346,6 +367,11 @@ function verifyTrades(data){
 }
 
 function postTrades(item, dataToUpdate){
+    if(parseFloat(item.valor) < 50){
+        item.isAtServer = true;
+        gAuxHistory.push(item)
+        return;
+    }
     const payload = {
         "traderId": item.id,
         "resultado": item.resultado,
@@ -422,10 +448,10 @@ function postUserConfig(){
 }
 
 async function getUserConfig(){
-    debugger;
     let response = await fetch(`http://meutrader-com.umbler.net/getUserConfig/${document.getElementById("idAccessKey").value}`);
     let data = await response.json()
-    console.log(data)
+    
+    return data;
 }
 
 /*GET TOP TRADERS DATA*/
