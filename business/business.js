@@ -75,14 +75,17 @@ function verifyAccess(data){
         showAccessDiv();
         return;
     }
+    getUserConfig();
 }
 
 function onSaveConfig(isCopy){
     event.preventDefault();
     if(writeToConfigFile() && writeToSystemFile()) {
         document.getElementById("idBtnSaveConfig").disabled = true;
-        if(!isCopy)
+        if(!isCopy){
             M.toast({html: 'CONFIGURAÇÃO SALVA COM SUCESSO!', classes: 'toast-custom-success valign-wrapper', displayLength: 1000, completeCallback: enableSaveBtn()})
+            postUserConfig();
+        }
         else{
             setTimeout(() => {
                 enableSaveBtn();
@@ -374,19 +377,6 @@ function postTrades(item, dataToUpdate){
     });
 }
 
-async function fetchPostHistory(_payload){
-    fetch(`http://meutrader-com.umbler.net/postTrades`,{
-        method: 'post',
-        headers: {
-            "Content-Type": "application/json"
-        },  
-        body: JSON.stringify(_payload)
-    })
-    .then(function(response){
-        return response
-    })
-}
-
 function writeNewHistoryFileAfterPost(){
     var fs = require('fs');
     var itensUpdated = JSON.stringify(gAuxHistory).replace("[","").replace("]","") +",";
@@ -394,6 +384,48 @@ function writeNewHistoryFileAfterPost(){
         if (err) 
             console.log(err)
     });
+}
+
+function postUserConfig(){
+    debugger;
+    var data = createFormData();
+    const payload = {
+        "accessKey": data.userKey,
+        "tipoFollow": data.tipoFollow,
+        "followRank": data.followRank,
+        "followId": data.followId,
+        "blockId": data.blockId,
+        "tipoGerenciamento": data.tipoGerenciamento,
+        "valorEntrada": data.valorEntrada,
+        "qtdMartingales": data.qtdMartingales,
+        "valorStopWin": data.valorStopWin,
+        "valorStopLoss": data.valorStopLoss,
+        "valorMinimoTrader": data.valorMinimoTrader,
+        "tipoConta": data.tipoConta,
+        "tipoOpcoes": data.tipoOpcoes,
+        "tipoExpiracao": data.tipoExpiracao,
+        "selectedParidades": data.selectedParidades
+    };
+
+    return fetch(`http://meutrader-com.umbler.net/postUserConfig`,{
+        method: 'post',
+        headers: {
+            "Content-Type": "application/json"
+        },  
+		body: JSON.stringify(payload)
+	})
+	.then(function(response){
+        if(response.status == 200){
+            console.log('configuração postada com sucesso')
+        }
+    });
+}
+
+async function getUserConfig(){
+    debugger;
+    let response = await fetch(`http://meutrader-com.umbler.net/getUserConfig/${document.getElementById("idAccessKey").value}`);
+    let data = await response.json()
+    console.log(data)
 }
 
 /*GET TOP TRADERS DATA*/
