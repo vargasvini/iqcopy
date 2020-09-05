@@ -1,12 +1,13 @@
 function initBusiness(){
     checkFiles();
     $("#idDivAccessLogo").removeClass('slide_logo')
-    document.getElementById("idAccessKey").value = "9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d"
+    //document.getElementById("idAccessKey").value = "9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d"
+    if(getAccessKey() != null)
+        document.getElementById("idAccessKey").value = getAccessKey().accessKey
+
     if(document.getElementById("idAccessKey").value != ""){
         document.getElementById("idAccessKeyLabel").classList.add("active");
-    }
-    checkIfConfigIsEmpty()
-    
+    } 
 }
 
 function checkIfConfigIsEmpty(){
@@ -25,6 +26,31 @@ function checkIfConfigIsEmpty(){
     }
 }
 
+function getAccessKey(){
+    var fs = require('fs');
+    const data = fs.readFileSync('accesskey.config', {encoding:'utf8', flag:'r'}); 
+    if(data != ""){     
+        return JSON.parse(data)
+    }
+    return null
+}
+
+function saveAccessKey(){
+    var fs = require('fs');
+    fs.writeFileSync('accesskey.config', accesskeyJsonData(), 'utf8', function(err) {
+        if (err) 
+            isSaved = false;
+    });
+}
+
+function accesskeyJsonData(){
+    var accessData = { 
+        /*Acesso*/
+        accessKey: document.getElementById("idAccessKey").value
+    }
+    return JSON.stringify(accessData);
+}
+
 function checkFiles(){
     const fs = require('fs')
     checkSystemConfig(fs);
@@ -35,12 +61,10 @@ function checkFiles(){
 function checkSystemConfig(fs){
     const path = 'system.config'
     if (!fs.existsSync(path)) {
-        // if (getUserConfig()){
-            fs.writeFileSync(path, '', 'utf8', function(err) {
-                if (err) 
-                    isSaved = false;
-            });
-        //}
+        fs.writeFileSync(path, '', 'utf8', function(err) {
+            if (err) 
+                isSaved = false;
+        });
     }
 }
 
@@ -82,16 +106,17 @@ async function getUserAsync()
 
 function verifyAccess(data){
     var aKey = document.getElementById("idAccessKey").value
-    // 9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d
     if (data.some(item => item.accessKey === aKey.trim() && item.isActive == true))
     {
         hideAccessItem();
         $("#idDivAccessLogo").addClass('slide_logo')
         setTimeout(() => {
-        hideAccessDiv();
+            saveAccessKey();
+            checkIfConfigIsEmpty();
+            hideAccessDiv();
         }, 495);
     }else{
-        M.toast({html: 'ERRO AO ACESSAR O SISTEMA: CHAVE INVÁLIDA!', classes: 'toast-custom-error valign-wrapper', displayLength: 2000})
+        M.toast({html: 'ERRO AO ACESSAR O SISTEMA: CHAVE INVÁLIDA OU EXPIRADA!', classes: 'toast-custom-error valign-wrapper', displayLength: 2000})
         showAccessDiv();
         return;
     }
@@ -216,7 +241,6 @@ function getDataFromSystemFile(){
 }
 
 function processDataSystem(_data) {
-    debugger;
     var formData = JSON.parse(_data);
     /*Login Corretora*/
     document.getElementById("idLoginUser").value = formData.login;
@@ -413,7 +437,6 @@ function writeNewHistoryFileAfterPost(){
 }
 
 function postUserConfig(){
-    debugger;
     var data = createFormData();
     const payload = {
         "accessKey": data.userKey,
@@ -442,7 +465,6 @@ function postUserConfig(){
 	})
 	.then(function(response){
         if(response.status == 200){
-            console.log('configuração postada com sucesso')
         }
     });
 }
@@ -477,7 +499,6 @@ async function getTradesAsync_OLD()
 {
     let response = await fetch(`http://meutrader-com.umbler.net/getTrades`);
     let data = await response.json()
-    console.log(data);
 
     var queryResult = Enumerable.from(data).toArray()
 
