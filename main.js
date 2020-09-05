@@ -10,10 +10,10 @@ let addWindow;
 var iconPath = "";
 
 if(isDevMain){
-    iconPath = path.join(__dirname, "/images/globals/icotest.jpg");
+    iconPath = path.join(__dirname, "icon.png");
 } 
 else{
-    iconPath = path.join(__dirname, "/images/globals/icotest.jpg");
+    iconPath = path.join(__dirname, "build/icon.png");
     iconPath = iconPath.replace("app.asar", "app.asar.unpacked");
 }
 

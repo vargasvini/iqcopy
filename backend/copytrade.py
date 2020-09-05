@@ -223,7 +223,7 @@ def startCopy():
         try:
             now = datetime.now()
             if refreshTime < now:
-                refreshTime =  now + timedelta(hours=1)
+                refreshTime =  now + timedelta(minutes=30)
                 config.getAtivosAbertosBinarias().clear()
                 config.setAtivosAbertosBinarias(Utils.buscaAtivosAbertos(iqoption, 'B'))
                 getCommonData(config.getParidadesList(), config.getAtivosAbertosBinarias(), "B")
