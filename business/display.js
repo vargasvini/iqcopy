@@ -1,3 +1,16 @@
+function showRowFirstAccess(){
+    document.getElementById("idRowFirstAccess").style="display:block";
+} 
+function hideRowFirstAccess(){
+    document.getElementById("idRowFirstAccess").style="display:none";
+} 
+function showRowAccess(){
+    document.getElementById("idRowAccess").style="display:block";
+} 
+function hideRowAccess(){
+    document.getElementById("idRowAccess").style="display:none";
+} 
+
 function enableStartCopy(){
     document.getElementById("idBtnStartCopy").disabled = false;   
 }

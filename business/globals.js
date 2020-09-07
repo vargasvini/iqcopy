@@ -6,6 +6,7 @@ const isDev = require('electron-is-dev');
 
 var pyshell;
 var pyshellCopy;
+var pyshellInstaller;
 var idIntervalFinderBackend = "";
 var idIntervalFinderFile = "";
 var idIntervalCopyFile = "";

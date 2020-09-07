@@ -440,3 +440,18 @@ input:not([type]):focus:not([readonly])+label, input[type=text]:not(.browser-def
 .th-top-saldo:hover{
     color:white;
 }
+
+.first-acess{
+    height: 100%;
+}
+
+.first-acess-content{
+    text-align: center;
+    margin-top: 23%;
+}
+.first-access-message{
+    text-align: center; 
+    margin-top: 25px; 
+    color: #69f3a8; 
+    font-size: 18
+}

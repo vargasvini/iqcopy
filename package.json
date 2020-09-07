@@ -17,6 +17,7 @@
     },
     "appId": "configbot",
     "asarUnpack": [
+      "backend/installer.py",
       "backend/copytrade.py",
       "backend/api.py",
       "backend/config.py",

@@ -1,3 +1,28 @@
+async function onExecInstaller(){
+    debugger;
+    if (pyshellInstaller != undefined){
+        pyshellInstaller.childProcess.kill();
+    }
+    if(isDev){
+        filepath = path.join(__dirname, "./backend/");
+    } 
+    else{
+        filepath = path.join(__dirname, "./backend/");
+        filepath = filepath.replace("app.asar", "app.asar.unpacked");
+    }
+    var options = {
+        scriptPath: filepath,
+        args: ['requests', 'websocket-client', 'python-dateutil', 'dateutil']
+    }
+    const callInstaller = promisify(this.runPyShellInstaller);
+    const returnPyshellInstaller = await callInstaller("installer.py", options);
+    if(returnPyshellInstaller != null){
+        return returnPyshellInstaller
+    }
+    return "";
+    
+}
+
 async function onStartCopy(){
     onSaveConfig(true);
     if (pyshellCopy != undefined){
@@ -172,6 +197,16 @@ function runPyShellCopy(scriptPath, options, callback) {
     pyshellCopy = new PythonShell(scriptPath, options);
     let output = [];
     return pyshellCopy.on('message', function (message) {
+        output.push(message);
+    }).end(function (err) {
+        return callback(err ? err : null, output.length ? output : null);
+    });
+}
+
+function runPyShellInstaller(scriptPath, options, callback) {
+    pyshellInstaller = new PythonShell(scriptPath, options);
+    let output = [];
+    return pyshellInstaller.on('message', function (message) {
         output.push(message);
     }).end(function (err) {
         return callback(err ? err : null, output.length ? output : null);

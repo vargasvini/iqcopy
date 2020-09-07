@@ -28,9 +28,11 @@ function checkIfConfigIsEmpty(){
 
 function getAccessKey(){
     var fs = require('fs');
-    const data = fs.readFileSync('accesskey.config', {encoding:'utf8', flag:'r'}); 
-    if(data != ""){     
-        return JSON.parse(data)
+    if (fs.existsSync('accesskey.config')) {
+        const data = fs.readFileSync('accesskey.config', {encoding:'utf8', flag:'r'}); 
+        if(data != ""){     
+            return JSON.parse(data)
+        }
     }
     return null
 }
@@ -102,6 +104,52 @@ async function getUserAsync()
   let response = await fetch(`http://meutrader-com.umbler.net/getUsers`);
   let data = await response.json()
   return data;
+}
+
+function isInstalled(){
+    debugger;
+    var fs = require('fs');
+    if (fs.existsSync('installer.config')) {
+        const data = fs.readFileSync('installer.config', {encoding:'utf8', flag:'r'}); 
+        var installer = JSON.parse(data)
+        return installer.success 
+    }
+}
+
+function isFirstAccess(){
+    var fs = require('fs');
+    if (fs.existsSync('installer.config')) {
+        return false;
+    }
+    return true;
+}
+
+function saveInstallerConfig(_success, _package){
+    var fs = require('fs');
+    fs.writeFileSync('installer.config', installerJsonData(_success, _package), 'utf8', function(err) {
+        if (err) 
+            isSaved = false;
+    });
+}
+
+function installerJsonData(_success, _package){
+    var installerData = { 
+        /*Acesso*/
+        success: _success,
+        package: _package
+    }
+    return JSON.stringify(installerData);
+}
+
+async function callInstaller(){
+    await onExecInstaller().then((response)=> {
+        console.log(response)
+        if(response != "")
+            saveInstallerConfig(false, response[0])
+        else{
+            saveInstallerConfig(true, "")
+        }
+    })
 }
 
 function verifyAccess(data){

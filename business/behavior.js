@@ -592,6 +592,34 @@ function getRadioVal(form, name) {
 }
 
 window.onload = function() {
-    initBehavior();
-    initBusiness();
+    if(isFirstAccess()){
+        document.getElementById("idDivFirstAccessMessage").innerHTML= "Configurando primeiro acesso..."
+        showRowFirstAccess()
+        callInstaller().then(() => {
+            if(isInstalled()){
+                initBehavior();
+                initBusiness();
+                hideRowFirstAccess()
+                showRowAccess();
+            }else{
+                const remote = require('electron').remote
+                let w = remote.getCurrentWindow()
+                w.close()
+            }
+        });
+    }else{
+        document.getElementById("idDivFirstAccessMessage").innerHTML= "Inicializando..."
+        if(isInstalled()){
+            setTimeout(() => {
+                initBehavior();
+                initBusiness();
+                hideRowFirstAccess();
+                showRowAccess();
+            }, 1000);
+        }else{
+            const remote = require('electron').remote
+            let w = remote.getCurrentWindow()
+            w.close()
+        }
+    }
 };
