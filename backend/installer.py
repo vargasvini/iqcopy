@@ -4,7 +4,6 @@ import sys
 requests = sys.argv[1]
 websocketclient = sys.argv[2]
 pythondateutil = sys.argv[3]
-dateutil = sys.argv[4]
 
 def installRequests():
     try:

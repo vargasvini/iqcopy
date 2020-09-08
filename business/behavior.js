@@ -591,6 +591,21 @@ function getRadioVal(form, name) {
     return val;
 }
 
+function endMainIfPackageError(){
+    const options = {
+        title: 'Erro',
+        type: 'error',
+        buttons: [],        
+        message: 'Ocorreu um erro durante o processo de instalação dos pacotes necessários.',
+        detail: 'Por favor, entre em contato com o suporte.',
+        cancelId: 0
+    };
+    if(dialog.showMessageBoxSync(null, options) == 0){
+        let w = remote.getCurrentWindow()
+        w.close()
+    }
+}
+
 window.onload = function() {
     if(isFirstAccess()){
         document.getElementById("idDivFirstAccessMessage").innerHTML= "Configurando primeiro acesso..."
@@ -602,9 +617,7 @@ window.onload = function() {
                 hideRowFirstAccess()
                 showRowAccess();
             }else{
-                const remote = require('electron').remote
-                let w = remote.getCurrentWindow()
-                w.close()
+                endMainIfPackageError()
             }
         });
     }else{
@@ -617,9 +630,18 @@ window.onload = function() {
                 showRowAccess();
             }, 1000);
         }else{
-            const remote = require('electron').remote
-            let w = remote.getCurrentWindow()
-            w.close()
+            document.getElementById("idDivFirstAccessMessage").innerHTML= "Configurando primeiro acesso..."
+            showRowFirstAccess()
+            callInstaller().then(() => {
+                if(isInstalled()){
+                    initBehavior();
+                    initBusiness();
+                    hideRowFirstAccess()
+                    showRowAccess();
+                }else{
+                    endMainIfPackageError()
+                }
+            });
         }
     }
 };

@@ -1,5 +1,4 @@
 async function onExecInstaller(){
-    debugger;
     if (pyshellInstaller != undefined){
         pyshellInstaller.childProcess.kill();
     }
@@ -12,7 +11,7 @@ async function onExecInstaller(){
     }
     var options = {
         scriptPath: filepath,
-        args: ['requests', 'websocket-client', 'python-dateutil', 'dateutil']
+        args: ['requests', 'websocket-client', 'python-dateutil']
     }
     const callInstaller = promisify(this.runPyShellInstaller);
     const returnPyshellInstaller = await callInstaller("installer.py", options);

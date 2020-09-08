@@ -1,7 +1,7 @@
 const electron = require('electron');
 const url = require('url');
 const path = require('path');
-const {app, BrowserWindow, Menu, screen} = electron;
+const {app, BrowserWindow, Menu, screen, dialog} = electron;
 const nativeImage = require('electron').nativeImage;
 const isDevMain = require('electron-is-dev');
 
@@ -100,7 +100,7 @@ const mainMenuTempalte = [
 ]
 
 //Add developer tools
-if(process.env.NODE_ENV != 'production'){
+if(isDevMain){
     mainMenuTempalte.push({
         label:'Developer Tools',
         submenu:[

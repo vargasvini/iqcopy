@@ -106,8 +106,7 @@ async function getUserAsync()
   return data;
 }
 
-function isInstalled(){
-    debugger;
+function isInstalled(){    
     var fs = require('fs');
     if (fs.existsSync('installer.config')) {
         const data = fs.readFileSync('installer.config', {encoding:'utf8', flag:'r'}); 
