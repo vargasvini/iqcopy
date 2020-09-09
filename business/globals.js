@@ -15,3 +15,11 @@ var idIntervalCopyFile = "";
 var progress = 1;
 var gAuxHistory = []
 var gTopTradersList = []
+var gApiUrl = ""
+var gToken = ""
+
+if(!isDev){
+    gApiUrl = 'http://localhost:8085/api'
+}else{
+    gApiUrl = 'https://meutrader.com/api'
+}

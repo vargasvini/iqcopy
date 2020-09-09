@@ -6,8 +6,6 @@ function initBehavior(){
     getMenuItemsAndSetEvent();
     getInputFieldAndSetEvent();
     verifyStartInputsBehavior();
-    getHistoryData();
-    getTradesAsync();
     thTopClicks();
     clearLogsContent(); 
     setSelectType();

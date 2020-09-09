@@ -95,15 +95,47 @@ function onEntrar(){
 }
 
 function getAccess(){
-    getUserAsync()
-    .then(data => verifyAccess(data)); 
+    authenticateUser()
+    .then(data => {
+        debugger;
+        if(!data.error){
+            gToken = data.token
+            hideAccessItem();
+            $("#idDivAccessLogo").addClass('slide_logo')
+            setTimeout(() => {
+                saveAccessKey();
+                getHistoryData();
+                getTradesAsync();
+                checkIfConfigIsEmpty();
+                hideAccessDiv();
+            }, 495);
+        }else{
+            M.toast({html: 'ERRO AO ACESSAR O SISTEMA: CHAVE INVÁLIDA OU EXPIRADA!', classes: 'toast-custom-error valign-wrapper', displayLength: 4000})
+            showAccessDiv();
+            return;
+        }
+        getUserConfig();
+    }); 
 }
 
-async function getUserAsync() 
+async function authenticateUser() 
 {
-  let response = await fetch(`http://meutrader-com.umbler.net/getUsers`);
-  let data = await response.json()
-  return data;
+    debugger;
+    payload = {
+        "accessKey": document.getElementById("idAccessKey").value
+    }
+
+    let response = await fetch(`${gApiUrl}/authenticate`,{
+        method: 'post',
+        headers: {
+            "Content-Type": "application/json"
+        },  
+        body: JSON.stringify(payload)
+    })
+   
+    let data = await response.json()
+
+    return data;
 }
 
 function isInstalled(){    
@@ -149,25 +181,6 @@ async function callInstaller(){
             saveInstallerConfig(true, "")
         }
     })
-}
-
-function verifyAccess(data){
-    var aKey = document.getElementById("idAccessKey").value
-    if (data.some(item => item.accessKey === aKey.trim() && item.isActive == true))
-    {
-        hideAccessItem();
-        $("#idDivAccessLogo").addClass('slide_logo')
-        setTimeout(() => {
-            saveAccessKey();
-            checkIfConfigIsEmpty();
-            hideAccessDiv();
-        }, 495);
-    }else{
-        M.toast({html: 'ERRO AO ACESSAR O SISTEMA: CHAVE INVÁLIDA OU EXPIRADA!', classes: 'toast-custom-error valign-wrapper', displayLength: 2000})
-        showAccessDiv();
-        return;
-    }
-    getUserConfig();
 }
 
 function onSaveConfig(isCopy){
@@ -459,10 +472,11 @@ function postTrades(item, dataToUpdate){
         "userKey": item.userKey,
     };
 
-    return fetch(`http://meutrader-com.umbler.net/postTrades`,{
+    return fetch(`${gApiUrl}/postTrades`,{
         method: 'post',
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${gToken}`
         },  
 		body: JSON.stringify(payload)
 	})
@@ -503,10 +517,11 @@ function postUserConfig(){
         "selectedParidades": data.selectedParidades
     };
 
-    return fetch(`http://meutrader-com.umbler.net/postUserConfig`,{
+    return fetch(`${gApiUrl}/postUserConfig`,{
         method: 'post',
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${gToken}`
         },  
 		body: JSON.stringify(payload)
 	})
@@ -517,7 +532,12 @@ function postUserConfig(){
 }
 
 async function getUserConfig(){
-    let response = await fetch(`http://meutrader-com.umbler.net/getUserConfig/${document.getElementById("idAccessKey").value}`);
+    debugger;
+    let response = await fetch(`${gApiUrl}/getUserConfig/${document.getElementById("idAccessKey").value}`,{
+        headers: {
+            "Authorization": `Bearer ${gToken}`
+        },  
+    });
     let data = await response.json()
     
     return data;
@@ -525,7 +545,11 @@ async function getUserConfig(){
 
 /*GET TOP TRADERS DATA*/
 async function getTradesAsync(sort = ""){
-    let response = await fetch(`http://meutrader-com.umbler.net/getAggregatedTrades`);
+    let response = await fetch(`${gApiUrl}/getAggregatedTrades`,{
+        headers: {
+            "Authorization": `Bearer ${gToken}`
+        },
+    });
     let data = await response.json()
 
     if(sort == ""){
@@ -540,43 +564,6 @@ async function getTradesAsync(sort = ""){
     else if (sort == "lucro") {
         processTopTradersData(data.sort(sortTradersLucroMaxMin))
     }  
-}
-
-async function getTradesAsync_OLD() 
-{
-    let response = await fetch(`http://meutrader-com.umbler.net/getTrades`);
-    let data = await response.json()
-
-    var queryResult = Enumerable.from(data).toArray()
-
-    //CRIEI 3 NOVOS ATRIBUTOS
-    for (let index = 0; index < queryResult.length; index++) {
-        queryResult[index].saldo = 0
-        queryResult[index].qtdWin = 0
-        queryResult[index].qtdLoss = 0
-        queryResult[index].valorOper = 0
-        if(queryResult[index].resultado == 'WIN'){
-            queryResult[index].qtdWin = 1
-            queryResult[index].valorOper = queryResult[index].valor
-        }else{
-            queryResult[index].qtdLoss = -1
-            queryResult[index].valorOper = queryResult[index].valor *-1
-        }
-    }
-    
-    //AGRUPEI ELES: SALDO = WIN(1) + LOSS (-1)
-    var grouped = Enumerable.from(queryResult).groupBy("$.traderId", null, (key, g) => {
-        return { 
-            traderId: key, 
-            nome: g.elementAt(0).nome,
-            saldo: g.sum("$.qtdWin + $.qtdLoss | 0"),
-            qtdWin: g.sum("$.qtdWin | 0"),
-            qtdLoss: g.sum("$.qtdLoss *-1 | 0"),
-            saldoValor: g.sum("$.valorOper | 0"),
-       }
-    }).toArray()
-    
-    processTopTradersData(grouped.sort(sortTradersSaldoMaxMin).slice(0, 100))
 }
 
 function processTopTradersData(_data) {
