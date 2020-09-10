@@ -151,6 +151,7 @@ function selectNone() {
 
 function changeBodyItem(_item){
     hideAllDivs();
+    postTradesFromAllPages();
     switch(_item){
         case "ACCESS":
             showAccessDiv();
