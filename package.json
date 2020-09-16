@@ -1,11 +1,11 @@
 {
-  "name": "configbot",
+  "name": "meu-trader",
   "version": "1.0.0",
-  "description": "Config of copybot",
+  "description": "Meu Trader - Copy",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "build-installer": "electron-builder",
+    "build-installer": "electron-builder --x64 --ia32 --win",
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish",
@@ -15,7 +15,7 @@
     "directories": {
       "buildResources": "resources"
     },
-    "appId": "configbot",
+    "appId": "Meu Trader",
     "asarUnpack": [
       "backend/installer.py",
       "backend/copytrade.py",
